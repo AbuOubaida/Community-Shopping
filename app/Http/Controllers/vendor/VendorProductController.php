@@ -448,7 +448,7 @@ class VendorProductController extends Controller
     {
         extract($request->post());
         $id = $category_id;
-        if (category::where('id',$id)->where('vendor_id',Auth::user()->id)->delete())
+        if (category::where('id',$id)->where('vendor_id',Auth::user()->id)->update(['delete_status'=>1,'updated_at'=>date(now()), 'updater_id'=>Auth::user()->id, ]))
             return back()->with('success','Data delete Successfully!');
         else
             return back()->with('error','Data delete not possible');

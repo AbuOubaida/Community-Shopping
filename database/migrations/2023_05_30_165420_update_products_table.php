@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             //
+            $table->after("p_status",function ($table){
+                $table->integer('delete_status')->default(0)->comment('1=deleted, 0=not deleted');
+            });
         });
     }
 
