@@ -180,7 +180,7 @@ class VendorProductController extends Controller
             ->leftJoin('users as up','up.id','products.updater_id')// up as product updater info from user
             ->leftJoin('categories as cate','cate.id','products.category_id')//cate as categories table
             ->select('v.name as vendor_name','c.name as creater_name','up.name as updater_name','cate.c_name as category_name','products.*')
-            ->where("products.vendor_id", $user->id)->get();
+            ->where("products.vendor_id", $user->id)->where('products.delete_status',0)->get();
 
 //        dd($products);
         return \view('back-end.vendor.products.show-list',compact('headerData','products'));
@@ -331,7 +331,7 @@ class VendorProductController extends Controller
     {
         extract($request->post());
         $id = $product_id;
-        if (product::where('id',$id)->where('vendor_id',Auth::user()->id)->delete())
+        if (product::where('id',$id)->where('vendor_id',Auth::user()->id)->update(['delete_status'=>1,'updated_at'=>date(now()), 'updater_id'=>Auth::user()->id, ]))
             return back()->with('success','Data delete Successfully!');
         else
             return back()->with('error','Data delete not possible');
