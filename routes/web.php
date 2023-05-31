@@ -78,7 +78,12 @@ Route::middleware('auth')->group(function () {
             Route::controller(SuperAdminUserController::class)->group(function (){
                 Route::match(['get','post'],'add','create')->name('super.admin.add.user');
                 Route::match(['get'],'list','show')->name('super.admin.list.user');
+                Route::match(['get','post'],'user-view/{UserID}','singleViewUser')->name('super.single.view.user');
+                Route::match(['get','post'],'user-edit/{UserID}','edit')->name('super.edit.single.user');
+                Route::put('user-password-update','passwordUpdate')->name('super.admin.user.password.update');
+                Route::put('user-status-update','statusUpdate')->name('super.admin.user.status.update');
                 Route::delete('delete-user','destroy')->name('super.admin.delete.user');
+                Route::put('rollback-user','rollback')->name('super.admin.rollback.user');
             });
         });
 

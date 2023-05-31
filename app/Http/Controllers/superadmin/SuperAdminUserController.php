@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\superadmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\shop_info;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Intervention\Image\Facades\Image;
+use TheSeer\Tokenizer\Exception;
 
 class SuperAdminUserController extends Controller
 {
@@ -144,19 +148,57 @@ class SuperAdminUserController extends Controller
     {
         $headerData = ['app'=>'Community Shopping','role'=>'admin','title'=>'User List'];
         $AuthUser = Auth::user();
-        $userList = user::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id','!=',$AuthUser->id)->select('r.name as role_name','r.id as role_id','users.*')->get();
+        $userList = user::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id','!=',$AuthUser->id)->where('delete_status',0)->select('r.name as role_name','r.id as role_id','users.*')->get();
         return view('back-end.superadmin.users.show-list',compact('userList','headerData'));
     }
 
+    public function singleViewUser($id)
+    {
+        try {
+            $userId = Crypt::decryptString($id);
+            if ($user = User::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id',$userId)->select('r.display_name as role','users.*')->first())
+            {
+                $userShop = null;
+                if ($user->role == 'Vendor')
+                {
+                    $userShop = shop_info::where('owner_id',$user->id)->get();
+                }
+                return view('back-end/superadmin/users/view-user',compact('user','userShop'));
+            }else{
+                return back()->with('error','User not found!');
+            }
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\user  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(user $user)
+    public function edit(user $user, Request $request,$id)
     {
-        //
+        $headerData = ['app'=>'Community Shopping','role'=>Auth::user()->roles->first()->display_name,'title'=>'Edit User Profile'];
+        if ($request->isMethod('post'))
+        {
+            return $this->update($request);
+        }
+        else {
+            $userId = Crypt::decryptString($id);
+            if ($user = User::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id',$userId)->select('r.display_name as role','users.*')->first())
+            {
+                $userShop = null;
+                if ($user->role == 'Vendor')
+                {
+                    $userShop = shop_info::where('owner_id',$user->id)->get();
+                }
+                return view('back-end/superadmin/users/view-user',compact('user','userShop'));
+            }else{
+                return back()->with('error','User not found!');
+            }
+        }
     }
 
     /**
@@ -166,7 +208,7 @@ class SuperAdminUserController extends Controller
      * @param  \App\Models\user  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, user $user)
+    private function update(Request $request, user $user)
     {
         //
     }
@@ -175,15 +217,63 @@ class SuperAdminUserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\user  $user
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function destroy(Request $request)
     {
-        extract($request->post());
-        $id = $user_id;
-        if (user::where('id',$id)->delete())
-            return back()->with('success','Data delete Successfully!');
-        else
-            return back()->with('error','Data delete not possible');
+        try {
+            extract($request->post());
+            $id = $user_id;
+            if (user::where('id',$id)->update(['delete_status'=>1,'status'=>0,'update_by' => Auth::user()->id, ]))
+                return redirect(route('super.admin.list.user'))->with('success','Data delete successfully!');
+            else
+                return back()->with('error','Data delete not possible');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+
+    }
+    public function rollback(Request $request)
+    {
+        try {
+            extract($request->post());
+            $id = $user_id;
+            if (user::where('id',$id)->update(['delete_status'=>0,'status'=>1,'update_by' => Auth::user()->id, ]))
+                return redirect(route('super.admin.list.user'))->with('success','Data rollback successfully!');
+            else
+                return back()->with('error','Data rollback not possible');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function statusUpdate(Request $request)
+    {
+        try {
+            extract($request->post());
+            $id = $user_id;
+            if (user::where('id',$id)->update(['status'=>$status,'update_by' => Auth::user()->id, ]))
+                return back()->with('success','Status update successfully!');
+            else
+                return back()->with('error','Status update not possible');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function passwordUpdate(Request $request)
+    {
+        try {
+            extract($request->post());
+            $id = $user_id;
+            if (user::where('id',$id)->update(['password'=>Hash::make($password),'update_by' => Auth::user()->id, ]))
+                return back()->with('success','Password changed successfully!');
+            else
+                return back()->with('error','Password change not possible');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
     }
 }
