@@ -194,6 +194,7 @@ class SuperAdminUserController extends Controller
                 {
                     $userShop = shop_info::where('owner_id',$user->id)->get();
                 }
+                //
                 return view('back-end/superadmin/users/view-user',compact('user','userShop'));
             }else{
                 return back()->with('error','User not found!');
