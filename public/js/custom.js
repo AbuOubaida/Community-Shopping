@@ -45,6 +45,37 @@ if(window.location.port)
                 alert("Empty field error!")
             }
         })
+        $("#shipping-update").click(function (e){
+            e.preventDefault()
+            let ref = $(this).attr('ref')
+            let type = $("#locationType").val()
+            let location = $("#location").val()
+            let amount = $("#amount").val()
+            let url = window.location.origin + sourceDir + "/superadmin/protocol/shipping/edit-shipping-charge/"+ref;
+            if (type !== "0" && location !== "0" && amount.length !== 0)
+            {
+                $.ajax({
+                    headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    url: url,
+                    type: "POST",
+                    data: {'type': type, 'location': location, 'amount': amount},
+                    success: function (data)
+                    {
+                        try {
+                            data = JSON.parse(data)
+                            alert(data.error.msg)
+                        }catch (e)
+                        {
+                            window.location.reload()
+                            alert('Data update successfully!')
+                        }
+                    }
+                })
+            }
+            else {
+                alert("Empty field error!")
+            }
+        })
     })
     $(document).ready(function(){
         Obj = {

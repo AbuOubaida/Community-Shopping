@@ -101,6 +101,8 @@ Route::middleware('auth')->group(function () {
             Route::group(['prefix'=>'shipping'],function (){
                 Route::controller(ProtocolController::class)->group(function (){
                     Route::match(['get','post'],'set-shipping-charge','setShippingCharge')->name('set.shipping.charge');
+                    Route::match(['get','post'],'edit-shipping-charge/{ID}','editShippingCharge')->name('edit.shipping.charge');
+                    Route::delete('delete-shipping','destroyShipping')->name('delete.shipping');
                 });
             });
         });

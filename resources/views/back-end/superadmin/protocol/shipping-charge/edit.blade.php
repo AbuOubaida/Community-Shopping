@@ -18,11 +18,11 @@
                                         <div class="form-floating mb-3 mb-md-0">
                                             <select class="form-control" id="locationType" onchange="Obj.LocationType(this,'location')">
                                                 <option value="0">--Select Option--</option>
-                                                <option value="1">Country</option>
-                                                <option value="2">Division</option>
-                                                <option value="3">District</option>
-                                                <option value="4">Upazila</option>
-                                                <option value="5">Union</option>
+                                                <option value="1" @if(@$shipping->location_type == 1) selected @endif>Country</option>
+                                                <option value="2" @if(@$shipping->location_type == 2) selected @endif>Division</option>
+                                                <option value="3" @if(@$shipping->location_type == 3) selected @endif>District</option>
+                                                <option value="4" @if(@$shipping->location_type == 4) selected @endif>Upazila</option>
+                                                <option value="5" @if(@$shipping->location_type == 5) selected @endif>Union</option>
                                             </select>
                                             <label for="country">Type of Location</label>
                                         </div>
@@ -31,6 +31,7 @@
                                     <div class="col-md-4">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <select class="form-control" id="location">
+                                                <option value="{{@$shipping->location_name}}">{{@$shipping->location_name}}</option>
                                             </select>
                                             <label for="division">Location Name</label>
                                         </div>
@@ -38,13 +39,13 @@
                                     {{--                                        Districts--}}
                                     <div class="col-md-4">
                                         <div class="form-floating mb-3 mb-md-0">
-                                            <input class="form-control" id="amount" type="number" placeholder="Shipping Amount" value=""/>
+                                            <input class="form-control" id="amount" type="number" placeholder="Shipping Amount" value="{{@$shipping->amount}}"/>
                                             <label for="district">Shipping Amount</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mb-0 float-end">
-                                    <input class="btn btn-primary" type="submit" id="shipping-submit" value="Submit">
+                                    <input class="btn btn-success" type="submit" id="shipping-update" value="Update" ref="{{\Illuminate\Support\Facades\Crypt::encryptString(@$shipping->id)}}">
                                 </div>
                             </form>
                         </div>
