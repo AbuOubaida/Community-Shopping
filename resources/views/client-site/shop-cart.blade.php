@@ -27,7 +27,6 @@
                         <tbody>
                         @php($total = 0)
                 @if(session('cart'))
-
                     @foreach(session('cart') as $id => $details)
                             <?php
                             $total += $details['price'] * $details['quantity']
@@ -152,7 +151,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="country">Country <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="countrylist" name="country" id="country" value="@if(old('country')) {{old('country')}} @else @isset($user->country) {{$user->country}} @endisset @endif" onchange="return Obj.country(this,'divisionlist')" required>
+                                            <input class="form-control" list="countrylist" name="country" id="country" value="@if(old('country')) {{old('country')}} @else @isset($user->country) {{$user->country}} @endisset @endif" onchange="return Obj.country(this,'divisionlist'), Obj.shippingCharge(this,'1','country','division','district','upazila','union')" required>
                                             <datalist id="countrylist">
                                                 @foreach($countries as $c)
                                                     <option value="{{$c->nicename}}"></option>
@@ -253,7 +252,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <h4 style="margin: 0">Select Your Community :</h4>
                                         <p>Here the community will play a role, who will deliver the product to your address</p>
                                         <div class="row">
@@ -276,13 +275,17 @@
                                                 </label>
                                             </div>
                                         @endforeach
+                                    @else
+                                    <div class="col-md-6">
+                                        <h6 class="text-red">Sorry! No community found on your location!</h6>
+                                    </div>
                                     @endif
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <h4>Please select your payment option</h4>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-2">
                                                 <label for="online" title="Online Payment">
                                                     Online Payment
                                                     <input type="radio" id="online" name="payment" value="1">
@@ -290,7 +293,7 @@
 
                                                 </label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-2">
                                                 <label for="cash" title="Cash on Delivery">
                                                     Cash on Delivery
                                                     <input type="radio" id="cash" name="payment" value="2" checked>

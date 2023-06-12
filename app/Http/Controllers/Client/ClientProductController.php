@@ -172,20 +172,53 @@ class ClientProductController extends Controller
             $countries = DB::table('countries')->distinct()->get();
             $headerData = ['app'=>'Community Shopping','role'=>'Client','title'=>'Shopping Cart'];
             $pageInfo = ['rootRoute'=>'root','root'=>'Home','parent'=>'Shop','parentRoute'=>'client.product.list','this'=>'Shopping Cart'];
-            $comm = null;
             if ($user = Auth::user())
             {
-                $comm = $this->communityGet($user, $comm);
-                if (strtolower($user->division) == 'dhaka' )
+                if ($user->union)// when union is not empty
                 {
-                    $shippingCharge = shipping_charges::where('location_name',"Inside of Dhaka")->first();
-                }else {
-                    $shippingCharge = shipping_charges::where('location_name',"Outside of Dhaka")->first();
+                    $location_type = 5;//union
+                    $shippingCharge = shipping_charges::where('location_name',$user->union)->where('location_type',$location_type)->first();
+                    if (!($shippingCharge))
+                    {
+                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                    }
+                }elseif ($user->upazila)
+                {
+                    $location_type = 4;//union
+                    $shippingCharge = shipping_charges::where('location_name',$user->upazila)->where('location_type',$location_type)->first();
+                    if (!($shippingCharge))
+                    {
+                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                    }
+                }elseif ($user->district)
+                {
+                    $location_type = 3;//union
+                    $shippingCharge = shipping_charges::where('location_name',$user->district)->where('location_type',$location_type)->first();
+                    if (!($shippingCharge))
+                    {
+                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                    }
+                }elseif ($user->division)
+                {
+                    $location_type = 2;//union
+                    $shippingCharge = shipping_charges::where('location_name',$user->division)->where('location_type',$location_type)->first();
+                    if (!($shippingCharge))
+                    {
+                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                    }
+                }else{
+                    $location_type = 1;//union
+                    $shippingCharge = shipping_charges::where('location_name',$user->country)->where('location_type',$location_type)->first();
+                    if (!($shippingCharge))
+                    {
+                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                    }
                 }
+                $comm = null;
+                $comm = $this->communityGet($user, $comm);
             }else{
-                $shippingCharge = shipping_charges::where('location_name',"Unknown")->first();
+                $shippingCharge = shipping_charges::where('location_name',"all")->where('location_type',1)->first();
             }
-//        session()->put('url',\Illuminate\Support\Facades\Route::current()->getName());
             return view('client-site.shop-cart',compact('headerData','pageInfo','shippingCharge','countries','comm'));
         }catch (\Throwable $exception)
         {
@@ -196,44 +229,50 @@ class ClientProductController extends Controller
     }
     private function communityGet(User $user,$comm)
     {
-        $comm = communities::where('village',$user->village)->where('status',1)->get();
-        if (count($comm) == 0)
-        {
-            $comm = communities::where('word',$user->word)->where('status',1)->get(4);
+        try {
+            $comm = communities::where('village',$user->village)->where('status',1)->get();
             if (count($comm) == 0)
             {
-                $comm = communities::where('union',$user->union)->where('status',1)->get(4);
+                $comm = communities::where('word',$user->word)->where('status',1)->take(4)->get();
                 if (count($comm) == 0)
                 {
-                    $comm = communities::where('upazila',$user->upazila)->where('status',1)->get(4);
+                    $comm = communities::where('union',$user->union)->where('status',1)->take(4)->get();
                     if (count($comm) == 0)
                     {
-                        $comm = communities::where('district',$user->district)->where('status',1)->get(4);
+                        $comm = communities::where('upazila',$user->upazila)->where('status',1)->take(4)->get();
                         if (count($comm) == 0)
                         {
-                            $comm = communities::where('division',$user->division)->where('status',1)->get(4);
+                            $comm = communities::where('district',$user->district)->where('status',1)->take(4)->get();
                             if (count($comm) == 0)
                             {
-                                $comm = communities::where('country',$user->country)->where('status',1)->get(4);
+                                $comm = communities::where('division',$user->division)->where('status',1)->take(4)->get();
                                 if (count($comm) == 0)
                                 {
-                                    $comm = communities::where('status',1)->where(function ($query) use ($user){
-                                        $query->where('village','like',"%$user->village%");
-                                        $query->orWhere('word','like',"%$user->word%");
-                                        $query->orWhere('union','like',"%$user->union%");
-                                        $query->orWhere('upazila','like',"%$user->upazila%");
-                                        $query->orWhere('district','like',"%$user->district%");
-                                        $query->orWhere('division','like',"%$user->division%");
-                                        $query->orWhere('country','like',"%$user->country%");
-                                    })->get(4);
+                                    $comm = communities::where('country',$user->country)->where('status',1)->take(4)->get();
+                                    if (count($comm) == 0)
+                                    {
+                                        $comm = communities::where('status',1)->where(function ($query) use ($user){
+                                            $query->where('village','like',"%$user->village%");
+                                            $query->orWhere('word','like',"%$user->word%");
+                                            $query->orWhere('union','like',"%$user->union%");
+                                            $query->orWhere('upazila','like',"%$user->upazila%");
+                                            $query->orWhere('district','like',"%$user->district%");
+                                            $query->orWhere('division','like',"%$user->division%");
+                                            $query->orWhere('country','like',"%$user->country%");
+                                        })->take(4)->get();
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            return $comm;
+        }catch (\Throwable $exception)
+        {
+            return $exception;
         }
-        return $comm;
+
     }
 
     public function changeAddress(Request $request)

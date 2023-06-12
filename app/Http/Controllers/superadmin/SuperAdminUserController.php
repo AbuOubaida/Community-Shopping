@@ -86,6 +86,7 @@ class SuperAdminUserController extends Controller
 
         try {
             extract($request->post());
+            $img_name = null;
             if ($request->hasFile('profile')) {
                 extract($request->file());
                 if (@$profile)

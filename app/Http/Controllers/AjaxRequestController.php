@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\shipping_charges;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AjaxRequestController extends Controller
@@ -151,6 +153,33 @@ class AjaxRequestController extends Controller
                     'code' => $exception->getCode(),
                 )
             ));
+        }
+    }
+
+    public function getShipping(Request $request)
+    {
+        try {
+            if ($request->post())
+            {
+                $value = null;
+                $type = null;
+                extract($request->post());
+                if ($value != null && $type != null)
+                {
+                    if ($user = Auth::user())
+                    {
+                        $shippingCharge = shipping_charges::where('location_name',$value)->where('location_type',$type)->first();
+                        if (!($shippingCharge))
+                        {
+                            $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$type)->first();
+                        }
+                    }
+                }
+                return http_response_code(404);
+            }
+        }catch (\Throwable $exception)
+        {
+            return $exception;
         }
     }
 }
