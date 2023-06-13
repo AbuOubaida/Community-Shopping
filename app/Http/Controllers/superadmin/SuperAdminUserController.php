@@ -5,6 +5,7 @@ namespace App\Http\Controllers\superadmin;
 use App\Http\Controllers\Controller;
 use App\Models\shop_info;
 use App\Models\User;
+use http\Exception\BadConversionException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Intervention\Image\Facades\Image;
 use TheSeer\Tokenizer\Exception;
@@ -173,46 +175,133 @@ class SuperAdminUserController extends Controller
             return back()->with('error',$exception->getMessage());
         }
     }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\user  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(user $user, Request $request,$id)
+
+    public function edit(Request $request, $id)
     {
-        $headerData = ['app'=>'Community Shopping','role'=>Auth::user()->roles->first()->display_name,'title'=>'Edit User Profile'];
-        if ($request->isMethod('post'))
-        {
-            return $this->update($request);
-        }
-        else {
-            $userId = Crypt::decryptString($id);
-            if ($user = User::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id',$userId)->select('r.display_name as role','users.*')->first())
+        try {
+            $headerData = ['app'=>'Community Shopping','role'=>Auth::user()->roles->first()->display_name,'title'=>'Edit User Profile'];
+            $countries = DB::table('countries')->distinct()->get();
+            $roles = DB::table('roles')->distinct()->get();
+            if ($request->isMethod('put'))
             {
-                $userShop = null;
-                if ($user->role == 'Vendor')
-                {
-                    $userShop = shop_info::where('owner_id',$user->id)->get();
-                }
-                //
-                return view('back-end/superadmin/users/view-user',compact('user','userShop'));
-            }else{
-                return back()->with('error','User not found!');
+                return $this->update($request);
             }
+            else {
+                $userId = Crypt::decryptString($id);
+                if ($user = User::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id',$userId)->select('r.display_name as role','r.id as rid','users.*')->first())
+                {
+                    $userShop = null;
+                    if ($user->role == 'Vendor')
+                    {
+                        $userShop = shop_info::where('owner_id',$user->id)->get();
+                    }
+                    //
+                    $divisions = null;
+                    if (strtolower($user->country) == strtolower('Bangladesh'))
+                    {
+                        $divisions = DB::table('divisions')->get();
+                    }
+                    $districts = DB::table('districts')->get();
+                    $upazilas = DB::table('upazilas')->get();
+                    $zip_codes = DB::table('zip_codes')->get();
+                    $unions = DB::table('unions')->get();
+                    return view('back-end/superadmin/users/edit-user',compact('user','userShop','countries','roles','divisions','districts','upazilas','zip_codes','unions'));
+                }else{
+                    return back()->with('error','User not found!');
+                }
+            }
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
         }
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\user  $user
-     * @return \Illuminate\Http\Response
-     */
-    private function update(Request $request, user $user)
+
+    private function update(Request $request)
     {
-        //
+        $request->validate([
+            'fname' => ['required', 'string', 'max:255'],
+            'lname' => ['sometimes','nullable', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'phone' => ['required', 'numeric'],
+            'dob' => ['required', 'date'],
+            'gender' => ['required', 'numeric'],
+            'religion' => ['string','sometimes','nullable'],
+            'home'  => ['string','sometimes','nullable', 'max:255'],
+            'village' => ['string','sometimes','nullable', 'max:255'],
+            'word_no' => ['string','sometimes','nullable', 'max:255'],
+            'union' => ['string','sometimes','nullable', 'max:255'],
+            'upazila' => ['string','sometimes','nullable', 'max:255'],
+            'district' => ['string','sometimes','nullable', 'max:255'],
+            'zip_code' => ['string','sometimes','nullable', 'max:255'],
+            'division' => ['string','sometimes','nullable', 'max:255'],
+            'country' => ['string','sometimes','nullable', 'max:255'],
+            'roles' => ['required','string', 'max:255'],
+            'profile' => ['mimes:jpeg,jpg,png,gif,webp|sometimes|nullable|max:20000'],
+            'id' => ['required', 'string',],
+        ]);
+        try {
+            extract($request->post());
+            $id = Crypt::decryptString($id);
+            if ($data = User::where('id','!=',$id)->where('email',$email)->first())
+            {
+                return back()->with('warning','Email duplicate in DB');
+            }
+            if ($data = User::where('id','!=',$id)->where('phone',$phone)->first())
+            {
+                return back()->with('warning','Phone number duplicate in DB');
+            }
+            $user = User::where('id',$id)->first();
+            $img_name_profile = $user->img_name;
+            if ($request->hasFile('profile'))
+            {
+                extract($request->file());
+                if (@$profile)
+                {
+
+                    $ext = $profile->getClientOriginalExtension();
+                    $img_name_profile = str_replace(' ','_',$fname).'_'.rand(111,99999).'_'.$profile->getClientOriginalName();
+                    $imageUploadPath = $this->productImage.$img_name_profile;
+                    if ($user->img_name && file_exists($name = $this->productImage.$user->img_name))
+                    {
+                        unlink(public_path($name));
+                    }
+                    Image::make($profile)->save($imageUploadPath);
+                }
+            }
+            $me = Auth::user();
+            $user = User::where('id',$id)->update([
+                'fname' => $fname,
+                'lname' => $lname,
+                'name' => $fname.' '.$lname,
+                'email' => $email,
+                'phone' => $phone,
+                'gender' => $gender,
+                'religion' => $religion,
+                'dob' => $dob,
+                'home' => $home,
+                'village' => $village,
+                'word' => $word_no,
+                'union' => $union,
+                'upazila' => $upazila,
+                'district' => $district,
+                'zip_code' => $zip_code,
+                'division' => $division,
+                'country' => $country,
+                'img_name' => $img_name_profile,
+            ]);
+            if (DB::table('roles')->where('id',$roles)->first())
+            {
+                DB::table('role_user')->where('user_id',$id)->update(['role_id'=>$roles]);
+                return back()->with('success','Data update successfully');
+            }else{
+                return back()->with('error','Invalid User Roles')->withInput();
+            }
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
     }
 
     /**

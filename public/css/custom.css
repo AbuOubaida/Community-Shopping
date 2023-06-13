@@ -39,3 +39,6 @@ td {
     vertical-align: initial;
     width: 100%;
 }
+.alert {
+    z-index: 10000;
+}

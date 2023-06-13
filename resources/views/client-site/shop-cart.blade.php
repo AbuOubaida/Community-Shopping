@@ -258,18 +258,18 @@
                                         <div class="row">
                                     @if(isset($comm) && count($comm))
                                         @foreach($comm as $c)
-                                            <div class="col-md-6">
+                                            <div class="col-md-3">
                                                 <input type="radio" class="community" id="community" name="community" value="{{$c->id}}">
                                                 <label class="community-class" for="community" title="Online Payment">
                                                     <div class="community-body">
                                                         <div class="comm-header">
                                                             <span>{{$c->community_name}}</span>
-                                                            <p>
+                                                            <p class="text-white">
                                                                 <b>Type: </b>{{$c->community_type}}
                                                             </p>
                                                         </div>
                                                         <p class="comm-address">
-                                                            Address: Vill: {{$c->village}}, Word: {{$c->word}}, Union: {{$c->union}}, Upa-Zilla: {{$c->upazila}}, District: {{$c->district}}
+                                                            <b>Address:</b> Vill: {{$c->village}}, Word: {{$c->word}}, Union: {{$c->union}}, Upa-Zilla: {{$c->upazila}}, District: {{$c->district}}
                                                         </p>
                                                     </div>
                                                 </label>
