@@ -85,6 +85,7 @@
 
                     <div class="contact-form">
                     @if(session('cart'))
+
                         @if($user = \Illuminate\Support\Facades\Auth::user())
                             <form action="{{route("order.checkout")}}" method="post">
                                 @csrf
@@ -151,7 +152,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="country">Country <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="countrylist" name="country" id="country" value="@if(old('country')) {{old('country')}} @else @isset($user->country) {{$user->country}} @endisset @endif" onchange="return Obj.country(this,'divisionlist'), Obj.shippingCharge(this,'1','country','division','district','upazila','union')" required>
+                                            <input class="form-control" list="countrylist" name="country" id="country" value="@if(old('country')) {{old('country')}} @else @isset($user->country) {{$user->country}} @endisset @endif" onchange="return Obj.country(this,'divisionlist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required>
                                             <datalist id="countrylist">
                                                 @foreach($countries as $c)
                                                     <option value="{{$c->nicename}}"></option>
@@ -164,9 +165,13 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="division">Division <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="divisionlist" name="division" id="division" type="text" placeholder="division" value="@if(old('division')) {{old('division')}} @else @isset($user->division) {{$user->division}} @endisset @endif" onchange=" Obj.division(this,'districtlist'), Product.changeAddress(this)" required/>
+                                            <input class="form-control" list="divisionlist" name="division" id="division" type="text" placeholder="division" value="@if(old('division')) {{old('division')}} @else @isset($user->division) {{$user->division}} @endisset @endif" onchange=" Obj.division(this,'districtlist'), Obj.changeAddress(this,'2','country','division','district','upazila','union')" required/>
                                             <datalist id="divisionlist">
-                                                <option></option>
+                                                @if(count($divisions))
+                                                    @foreach($divisions as $d)
+                                                        <option value="{{$d->name}}"></option>
+                                                    @endforeach
+                                                @endif
                                             </datalist>
 
                                         </div>
@@ -177,7 +182,11 @@
                                             <label for="district">District <span class="text-danger">*</span></label>
                                             <input class="form-control" list="districtlist" name="district" id="district" type="text" placeholder="district" value="@if(old('district')) {{old('district')}} @else @isset($user->district) {{$user->district}} @endisset @endif" onchange="return Obj.district(this,'upazilalist')" required/>
                                             <datalist id="districtlist">
-                                                <option></option>
+                                                @if(count($districts))
+                                                    @foreach($districts as $dt)
+                                                        <option value="{{$dt->name}}"></option>
+                                                    @endforeach
+                                                @endif
                                             </datalist>
 
                                         </div>
@@ -187,9 +196,12 @@
                                             <label for="upazila">Upazila <span class="text-danger">*</span></label>
                                             <input class="form-control" list="upazilalist" name="upazila" id="upazila" type="text" placeholder="upazila" onchange="return Obj.upazilla(this,'ziplist','unionlist')" value="@if(old('upazila')) {{old('upazila')}} @else @isset($user->upazila) {{$user->upazila}} @endisset @endif" required/>
                                             <datalist id="upazilalist">
-                                                <option></option>
+                                                @if(count($upazilas))
+                                                    @foreach($upazilas as $u)
+                                                        <option value="{{$u->name}}"></option>
+                                                    @endforeach
+                                                @endif
                                             </datalist>
-
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -197,7 +209,11 @@
                                             <label for="zip_code">Zip Code</label>
                                             <input class="form-control" list="ziplist" name="zip_code" id="zip_code" type="number" placeholder="zip code" value="@if(old('zip_code')) {{old('zip_code')}} @else @isset($user->zip_code) {{$user->zip_code}} @endisset @endif"/>
                                             <datalist id="ziplist">
-                                                <option></option>
+                                                @if(count($zip_codes))
+                                                    @foreach($zip_codes as $z)
+                                                        <option value="{{$z->PostCode}}">{{$z->SubOffice}}</option>
+                                                    @endforeach
+                                                @endif
                                             </datalist>
                                         </div>
                                     </div>
@@ -206,7 +222,11 @@
                                             <label for="union">Union</label>
                                             <input class="form-control" list="unionlist" name="union" id="union" type="text" placeholder="union" value="@if(old('union')) {{old('union')}} @else @isset($user->union) {{$user->union}} @endisset @endif"/>
                                             <datalist id="unionlist">
-                                                <option></option>
+                                                @if(count($unions))
+                                                    @foreach($unions as $u)
+                                                        <option value="{{$u->name}}"></option>
+                                                    @endforeach
+                                                @endif
                                             </datalist>
                                         </div>
                                     </div>
@@ -243,45 +263,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row order-summary">
-                                    <div class="col-md-12">
-                                        <h5>Order Summary :</h5>
-                                        <ul class="list-unstyled" id="card_total">
-                                            @include('layouts.front-end._card_total')
-                                        </ul>
-                                    </div>
+                                <div class="col-md-12" id="card_total">
+                                    @include('layouts.front-end._card_total')
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <h4 style="margin: 0">Select Your Community :</h4>
-                                        <p>Here the community will play a role, who will deliver the product to your address</p>
-                                        <div class="row">
-                                    @if(isset($comm) && count($comm))
-                                        @foreach($comm as $c)
-                                            <div class="col-md-3">
-                                                <input type="radio" class="community" id="community" name="community" value="{{$c->id}}">
-                                                <label class="community-class" for="community" title="Online Payment">
-                                                    <div class="community-body">
-                                                        <div class="comm-header">
-                                                            <span>{{$c->community_name}}</span>
-                                                            <p class="text-white">
-                                                                <b>Type: </b>{{$c->community_type}}
-                                                            </p>
-                                                        </div>
-                                                        <p class="comm-address">
-                                                            <b>Address:</b> Vill: {{$c->village}}, Word: {{$c->word}}, Union: {{$c->union}}, Upa-Zilla: {{$c->upazila}}, District: {{$c->district}}
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                    <div class="col-md-6">
-                                        <h6 class="text-red">Sorry! No community found on your location!</h6>
-                                    </div>
-                                    @endif
-                                        </div>
-                                    </div>
                                     <div class="col-md-12">
                                         <h4>Please select your payment option</h4>
                                         <div class="row">
@@ -311,7 +296,7 @@
                         <h3>Order Summary :</h3>
                         <ul class="list-unstyled">
                             <li>Cart Subtotal :<b id="total" class="pull-right text-right" data-total="{{$total}}">BDT {{$total}}/=</b></li>
-                            <li>Shipping ( @if($shippingCharge) {{$shippingCharge->location_name}} @endif ) :<span class="pull-right text-right">@if($shippingCharge)BDT @if(session('cart')){{$shippingCharge->amount}}@else {{0}}@endif/= @endif</span></li>
+                            <li>Shipping ( @if($shippingCharge) {{$shippingCharge->location_name}} @endif @if($shippingCharge->location_type == 1) Country @elseif($shippingCharge->location_type == 2) Division @elseif($shippingCharge->location_type == 3) District @elseif($shippingCharge->location_type == 4) upazila @elseif($shippingCharge->location_type == 5) Union @else Unknown @endif {{")"}} :<span class="pull-right text-right">@if($shippingCharge)BDT @if(session('cart')){{$shippingCharge->amount}}@else {{0}}@endif/= @endif</span></li>
                             <li style="background: rebeccapurple;margin-left: -20px;margin-right: -20px;padding: 5px 20px;font-size: 24px;font-weight: bolder;color: cornsilk;"><strong>Order Total :<b style="font-size: 24px;font-weight: bolder;color: cornsilk;" class="pull-right text-right" id="order-total" data-total="@if(session('cart')){{($total+$shippingCharge->amount)}} @else {{0}} @endif">BDT @if(session('cart')){{($total+$shippingCharge->amount)}} @else {{0}} @endif /=</b></strong></li>
                         </ul>
                         <label for="css">Cash on Delivery</label><br>

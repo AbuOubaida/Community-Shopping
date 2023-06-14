@@ -36,7 +36,8 @@ Route::group(['prefix'=>'hidden-dirr'],function (){
         Route::match(['get','post'],'get-upazila','getUpazila')->name('get.upazila');
         Route::match(['get','post'],'get-zip','getZip')->name('get.zip');
         Route::match(['post'],'location-type','LocationType')->name('get.location.type');
-        Route::match(['post'],'get-shipping','getShipping');
+//        Route::post('get-shipping','getShipping');
+        Route::match(['post','get'],'get-shipping','changeAddress');
     });
 });
 

@@ -199,12 +199,12 @@ class SuperAdminUserController extends Controller
                     $divisions = null;
                     if (strtolower($user->country) == strtolower('Bangladesh'))
                     {
-                        $divisions = DB::table('divisions')->get();
+                        $divisions = DB::table('divisions')->distinct()->get();
                     }
-                    $districts = DB::table('districts')->get();
-                    $upazilas = DB::table('upazilas')->get();
-                    $zip_codes = DB::table('zip_codes')->get();
-                    $unions = DB::table('unions')->get();
+                    $districts = DB::table('districts')->distinct()->get();
+                    $upazilas = DB::table('upazilas')->distinct()->get();
+                    $zip_codes = DB::table('zip_codes')->distinct()->get();
+                    $unions = DB::table('unions')->distinct()->get();
                     return view('back-end/superadmin/users/edit-user',compact('user','userShop','countries','roles','divisions','districts','upazilas','zip_codes','unions'));
                 }else{
                     return back()->with('error','User not found!');

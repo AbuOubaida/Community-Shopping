@@ -202,54 +202,25 @@ if(window.location.port)
                     }
                 });
             },
-            shippingCharge:function (e,thisType,countryID,DivisionID,DistrictID,UpazilaID,UnionID){
+            changeAddress:function (e,thisType,countryID,DivisionID,DistrictID,UpazilaID,UnionID){
                 let country = $("#"+countryID).val();
                 let division = $("#"+DivisionID).val();
                 let district = $("#"+DistrictID).val();
                 let upazila = $("#"+UpazilaID).val();
                 let union = $("#"+UnionID).val();
-                let value = null;
-                let type = null;
-                if (union.length > 3)
-                {
-                    //Union has
-                    type = 5
-                    value = union
-                }else if(upazila.length > 3)
-                {
-                    //Upazila has
-                    type = 4
-                    value = upazila
-                }else if(district.length > 3)
-                {
-                    //District has
-                    type = 3
-                    value = district
-                }else if(division.length > 3)
-                {
-                    //Division has
-                    type = 2
-                    value = division
-                }else {
-                    type = 1
-                    value = country
-                }
-                if ((type != null) && (value != null))
-                {
-                    let word = $("#word_no").val()
-                    let village = $("#village").val()
-                    let url = window.location.origin + sourceDir + "/hidden-dirr/get-shipping";
-                    $.ajax({
-                        headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        url:url,
-                        type:"POST",
-                        data:{"value":value,"type":type},
-                        success:function (data)
-                        {
-
-                        }
-                    })
-                }
+                let word = $("#word_no").val()
+                let village = $("#village").val()
+                let url = window.location.origin + sourceDir + "/hidden-dirr/get-shipping";
+                $.ajax({
+                    headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    url:url,
+                    type:"POST",
+                    data:{"country":country,"division":division,"district":district,"upazila":upazila,"union":union,"word":word,"village":village},
+                    success:function (data)
+                    {
+                        $('#card_total').html(data)
+                    }
+                })
             },
             // Upload image preview
             priview:function (e,id){

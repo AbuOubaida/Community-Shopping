@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\client\ClientProductController;
+use App\Models\communities;
 use App\Models\shipping_charges;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -156,30 +159,117 @@ class AjaxRequestController extends Controller
         }
     }
 
-    public function getShipping(Request $request)
+    public function changeAddress(Request $request)
     {
         try {
             if ($request->post())
             {
-                $value = null;
-                $type = null;
+                $comm = null;
+                $shippingCharge = null;
                 extract($request->post());
-                if ($value != null && $type != null)
+                if ($user = Auth::user())
                 {
-                    if ($user = Auth::user())
+                    if ($union)
                     {
-                        $shippingCharge = shipping_charges::where('location_name',$value)->where('location_type',$type)->first();
-                        if (!($shippingCharge))
+                        if (!($shippingCharge = shipping_charges::where('location_name',$union)->where('location_type',5)->first()))
                         {
-                            $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$type)->first();
+                            $shippingCharge = shipping_charges::where('location_name',"all")->where('location_type',5)->first();
+                        }
+                    }
+                    if (!($shippingCharge) && $upazila)
+                    {
+                        if (!($shippingCharge = shipping_charges::where('location_name',$upazila)->where('location_type',4)->first()))
+                        {
+                            $shippingCharge = shipping_charges::where('location_name',"all")->where('location_type',4)->first();
+                        }
+                    }
+                    if (!($shippingCharge) && $district)
+                    {
+                        if (!($shippingCharge = shipping_charges::where('location_name',$district)->where('location_type',3)->first()))
+                        {
+                            $shippingCharge = shipping_charges::where('location_name',"all")->where('location_type',3)->first();
+                        }
+                    }
+                    if (!($shippingCharge) && $division)
+                    {
+                        if (!($shippingCharge = shipping_charges::where('location_name',$division)->where('location_type',2)->first()))
+                        {
+                            $shippingCharge = shipping_charges::where('location_name',"all")->where('location_type',2)->first();
+                        }
+                    }
+                    if (!($shippingCharge) && $country)
+                    {
+                        if (!($shippingCharge = shipping_charges::where('location_name',$country)->where('location_type',1)->first()))
+                        {
+                            $shippingCharge = shipping_charges::where('location_name',"all")->where('location_type',1)->first();
+                        }
+                    }
+                    if (!($shippingCharge))
+                    {
+                        echo json_encode(array(
+                            'error' => array(
+                                'msg' => "Not Found!",
+                                'code' => 404,
+                            )
+                        ));
+                    }
+
+                    $comm = self::communityGet($request);
+                }
+                $total = 0;
+                if(\session('cart'))
+                {
+                    foreach(session('cart') as $id => $details)
+                    {
+                        $total += $details['price'] * $details['quantity'];
+                    }
+                }
+                return view('layouts/front-end/_card_total',compact('total','shippingCharge','comm'));
+            }
+        }catch (\Throwable $exception)
+        {
+            echo json_encode(array(
+                'error' => array(
+                    'msg' => $exception->getMessage(),
+                    'code' => $exception->getCode(),
+                )
+            ));
+        }
+    }
+    public static function communityGet(Request $request)
+    {
+        try {
+            $record = 4;
+            extract($request->post());
+            $comm = communities::where('village',$village)->where('status',1)->get();
+            if (count($comm) == 0)
+            {
+                $comm = communities::where('word',$word)->where('status',1)->take($record)->get();
+                if (count($comm) == 0)
+                {
+                    $comm = communities::where('union',$union)->where('status',1)->take($record)->get();
+                    if (count($comm) == 0)
+                    {
+                        $comm = communities::where('upazila',$upazila)->where('status',1)->take($record)->get();
+                        if (count($comm) == 0)
+                        {
+                            $comm = communities::where('district',$district)->where('status',1)->take($record)->get();
+                            if (count($comm) == 0)
+                            {
+                                $comm = communities::where('division',$division)->where('status',1)->take($record)->get();
+                            }
+                            else{
+                                $comm = null;
+                            }
                         }
                     }
                 }
-                return http_response_code(404);
             }
+            return $comm;
         }catch (\Throwable $exception)
         {
             return $exception;
         }
+
     }
 }

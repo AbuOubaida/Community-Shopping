@@ -172,17 +172,25 @@ class ClientProductController extends Controller
             $countries = DB::table('countries')->distinct()->get();
             $headerData = ['app'=>'Community Shopping','role'=>'Client','title'=>'Shopping Cart'];
             $pageInfo = ['rootRoute'=>'root','root'=>'Home','parent'=>'Shop','parentRoute'=>'client.product.list','this'=>'Shopping Cart'];
+            $comm = null;
+            $districts = null;
+            $divisions = null;
+            $zip_codes = null;
+            $unions = null;
+            $upazilas = null;
             if ($user = Auth::user())
             {
                 if ($user->union)// when union is not empty
                 {
                     $location_type = 5;//union
                     $shippingCharge = shipping_charges::where('location_name',$user->union)->where('location_type',$location_type)->first();
+
                     if (!($shippingCharge))
                     {
                         $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
                     }
-                }elseif ($user->upazila)
+                }
+                if (!($shippingCharge) && $user->upazila)
                 {
                     $location_type = 4;//union
                     $shippingCharge = shipping_charges::where('location_name',$user->upazila)->where('location_type',$location_type)->first();
@@ -190,7 +198,9 @@ class ClientProductController extends Controller
                     {
                         $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
                     }
-                }elseif ($user->district)
+
+                }
+                if (!($shippingCharge) && $user->district)
                 {
                     $location_type = 3;//union
                     $shippingCharge = shipping_charges::where('location_name',$user->district)->where('location_type',$location_type)->first();
@@ -198,7 +208,9 @@ class ClientProductController extends Controller
                     {
                         $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
                     }
-                }elseif ($user->division)
+
+                }
+                if (!($shippingCharge) && $user->division)
                 {
                     $location_type = 2;//union
                     $shippingCharge = shipping_charges::where('location_name',$user->division)->where('location_type',$location_type)->first();
@@ -206,7 +218,9 @@ class ClientProductController extends Controller
                     {
                         $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
                     }
-                }else{
+                }
+                if(!($shippingCharge))
+                {
                     $location_type = 1;//union
                     $shippingCharge = shipping_charges::where('location_name',$user->country)->where('location_type',$location_type)->first();
                     if (!($shippingCharge))
@@ -214,12 +228,22 @@ class ClientProductController extends Controller
                         $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
                     }
                 }
-                $comm = null;
-                $comm = $this->communityGet($user, $comm);
+                $comm = $this->communityGet($user);
+                $divisions = null;
+                if (strtolower($user->country) == strtolower('Bangladesh'))
+                {
+                    $divisions = DB::table('divisions')->distinct()->get();
+                }
+                $districts = DB::table('districts')->distinct()->get();
+                $upazilas = DB::table('upazilas')->distinct()->get();
+                $zip_codes = DB::table('zip_codes')->distinct()->get();
+                $unions = DB::table('unions')->distinct()->get();
             }else{
                 $shippingCharge = shipping_charges::where('location_name',"all")->where('location_type',1)->first();
+
             }
-            return view('client-site.shop-cart',compact('headerData','pageInfo','shippingCharge','countries','comm'));
+
+            return view('client-site.shop-cart',compact('headerData','pageInfo','shippingCharge','countries','comm','divisions','districts','upazilas','zip_codes','unions'));
         }catch (\Throwable $exception)
         {
             back();
@@ -227,7 +251,7 @@ class ClientProductController extends Controller
 
 
     }
-    private function communityGet(User $user,$comm)
+    private function communityGet(User $user)
     {
         try {
             $comm = communities::where('village',$user->village)->where('status',1)->get();
