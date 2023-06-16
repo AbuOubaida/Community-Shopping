@@ -53,6 +53,8 @@ Route::controller(ClientProductController::class)->group(function (){
     Route::delete('remove-from-cart','deleteCart')->name('delete.cart');
     Route::middleware('auth')->group(function (){
         Route::match(['get','post'],'checkout','checkOut')->name('order.checkout');
+        Route::match(['post','get'],'invoice','Invoice')->name('invoice');
+        Route::match(['post','get'],'invoice-pdf/{orderID}','InvoicePDF')->name('invoice.pdf');
     });
 });
 

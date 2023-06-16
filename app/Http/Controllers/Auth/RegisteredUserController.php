@@ -70,10 +70,12 @@ class RegisteredUserController extends Controller
             'profile' => ['mimes:jpeg,jpg,png,gif,webp|sometimes|nullable|max:20000'],
         ]);
         extract($request->post());
+        $img_name = null;
         if ($request->hasFile('profile'))
         {
             extract($request->file());
 //            dd($dob,$gender,$religion,$profile,$this->productImage);
+
             if (@$profile)
             {
                 try {

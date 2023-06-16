@@ -5,10 +5,12 @@ namespace App\Http\Controllers\client;
 use App\Http\Controllers\Controller;
 use App\Models\communities;
 use App\Models\order;
+use App\Models\Order_product;
 use App\Models\product;
 use App\Models\shipping_charges;
 use App\Models\shop_info;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -180,54 +182,7 @@ class ClientProductController extends Controller
             $upazilas = null;
             if ($user = Auth::user())
             {
-                if ($user->union)// when union is not empty
-                {
-                    $location_type = 5;//union
-                    $shippingCharge = shipping_charges::where('location_name',$user->union)->where('location_type',$location_type)->first();
-
-                    if (!($shippingCharge))
-                    {
-                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
-                    }
-                }
-                if (!($shippingCharge) && $user->upazila)
-                {
-                    $location_type = 4;//union
-                    $shippingCharge = shipping_charges::where('location_name',$user->upazila)->where('location_type',$location_type)->first();
-                    if (!($shippingCharge))
-                    {
-                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
-                    }
-
-                }
-                if (!($shippingCharge) && $user->district)
-                {
-                    $location_type = 3;//union
-                    $shippingCharge = shipping_charges::where('location_name',$user->district)->where('location_type',$location_type)->first();
-                    if (!($shippingCharge))
-                    {
-                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
-                    }
-
-                }
-                if (!($shippingCharge) && $user->division)
-                {
-                    $location_type = 2;//union
-                    $shippingCharge = shipping_charges::where('location_name',$user->division)->where('location_type',$location_type)->first();
-                    if (!($shippingCharge))
-                    {
-                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
-                    }
-                }
-                if(!($shippingCharge))
-                {
-                    $location_type = 1;//union
-                    $shippingCharge = shipping_charges::where('location_name',$user->country)->where('location_type',$location_type)->first();
-                    if (!($shippingCharge))
-                    {
-                        $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
-                    }
-                }
+                $shippingCharge = $this->getShippingCharge($user);
                 $comm = $this->communityGet($user);
                 $divisions = null;
                 if (strtolower($user->country) == strtolower('Bangladesh'))
@@ -250,6 +205,64 @@ class ClientProductController extends Controller
         }
 
 
+    }
+    private function getShippingCharge($user)
+    {
+        try {
+            $shippingCharge = null;
+            if ($user->union)// when union is not empty
+            {
+                $location_type = 5;//union
+                $shippingCharge = shipping_charges::where('location_name',$user->union)->where('location_type',$location_type)->first();
+
+                if (!($shippingCharge))
+                {
+                    $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                }
+            }
+            if (!($shippingCharge) && $user->upazila)
+            {
+                $location_type = 4;//upazila
+                $shippingCharge = shipping_charges::where('location_name',$user->upazila)->where('location_type',$location_type)->first();
+                if (!($shippingCharge))
+                {
+                    $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                }
+
+            }
+            if (!($shippingCharge) && $user->district)
+            {
+                $location_type = 3;//District
+                $shippingCharge = shipping_charges::where('location_name',$user->district)->where('location_type',$location_type)->first();
+                if (!($shippingCharge))
+                {
+                    $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                }
+
+            }
+            if (!($shippingCharge) && $user->division)
+            {
+                $location_type = 2;//Division
+                $shippingCharge = shipping_charges::where('location_name',$user->division)->where('location_type',$location_type)->first();
+                if (!($shippingCharge))
+                {
+                    $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                }
+            }
+            if(!($shippingCharge))
+            {
+                $location_type = 1;//Country
+                $shippingCharge = shipping_charges::where('location_name',$user->country)->where('location_type',$location_type)->first();
+                if (!($shippingCharge))
+                {
+                    $shippingCharge = shipping_charges::where('location_name','all')->where('location_type',$location_type)->first();
+                }
+            }
+            return $shippingCharge;
+        }catch (\Throwable $exception)
+        {
+            return null;
+        }
     }
     private function communityGet(User $user)
     {
@@ -397,33 +410,77 @@ class ClientProductController extends Controller
                 'house' => ['string','sometimes','nullable', 'max:255',$this->htmlValidator()],
                 'extra' => ['string','sometimes','nullable', 'max:255',$this->htmlValidator()],
                 'payment' => ['numeric','required', 'max:2',$this->htmlValidator()],
+                'community' => ['numeric','required',$this->htmlValidator()],
             ]);
             try {
                 $village = null; $word_no = null; $union = null; $upazila = null; $zip_code = null; $district = null; $division = null; $country = null; $road = null; $house = null; $extra = null;
                 extract($request->post());
                 $address = "House: $house, Road: $road, Village: $village, Word: $word_no, Union: $union, Upazila: $upazila, Zip Code: $zip_code, District: $district, Division: $division, Country: $country, Extra Info: $extra";
                 $cID = Auth::user()->id;
-                $orderID = rand(0, 99999);
+                $orderID = rand(0, 999999);
+                $invoice = 1000;
+                $orderTotalDB = order::get();
+                $invoice = $invoice + $orderTotalDB->count();
+                $shippingCharge = $this->getShippingCharge($request);
+                if (!($shippingCharge))
+                {
+                    return back()->with('error','Shipping charge error!')->withInput();
+                }
+
                 $cart = session()->get('cart');
+                $totalPrice = null;
                 foreach(session('cart') as $id => $details)
                 {
-                    $product = product::where('id',$details['p_id'])->first();
+                    try {
+                        $product = product::where('id',$details['p_id'])->first();
+                        Order_product::create([
+                            'order_id'=>$orderID,
+                            'product_id'=>$product['id'],
+                            'customer_id'=>$cID,
+                            'vendor_id'=>$product['vendor_id'],
+                            'order_status'=>1,//primary
+                            'order_quantity'=>$details['quantity'],
+                            'unite_price'=>$details['price'],
+                            'total_price'=>($details['quantity'] * $details['price']),
+                            'payment_status'=>0,//not complete
+                            'created_by'=>Auth::user()->id,//not complete
+                        ]);
+                        $totalPrice += ($details['quantity'] * $details['price']);
+                    }catch (\Throwable $exception)
+                    {
+                        Order_product::where("order_id",$orderID)->delete();
+                        return back()->with('error',$exception->getMessage());
+                    }
+                }
+                try {
                     order::create([
+                        'invoice_id' => $invoice,
                         'order_id' => $orderID,
                         'customer_id' => $cID,
-                        'products_id' => $product['id'],
-                        'vendor_id' => $product['vendor_id'],
+                        'delivery_person_id' => $community,
                         'delivery_address' => $address,
+                        'c_name' => $customer_name,
                         'c_phone' => $phone,
                         'c_email' => $email,
                         'order_status' => 1,
-                        'order_quantity' => $details['quantity'],
-                        'price' => ($details['quantity'] * $details['price']),
+                        'product_count' => count($cart),
+                        'price' => $totalPrice,
+                        'shipping_charge' => $shippingCharge->amount,
                         'payment_method' => $payment,
                     ]);
+                }catch (\Throwable $exception)
+                {
+                    order::where('order_id',$orderID)->delete();
+                    Order_product::where("order_id",$orderID)->delete();
+                    return back()->with('error',$exception->getMessage());
                 }
+                $order = null;
+                $order_products = null;
+                $order = order::where('order_id',$orderID)->where('customer_id',$cID)->first();
+                $order_products = Order_product::leftJoin("products as p",'p.id','order_products.product_id')->where('order_products.order_id',$orderID)->where('order_products.customer_id',$cID)->select('p.p_name as product_name','order_products.*')->get();
                 session()->forget(['cart']);
-                return redirect()->route('my.order.list')->with('success','Order successfully!');
+//                return redirect()->route('my.order.list')->with('success','Order successfully!');
+                return \view("client-site/invoice",compact('order','order_products'))->with('success','Order create successfully!');
             }catch (\Throwable $exception)
             {
                 return back()->withInput()->with('error',$exception->getMessage());
@@ -431,11 +488,37 @@ class ClientProductController extends Controller
 
         }
         else{
-            return redirect()->route('view.cart');
+            return redirect()->route('view.cart')->withInput();
         }
 
     }
 
+    public function Invoice(Request $request)
+    {
+        try {
+            $headerData = ['app'=>'Community Shopping','role'=>'Client','title'=>'Invoice'];
+            $pageInfo = ['rootRoute'=>'root','root'=>'Home','parent'=>'shop-cart','parentRoute'=>'view.cart','this'=>'Invoice'];
+            return \view("client-site/invoice",compact('headerData','pageInfo'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+
+    public function InvoicePDF($orderID)
+    {
+        $oID = decrypt($orderID);
+        $cID = Auth::user()->id;
+        $order = order::where('order_id',$oID)->where('customer_id',$cID)->first();
+        $order_products = Order_product::leftJoin("products as p",'p.id','order_products.product_id')->where('order_products.order_id',$oID)->where('order_products.customer_id',$cID)->select('p.p_name as product_name','order_products.*')->get();
+        $pdf = PDF::loadView('client-site/invoice_print',compact('order','order_products'));
+        $output = $pdf->output();
+
+        return new Response($output, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' =>  'inline',
+            'filename'=>"$oID'_invoice.pdf'"]);
+    }
 
     /**
      * Show the form for editing the specified resource.

@@ -175,7 +175,7 @@ class CommunityController extends Controller
             {
                 return redirect()->route('edit.community');
             }
-            if (communities::where("community_name","=",$community_name)->first())
+            if (communities::where("community_name",$community_name)->where("village",$village)->where("union",$union)->first())
             {
                 return back()->with('warning','Community name is already exist in out Database. Please try another Community Name')->withInput();
             }
@@ -315,7 +315,7 @@ class CommunityController extends Controller
             extract($request->post());
             // If has profile image of shop
             $myCommunity = communities::where('owner_id',$user->id)->first();
-            if (communities::where("community_name","=",$community_name)->where("owner_id","!=",$user->id)->first())
+            if (communities::where("community_name",$community_name)->where("village",$village)->where("union",$union)->where("owner_id","!=",$user->id)->first())
             {
                 return back()->with('warning','Community name is already exist in out Database. Please try another Shop Name')->withInput();
             }

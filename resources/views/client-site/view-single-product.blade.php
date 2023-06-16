@@ -1,5 +1,6 @@
 @extends('client-site.main')
 @section('content')
+<x-client._page_header :pageInfo="$pageInfo" />{{--<header slider section>--}}
 <style>
     h1,h2,h3,h4,h5,h6 {
         font-family: raleway,sans-serif!important;
@@ -8,7 +9,6 @@
         margin-bottom: 5px;
     }
 </style>
-<x-client._page_header :pageInfo="$pageInfo" />{{--<header slider section>--}}
 {{--product section--}}
 <section id="product" class="shop shop-product bg-gray pb-60">
     <div class="container">
@@ -16,7 +16,7 @@
             <div class="col-xs-12 col-sm-12  col-md-12">
 
                 <div class="product-img mb-50 text-center">
-                    <img class="img-responsive d-inline-block" src="{{url("assets/back-end/vendor/product/").'/'.$product->p_image}}" alt="product image">
+                    <img class="img-responsive d-inline-block" src="{{url("assets/back-end/vendor/product/").'/'.$product->p_image}}" width="50%" alt="product image">
                 </div>
                 <div class="row">
                     <div class="col-md-3">

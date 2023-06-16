@@ -40,13 +40,18 @@ class orderController extends Controller
     }
     public function newOrder ()
     {
-        $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'New Order List'];
-        $me = Auth::user();
-        $orders = order::leftJoin('users as u','u.id','orders.customer_id')
-            ->leftJoin('products as p','p.id','orders.products_id')
-            ->select('u.name as customer_name','p.p_name as product','p.p_image as image','orders.*')
-            ->where('orders.order_complete_status','0')->where('orders.vendor_id',$me->id)->get();
-        return view('back-end.vendor.orders.order-list',compact('headerData','orders'));
+        try {
+            $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'New Order List'];
+            $me = Auth::user();
+            $orders = order::leftJoin('users as u','u.id','orders.customer_id')
+                ->leftJoin('products as p','p.id','orders.products_id')
+                ->select('u.name as customer_name','p.p_name as product','p.p_image as image','orders.*')
+                ->where('orders.order_complete_status','0')->where('orders.vendor_id',$me->id)->get();
+            return view('back-end.vendor.orders.order-list',compact('headerData','orders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
     }
 
     public function viewOrder($orderID)

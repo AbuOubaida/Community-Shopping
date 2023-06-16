@@ -15,18 +15,20 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('invoice_id');
             $table->string('order_id');
             $table->bigInteger('customer_id');
-            $table->bigInteger('products_id');
-            $table->bigInteger('restaurant_id');
             $table->bigInteger('delivery_person_id')->nullable();
             $table->string('delivery_address');
+            $table->string('c_name');
             $table->string('c_phone');
             $table->string('c_email');
             $table->integer('order_status')->default(1);
             $table->integer('order_complete_status')->default(0);
-            $table->string('order_quantity');
+            $table->string('product_count');
             $table->string('price');
+            $table->string('payment_method');
+            $table->string('shipping_charge');
             $table->timestamps();
         });
     }

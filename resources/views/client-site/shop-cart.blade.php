@@ -180,7 +180,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="district">District <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="districtlist" name="district" id="district" type="text" placeholder="district" value="@if(old('district')) {{old('district')}} @else @isset($user->district) {{$user->district}} @endisset @endif" onchange="return Obj.district(this,'upazilalist')" required/>
+                                            <input class="form-control" list="districtlist" name="district" id="district" type="text" placeholder="district" value="@if(old('district')) {{old('district')}} @else @isset($user->district) {{$user->district}} @endisset @endif" onchange="return Obj.district(this,'upazilalist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required/>
                                             <datalist id="districtlist">
                                                 @if(count($districts))
                                                     @foreach($districts as $dt)
@@ -194,7 +194,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="upazila">Upazila <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="upazilalist" name="upazila" id="upazila" type="text" placeholder="upazila" onchange="return Obj.upazilla(this,'ziplist','unionlist')" value="@if(old('upazila')) {{old('upazila')}} @else @isset($user->upazila) {{$user->upazila}} @endisset @endif" required/>
+                                            <input class="form-control" list="upazilalist" name="upazila" id="upazila" type="text" placeholder="upazila" onchange="return Obj.upazilla(this,'ziplist','unionlist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('upazila')) {{old('upazila')}} @else @isset($user->upazila) {{$user->upazila}} @endisset @endif" required/>
                                             <datalist id="upazilalist">
                                                 @if(count($upazilas))
                                                     @foreach($upazilas as $u)
@@ -220,7 +220,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="union">Union</label>
-                                            <input class="form-control" list="unionlist" name="union" id="union" type="text" placeholder="union" value="@if(old('union')) {{old('union')}} @else @isset($user->union) {{$user->union}} @endisset @endif"/>
+                                            <input class="form-control" list="unionlist" name="union" id="union" type="text" placeholder="union" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('union')) {{old('union')}} @else @isset($user->union) {{$user->union}} @endisset @endif"/>
                                             <datalist id="unionlist">
                                                 @if(count($unions))
                                                     @foreach($unions as $u)
@@ -234,14 +234,14 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="word_no">Word No</label>
-                                            <input class="form-control" name="word_no" id="word_no" type="number" placeholder="word no" value="@if(old('word_no')) {{old('word_no')}} @else @isset($user->word_no) {{$user->word_no}} @endisset @endif"/>
+                                            <input class="form-control" name="word_no" id="word_no" type="number" placeholder="word no" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('word_no')) {{old('word_no')}} @else @isset($user->word_no) {{$user->word_no}} @endisset @endif"/>
                                         </div>
                                     </div>
 
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="village">Village</label>
-                                            <input class="form-control" name="village" id="village" type="text" placeholder="village" value="@if(old('village')) {{old('village')}} @else @isset($user->village) {{$user->village}} @endisset @endif"/>
+                                            <input class="form-control" name="village" id="village" type="text" placeholder="village" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('village')) {{old('village')}} @else @isset($user->village) {{$user->village}} @endisset @endif"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -273,7 +273,7 @@
                                             <div class="col-md-2">
                                                 <label for="online" title="Online Payment">
                                                     Online Payment
-                                                    <input type="radio" id="online" name="payment" value="1">
+                                                    <input type="radio" id="online" name="payment" value="1" required>
                                                     <img src="{{url("assets/img/online payment icon.png")}}" width="100%" alt="Online Payment">
 
                                                 </label>
@@ -281,7 +281,7 @@
                                             <div class="col-md-2">
                                                 <label for="cash" title="Cash on Delivery">
                                                     Cash on Delivery
-                                                    <input type="radio" id="cash" name="payment" value="2" checked>
+                                                    <input type="radio" id="cash" name="payment" value="2" checked required>
                                                     <img src="{{url("assets/img/cash on delivery icon.png")}}" width="100%" alt="Cash On Delivery">
                                                 </label>
                                             </div>

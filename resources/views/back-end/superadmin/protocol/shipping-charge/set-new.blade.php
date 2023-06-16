@@ -16,7 +16,7 @@
                                     {{--                                        Country--}}
                                     <div class="col-md-4">
                                         <div class="form-floating mb-3 mb-md-0">
-                                            <select class="form-control" id="locationType" onchange="Obj.LocationType(this,'location')">
+                                            <select class="form-control" id="locationType" onchange="Obj.LocationType(this,'locationlist')">
                                                 <option value="0">--Select Option--</option>
                                                 <option value="1">Country</option>
                                                 <option value="2">Division</option>
@@ -30,9 +30,13 @@
                                     {{--                                        Devision--}}
                                     <div class="col-md-4">
                                         <div class="form-floating mb-3 mb-md-0">
-                                            <select class="form-control" id="location">
-                                            </select>
-                                            <label for="division">Location Name</label>
+                                            <input class="form-control" list="locationlist" id="location" type="text"/>
+                                            <datalist id="locationlist">
+                                                <option></option>
+                                            </datalist>
+{{--                                            <select class="form-control" id="location">--}}
+{{--                                            </select>--}}
+                                            <label for="location">Location Name</label>
                                         </div>
                                     </div>
                                     {{--                                        Districts--}}
