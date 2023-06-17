@@ -23,7 +23,7 @@
         </div>
         <div class="sb-sidenav-footer">
             <div class="small">Logged in as:</div>
-            Online Food Delivery System
+            {{str_replace('-', ' ', config('app.name'))}}
         </div>
     </nav>
 </div>

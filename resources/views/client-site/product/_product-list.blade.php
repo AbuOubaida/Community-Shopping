@@ -23,13 +23,14 @@
                         </div>
                     </div>
 
-                    <div class="divider--shape-1down"><a href="#"><div class="product--type text--capitalize"><span>{{$pl->category_name}}</span></div></a></div>
+                    <div class="divider--shape-1down"></div>
                 </div>
 
                 <div class="product--content">
                     <a href="{{route('client.single.product.view',['productSingleID'=>encrypt($pl->id)])}}">
 
                         <div class="product--title">
+                            <span><a href="#"><div class="product--type text--capitalize"><span>{{$pl->category_name}}</span></div></a></span>
                             <h3>{{$pl->p_name}}</h3>
                             <small>
                             @if($pl->shop_name)
@@ -54,7 +55,18 @@
                             <br><br>
                         @endif
                         <div class="product--price">
-                            <span>BDT {{$pl->p_price}}/=</span>
+                            @if($pl->offer_status)
+                                <delete>BDT {{$pl->p_price}}/=</delete>
+                                @php
+                                $offer = $pl->offer_percentage;
+                                $discount = (($pl->p_price * $offer)/100)
+                                @endphp
+                                <span>Discount  {{$discount}}</span>
+                                <span>BDT {{($pl->p_price - $discount)}}/=</span>
+                            @else
+                                <span>BDT {{$pl->p_price}}/=</span>
+                            @endif
+
                         </div>
                     </a>
                     <br>

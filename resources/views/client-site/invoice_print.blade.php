@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How To Generate Invoice PDF In Laravel 9 - Techsolutionstuff</title>
+    <title>{{str_replace('-', ' ', config('app.name'))}} | Invoice</title>
 </head>
 <style type="text/css">
     body{
@@ -197,8 +197,9 @@
                     <th class="w-50">Shipping Method</th>
                 </tr>
                 <tr>
-                    <td>@if($order->payment_method == 1) Online Payment @elseif($order->payment_method == 2)Cash On Delivery@else Undefine @endif</td>
-                    <td>Community Shipping - {!! $order->shipping_charge !!}</td>
+                    <td>@if($order->payment_method == 1) {{"Online Payment"}} @elseif($order->payment_method == 2){{"Cash On Delivery"}} @else
+                        {{"Undefined"}} @endif</td>
+                    <td>Community Shipping Charge BDT {!! $order->shipping_charge !!}/=</td>
                 </tr>
             </table>
         </div>

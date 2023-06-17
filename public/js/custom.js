@@ -249,6 +249,51 @@ if(window.location.port)
                     }
                 })
             },
+            CancelProductOrder:function (e,id){
+                if(!(confirm("Are you sure to cancel this product order")))
+                {
+                    return false
+                }
+                let url = window.location.origin + sourceDir + "/hidden-dirr/cancel-product-order";
+                $.ajax({
+                    headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    url:url,
+                    type:"POST",
+                    data:{"value":id},
+                    success:function (data)
+                    {
+                        if (data.error){
+                            // throw data.error.msg;
+                            alert(data.error.msg)
+                        }else if (data.success){
+                            alert(JSON.stringify(data));
+                        }
+                        window.location.reload()
+                    }
+                })
+            },
+            CancelOrder:function (e,id){
+                if(!(confirm("Are you sure to cancel this product order")))
+                {
+                    return false
+                }
+                let url = window.location.origin + sourceDir + "/hidden-dirr/cancel-order";
+                $.ajax({
+                    headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    url:url,
+                    type:"POST",
+                    data:{"value":id},
+                    success:function (data)
+                    {
+                        if (data.error){
+                            // throw data.error.msg;
+                            alert(data.error.msg)
+                        }else{
+                            window.location.href = data
+                        }
+                    }
+                })
+            }
         }
     })
 }(jQuery));

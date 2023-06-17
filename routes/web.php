@@ -38,6 +38,13 @@ Route::group(['prefix'=>'hidden-dirr'],function (){
         Route::match(['post'],'location-type','LocationType')->name('get.location.type');
 //        Route::post('get-shipping','getShipping');
         Route::match(['post','get'],'get-shipping','changeAddress');
+        Route::middleware('auth')->group(function (){
+            Route::controller(OrderController::class)->group(function (){
+                Route::post('cancel-product-order','cancelProductOrder');
+                Route::post('cancel-order','cancelOrder');
+            });
+        });
+
     });
 });
 
@@ -54,7 +61,7 @@ Route::controller(ClientProductController::class)->group(function (){
     Route::middleware('auth')->group(function (){
         Route::match(['get','post'],'checkout','checkOut')->name('order.checkout');
         Route::match(['post','get'],'invoice','Invoice')->name('invoice');
-        Route::match(['post','get'],'invoice-pdf/{orderID}','InvoicePDF')->name('invoice.pdf');
+        Route::match(['post','get'],'invoice-pdf/{orderID}/{userID}','InvoicePDF')->name('invoice.pdf');
     });
 });
 
@@ -174,6 +181,7 @@ Route::middleware('auth')->group(function () {
 
         Route::controller(OrderController::class)->group(function (){
             Route::get('my-order-list','myOrder')->name('my.order.list');
+            Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('order.single');
         });
     });
     #.2.6.Group For community/messenger role access

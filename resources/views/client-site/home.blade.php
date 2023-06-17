@@ -17,19 +17,19 @@
             <div class="col-xs-12 col-sm-12 col-md-12 shop-filter">
                 <ul class="list-inline">
                     <li><a class="active-filter" href="#" data-filter="*">All</a></li>
-                    @if(isset($categories) && count($categories) > 0)
-                        @foreach($categories as $category)
-                            <li><a href="#" data-filter=".filter-{{$category->c_name}}">{{$category->c_name}}</a></li>
+                    @if(isset($uniques) && count($uniques) > 0)
+                        @foreach($uniques as $category)
+                            <li><a href="#" data-filter=".filter-{{$category['category_id']}}">{{$category['category_name']}}</a></li>
                         @endforeach
                     @endif
                 </ul>
             </div>
         </div>
 {{--        Latest Dishes start here--}}
-        <div id="shop-all" class="row">
+        <div id="shop-all" class="row" style="display: flex; flex-wrap: wrap">
     @if(isset($products) && count($products)>0)
         @foreach($products as $p)
-            <div class="col-xs-12 col-sm-6 col-md-3 productFilter filter-{{$p->category_name}}">
+            <div class="col-xs-12 col-sm-6 col-md-3 productFilter filter-{{$p->category_id}}">
                 <div class="product-item">
                     <div class="product--img">
                         <img class="product-img-list" src="{{url("assets/back-end/vendor/product/").'/'.$p->p_image}}" alt="Product"/>
@@ -148,7 +148,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="display: flex; flex-wrap: wrap">
 {{--            Product List Start Here--}}
             @include('client-site.product._product-list')
 {{--            Product List End Here--}}

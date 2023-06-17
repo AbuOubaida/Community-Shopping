@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('vendor_id');
             $table->bigInteger('creater_id');
+            $table->bigInteger('updater_id')->nullable();
             $table->integer('status')->default(1);
             $table->string('c_name');
             $table->string('c_description')->nullable();

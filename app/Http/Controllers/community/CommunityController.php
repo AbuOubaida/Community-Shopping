@@ -18,6 +18,10 @@ class CommunityController extends Controller
         try {
             $this->middleware(function ($request,$next){
                 $this->user_info = Auth::user();
+                if ($this->user_info->status != 1)
+                {
+                    return redirect(route("logout"));
+                }
                 $community_info = communities::where('owner_id',$this->user_info->id)->first();
 //                dd($community_info);
                 if ($community_info)
@@ -186,7 +190,7 @@ class CommunityController extends Controller
                 {
                     try {
                         $ext = $profile->getClientOriginalExtension();
-                        $img_name_profile = str_replace(' ','_profile_',$shop_name).'_'.rand(111,99999).'_'.$profile->getClientOriginalName();
+                        $img_name_profile = str_replace(' ','_profile_',$community_name).'_'.rand(111,99999).'_'.$profile->getClientOriginalName();
                         $imageUploadPathProfile = $profile_image_path.$img_name_profile;
 
                         Image::make($profile)->save($imageUploadPathProfile);
@@ -204,7 +208,7 @@ class CommunityController extends Controller
                 {
                     try {
                         $ext = $cover->getClientOriginalExtension();
-                        $img_name_cover = str_replace(' ','_',$shop_name).'_cover_'.rand(111,99999).'_'.$cover->getClientOriginalName();
+                        $img_name_cover = str_replace(' ','_',$community_name).'_cover_'.rand(111,99999).'_'.$cover->getClientOriginalName();
                         $imageUploadPathCover = $cover_image_path.$img_name_cover;
 
                         Image::make($cover)->save($imageUploadPathCover);

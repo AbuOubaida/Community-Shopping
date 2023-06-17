@@ -80,6 +80,7 @@ class ClientProductController extends Controller
             ->leftJoin('shop_infos as shop','shop.owner_id','v.id')//shop as shop_info table
             ->select('v.name as vendor_name','shop.shop_name as shop_name','shop.shop_profile_image as v_image','shop.profile_image_path as v_img_path','c.name as creater_name','up.name as updater_name','cate.c_name as category_name','products.*')
                 ->where("products.p_status", 1)->where('p_image','!=',null)->orderBy("id", "DESC")->get();
+//            dd($productLists);
 
             return view('client-site.product-list',compact('headerData','pageInfo','productLists'));
         }catch (\Throwable $exception)
@@ -505,12 +506,12 @@ class ClientProductController extends Controller
         }
     }
 
-    public function InvoicePDF($orderID)
+    public function InvoicePDF($orderID,$userID)
     {
         $oID = decrypt($orderID);
-        $cID = Auth::user()->id;
+        $cID = decrypt($userID);
         $order = order::where('order_id',$oID)->where('customer_id',$cID)->first();
-        $order_products = Order_product::leftJoin("products as p",'p.id','order_products.product_id')->where('order_products.order_id',$oID)->where('order_products.customer_id',$cID)->select('p.p_name as product_name','order_products.*')->get();
+        $order_products = Order_product::leftJoin("products as p",'p.id','order_products.product_id')->where('order_products.order_id',$oID)->where('order_products.customer_id',$cID)->where('order_products.order_status','!=',0)->select('p.p_name as product_name','order_products.*')->get();
         $pdf = PDF::loadView('client-site/invoice_print',compact('order','order_products'));
         $output = $pdf->output();
 

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Intervention\Image\Facades\Image;
 
@@ -52,7 +53,9 @@ class RegisteredUserController extends Controller
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+//            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->where(function ($query) use ($request){ return $query->where('status',1)->where('email',$request->email);})],
             'phone' => ['required', 'numeric', 'unique:'.User::class],
+//            'phone' => ['required', 'numeric', Rule::unique('users')->where(function ($query) use ($request){ return $query->where('status',1)->where('phone',$request->phone);})],
             'dob' => ['required', 'date'],
             'gender' => ['required', 'numeric'],
             'religion' => ['string','sometimes','nullable'],
@@ -119,7 +122,7 @@ class RegisteredUserController extends Controller
             {
                 $user->attachRole($roles);
                 event(new Registered($user));
-                return back()->with('success','Account create successfully');
+                return redirect(route('login'))->with('success','Account create successfully.');
             }else{
                 return back()->with('error','Invalid User Roles')->withInput();
             }

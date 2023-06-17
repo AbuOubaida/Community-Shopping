@@ -45,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" style="display: flex; flex-wrap: wrap">
                     @include('client-site.product._product-list')
                 </div>
 

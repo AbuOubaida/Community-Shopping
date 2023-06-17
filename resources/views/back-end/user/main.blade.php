@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@isset($headerData){{$headerData['app']}} || {{$headerData['role']}} || {{$headerData['title']}} @endisset</title>
     <x-user._header_link/>
 </head>

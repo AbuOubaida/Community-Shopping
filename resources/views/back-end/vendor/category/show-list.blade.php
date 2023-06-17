@@ -52,12 +52,12 @@
                                                     <td>
                                                         <a href="{{route('vendor.view.category',['categoryID'=>$c->id])}}" class="text-primary">View</a>
                                                         <a href="{{route('vendor.edit.category',['categoryID'=>$c->id])}}" class="text-success"> Edit</a>
-                                                        <form action="{{route('vendor.delete.category')}}" method="post" class="d-inline-block">
-                                                            {!! method_field('delete') !!}
-                                                            {!! csrf_field() !!}
-                                                            <input type="hidden" name="category_id" value="{{$c->id}}">
-                                                            <button class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure delete this Apply Category?')" type="submit">Delete</button>
-                                                        </form>
+{{--                                                        <form action="{{route('vendor.delete.category')}}" method="post" class="d-inline-block">--}}
+{{--                                                            {!! method_field('delete') !!}--}}
+{{--                                                            {!! csrf_field() !!}--}}
+{{--                                                            <input type="hidden" name="category_id" value="{{$c->id}}">--}}
+{{--                                                            <button class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure delete this Apply Category?')" type="submit">Delete</button>--}}
+{{--                                                        </form>--}}
                                                     </td>
                                                 </tr>
                                             @endforeach

@@ -21,24 +21,22 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Order id</th>
-                                            <th>Product</th>
+                                            <th>Product Count</th>
                                             <th>Customer name</th>
-                                            <th>Order quantity</th>
                                             <th>Price</th>
                                             <th>Status</th>
-                                            <th>Address</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                         </thead>
                                         <tfoot>
                                         <tr>
                                             <th>No</th>
                                             <th>Order id</th>
-                                            <th>Product</th>
+                                            <th>Product Count</th>
                                             <th>Customer name</th>
-                                            <th>Order quantity</th>
                                             <th>Price</th>
                                             <th>Status</th>
-                                            <th>Address</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                         </tfoot>
                                         <tbody>
@@ -50,14 +48,21 @@
                                                 <tr>
                                                     <td>{{$i++}}</td>
                                                     <td>{{$o->order_id}}</td>
-                                                    <td>
-{{--                                                        <img src="{{url('assets/back-end/vendor/product/').'/'.$o->image}}" alt="product Image" width="20%" class="tabel-image">--}}
-                                                        <br> {{$o->product}}</td>
+                                                    <td>{{$o->nop}}</td>
                                                     <td class="text-capitalize"> {{$o->customer_name}}</td>
-                                                    <td>{{$o->order_quantity}}</td>
                                                     <td>BDT {{$o->price}}</td>
-                                                    <td>@if($o->order_complete_status == 0) <spen class="text-warning">Pending</spen> @else <span class="text-success">Complete</span> @endif</td>
-                                                    <td>{{$o->delivery_address}}</td>
+                                                    <td>@if($o->order_status == 1) <spen class="text-success">Active</spen> @else <span class="text-danger">Inactive</span> @endif</td>
+{{--                                                    <td>{{$o->delivery_address}}</td>--}}
+                                                    <td class="text-center">
+                                                        <a title="View" href="{{route("order.single",['orderID'=>$o->order_id])}}" class="text-primary"><i class="fas fa-eye"></i></a>
+{{--                                                        <a title="Edit" href="" class="text-success"><i class="fas fa-edit"></i></a>--}}
+{{--                                                        <form action="" method="post" class="d-inline-block">--}}
+{{--                                                            {!! method_field('delete') !!}--}}
+{{--                                                            {!! csrf_field() !!}--}}
+{{--                                                            <input type="hidden" name="user_id" value="">--}}
+{{--                                                            <button title="Delete" class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure delete this User?')" type="submit"><i class="fas fa-trash"></i></button>--}}
+{{--                                                        </form>--}}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
