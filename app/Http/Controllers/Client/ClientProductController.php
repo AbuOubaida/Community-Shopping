@@ -126,7 +126,14 @@ class ClientProductController extends Controller
             ->leftJoin('users as up','up.id','products.updater_id')// up as product updater info from user
             ->leftJoin('categories as cate','cate.id','products.category_id')//cate as categories table
             ->select('v.name as vendor_name','c.name as creater_name','up.name as updater_name','cate.c_name as category_name','products.*')->where("products.p_status", 1)->where('products.id',$product_id)->first();
-
+            $discount = 0;
+            if ($product->offer_status)
+            {
+                if ($product->offer_percentage)
+                {
+                    $discount = (($product->p_price*$product->offer_percentage)/100);
+                }
+            }
             $cart = session()->get('cart');
             if (!$cart)
             {
@@ -134,7 +141,8 @@ class ClientProductController extends Controller
                     'p_id' => $product->id,
                     'name' => $product->p_name,
                     'quantity' => 1,
-                    'price' => $product->p_price,
+                    'price' => ($product->p_price - $discount),
+                    'discount' => $discount,
                     'photo' => $product->p_image,
                     'category' => $product->category_name,
                     'vendor' => $product->vendor_name,
@@ -152,7 +160,8 @@ class ClientProductController extends Controller
                     'p_id' => $product->id,
                     'name' => $product->p_name,
                     'quantity' => 1,
-                    'price' => $product->p_price,
+                    'discount' => $discount,
+                    'price' => ($product->p_price - $discount),
                     'photo' => $product->p_image,
                     'category' => $product->category_name,
                     'vendor' => $product->vendor_name,

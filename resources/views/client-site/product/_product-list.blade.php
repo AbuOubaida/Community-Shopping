@@ -5,7 +5,7 @@
     </style>
 @if(isset($productLists) && count($productLists)>0)
     @foreach($productLists as $pl)
-        <div class="col-xs-12 col-sm-6 col-md-3 productFilter filter-{{$pl->category_name}}">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-xl-2 productFilter filter-{{$pl->category_name}}">
             <div class="product-item">
                 <div class="product--img">
                     <img class="product-img-list" src="{{url("assets/back-end/vendor/product/").'/'.$pl->p_image}}" alt="Product"/>
@@ -56,17 +56,20 @@
                         @endif
                         <div class="product--price">
                             @if($pl->offer_status)
-                                <delete>BDT {{$pl->p_price}}/=</delete>
+                                <small class="text-red"><del>BDT {{$pl->p_price}}/=</del>
                                 @php
                                 $offer = $pl->offer_percentage;
                                 $discount = (($pl->p_price * $offer)/100)
                                 @endphp
-                                <span>Discount  {{$discount}}</span>
+                                <span>(-@if($offer <=0 ) 0 @else {{$offer}} @endif%)</span>
+                                </small>
+                                <br>
+                                <br>
                                 <span>BDT {{($pl->p_price - $discount)}}/=</span>
                             @else
+                                <br><br>
                                 <span>BDT {{$pl->p_price}}/=</span>
                             @endif
-
                         </div>
                     </a>
                     <br>

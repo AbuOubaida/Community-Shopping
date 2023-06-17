@@ -18,10 +18,10 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr class="cart-product">
-                            <th class="cart-product-item">Product</th>
-                            <th class="cart-product-price" style="width: 10%">Price</th>
+                            <th class="cart-product-item" style="width:40%">Product</th>
+                            <th class="cart-product-price" style="width: 13%">Price</th>
                             <th class="cart-product-quantity" style="width: 20%">Quantity</th>
-                            <th class="cart-product-total">Total</th>
+                            <th class="cart-product-total" style="width: 14%">Total</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -49,7 +49,11 @@
                                     </a>
 
                                 </td>
-                                <td class="cart-product-price" data-th="Price">BDT {{$details['price']}}</td>
+                                <td class="cart-product-price" data-th="Price">
+                                    @if($details['discount'])
+                                        <small class="text-red"> (With Discount)</small><br>
+                                    @endif
+                                    BDT {{$details['price']}} </td>
                                 <td class="cart-product-quantity">
                                     <div class="product-quantity" data-th="Quantity">
                                         <div class="row">

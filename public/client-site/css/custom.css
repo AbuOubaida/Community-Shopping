@@ -42,13 +42,13 @@
     vertical-align: initial;
     margin-left: -7em;
     margin-top: -2px;
-    width: 25%;
+    max-width: 200px;
 }
-.logo-light {
+.logo-light{
     vertical-align: initial;
     margin-left: -7em;
     margin-top: -2px;
-    width: 25%;
+    max-width: 200px;
 }
 .active-border-bottom {
     border-bottom: 2px solid;
@@ -150,12 +150,22 @@ input:required:valid {
         height: 200px!important;
     }
 }
+@media screen and (max-width: 768px) {
+    .logo-light,.logo-dark {
+        vertical-align: initial;
+        margin-left: 0em;
+        margin-top: 20px;
+        max-width: 100px;
+    }
+}
 @media screen and (min-width: 1366px) {
+    .product-item .product--content {
+        padding: 0px 0px 30px 0px!important;
+    }
     .logo-dark {
         vertical-align: initial;
         margin-left: -8em;
         margin-top: 0px;
-        width: 25%;
     }
     .product-item {
         min-height: 33.3em;

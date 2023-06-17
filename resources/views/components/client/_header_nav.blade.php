@@ -26,8 +26,8 @@
                 </button>
                 <a class="logo" href="{{route("root")}}">
 {{--                    <h2 class="logo-text">Online Food</h2>--}}
-                    <img class="logo-light " src="{{url("client-site/images/logo/cms.png")}}" width="25%"/>
-                    <img class="logo-dark" src="{{url("client-site/images/logo/cms.png")}}" alt="granny Logo" width="30%" />
+                    <img class="logo-light " src="{{url("client-site/images/logo/cms.png")}}"/>
+                    <img class="logo-dark" src="{{url("client-site/images/logo/cms.png")}}" alt="" />
                 </a>
             </div>
             <div class="module-container pull-right">

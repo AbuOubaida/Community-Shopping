@@ -48,13 +48,13 @@
                         </div>
 
                         <div class="divider--shape-1down">
-                            <a href="#"><div class="product--type text--capitalize"><span>{{$p->category_name}}</span></div></a>
                         </div>
                     </div>
 
                     <div class="product--content">
                         <a href="{{route('client.single.product.view',['productSingleID'=>encrypt($p->id)])}}">
                             <div class="product--title">
+                                <span><a href="#"><div class="product--type text--capitalize"><span>{{$p->category_name}}</span></div></a></span>
                                 <h3>{{$p->p_name}}</h3>
                                 <small>
                                     @if($p->shop_name)
@@ -79,7 +79,21 @@
                                 <br><br>
                             @endif
                             <div class="product--price">
-                                <span>BDT {{$p->p_price}}/=</span>
+                                @if($p->offer_status)
+                                    <small class="text-red"><del>BDT {{$p->p_price}}/=</del>
+                                        @php
+                                            $offer = $p->offer_percentage;
+                                            $discount = (($p->p_price * $offer)/100)
+                                        @endphp
+                                        <span>(-@if($offer <=0 ) 0 @else {{$offer}} @endif%)</span>
+                                    </small>
+                                    <br>
+                                    <br>
+                                    <span>BDT {{($p->p_price - $discount)}}/=</span>
+                                @else
+                                    <br><br>
+                                    <span>BDT {{$p->p_price}}/=</span>
+                                @endif
                             </div>
                         </a>
                         <br>

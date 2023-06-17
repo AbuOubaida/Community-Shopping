@@ -42,3 +42,8 @@ td {
 .alert {
     z-index: 10000;
 }
+.card {
+    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: auto;
+}
