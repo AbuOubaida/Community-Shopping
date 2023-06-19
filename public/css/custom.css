@@ -30,15 +30,15 @@
 .bg-text h1 {
     font-family: cursive;
 }
-th {
-    vertical-align: initial;
-    padding-right: 5px;
-    white-space:nowrap
-}
-td {
-    vertical-align: initial;
-    width: 100%;
-}
+/*th {*/
+/*    vertical-align: initial;*/
+/*    padding-right: 5px;*/
+/*    white-space:nowrap*/
+/*}*/
+/*td {*/
+/*    vertical-align: initial;*/
+/*    width: 100%;*/
+/*}*/
 .alert {
     z-index: 10000;
 }
@@ -46,4 +46,7 @@ td {
     overflow: hidden;
     overflow-x: auto;
     overflow-y: auto;
+}
+.text-active {
+    color: #0d6efd!important;
 }

@@ -14,6 +14,11 @@ if(window.location.port)
     $(document).ajaxStart(function (){
         $("#ajax_loader").show();
     });
+    // $('#datatablesSimple').dataTable( {
+    //     "columnDefs": [
+    //         { "width": "10%", "targets": 0 }
+    //     ]
+    // });
     $(document).ready(function (){
         $("#shipping-submit").click(function (e){
             e.preventDefault()

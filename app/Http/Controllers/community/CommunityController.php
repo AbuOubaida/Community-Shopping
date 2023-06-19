@@ -49,7 +49,7 @@ class CommunityController extends Controller
      */
     public function index()
     {
-        $headerData = ['app'=>'Online Food Delivery System','role'=>'Community','title'=>'Dashboard'];
+        $headerData = ['app'=>str_replace("_",' ',config("app.name")),'role'=>'Community','title'=>'Dashboard'];
         return view('back-end.community.dashboard',compact('headerData'));
     }
 

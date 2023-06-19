@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\superadmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\order;
 use Illuminate\Http\Request;
 
-class SuperAdminDashboardController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,7 @@ class SuperAdminDashboardController extends Controller
      */
     public function index()
     {
-        $headerData = ['app'=>str_replace('_', ' ', config('app.name')),'role'=>'Super Admin','title'=>'Dashboard'];
-        return view('back-end.superadmin.dashboard',compact('headerData'));
+        //
     }
 
     /**
@@ -43,10 +42,10 @@ class SuperAdminDashboardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(order $order)
     {
         //
     }
@@ -54,10 +53,10 @@ class SuperAdminDashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(order $order)
     {
         //
     }
@@ -66,10 +65,10 @@ class SuperAdminDashboardController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, order $order)
     {
         //
     }
@@ -77,10 +76,10 @@ class SuperAdminDashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(order $order)
     {
         //
     }

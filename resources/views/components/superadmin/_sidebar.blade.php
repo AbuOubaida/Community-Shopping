@@ -113,8 +113,8 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:</div>
-            Start Bootstrap
+            <div class="small">Logged in as: {!! \Illuminate\Support\Facades\Auth::user()->roles()->first()->display_name !!}</div>
+            {!! str_replace('_', ' ', config('app.name')) !!}
         </div>
     </nav>
 </div>

@@ -152,7 +152,8 @@
 @else
     <div class="header">
         <a href="{{route('root')}}" class="logo-bg"><img class="logo-light" src="{{url("client-site/images/logo/cms.png")}}"/></a>
-        <a href="" >View order</a>
+        <a href="@if(\Illuminate\Support\Facades\Auth::user()->hasRole("user")) {!! route('order.single') !!} @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole("community")) {!! route('community.order.single') !!}
+        @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole("vendor")) {!! route('vendor.my.order.single') !!} @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole("superadmin")) {!! route('super.my.order.single') !!} @else {!! route('login') !!} @endif" >View order</a>
     </div>
     <div class="head-title">
         <h4 class="text-center m-0 p-0" style="color: #1abc9c">Order submit successfully!</h4>

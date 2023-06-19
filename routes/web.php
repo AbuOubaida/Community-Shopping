@@ -117,6 +117,11 @@ Route::middleware('auth')->group(function () {
                 });
             });
         });
+
+        Route::controller(\App\Http\Controllers\superadmin\OrderController::class)->group(function (){
+            Route::match(['get','post'],'my-order','myOrder')->name('super.my.order');
+            Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('super.my.order.single');
+        });
     });
 
     #.2.3.Group For admin role access++++++++++++++++++++++++++++++++++++++++
@@ -131,6 +136,10 @@ Route::middleware('auth')->group(function () {
                 Route::match(['get'],'list','show')->name('admin.list.user');
                 Route::delete('delete-user','destroy')->name('admin.delete.user');
             });
+        });
+        Route::controller(\App\Http\Controllers\admin\OrderController::class)->group(function (){
+            Route::get('my-order-list','myOrder')->name('admin.my.order');
+            Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('admin.my.order.single');
         });
 
     });
@@ -169,6 +178,9 @@ Route::middleware('auth')->group(function () {
 
                 Route::get('new-order-delivery/{oID}','orderDelivery')->name('order.delivery');
                 Route::post('update-order-delivery','updateOrderDelivery')->name('update.order');
+
+                Route::get('my-order-list','myOrder')->name('vendor.my.order');
+                Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('vendor.my.order.single');
             });
         });
     });
@@ -192,6 +204,10 @@ Route::middleware('auth')->group(function () {
             Route::match(['get','post'],'create-community','createCommunity')->name('create.community');
             Route::match(['get','post'],'edit-community','editCommunity')->name('edit.community');
             Route::match(['get','post'],'my-community','myCommunity')->name('my.community');
+        });
+        Route::controller(\App\Http\Controllers\community\OrderController::class)->group(function (){
+            Route::match(['get','post'],'my-order','myOrder')->name('community.my.order');
+            Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('community.order.single');
         });
 
 //        Route::controller(OrderController::class)->group(function (){

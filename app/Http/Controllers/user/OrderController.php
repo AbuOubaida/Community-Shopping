@@ -13,7 +13,7 @@ class OrderController extends Controller
 {
     public function myOrder()
     {
-        $headerData = ['app'=>'Online Food Delivery System','role'=>'User','title'=>'My Order List'];
+        $headerData = ['app'=>str_replace("_"," ",config("app.name")),'role'=>'User','title'=>'My Order List'];
         $me = Auth::user();
         $orders = order::leftJoin('users as u','u.id','orders.customer_id')
             ->select(DB::raw("(select count(id) from order_products as op where op.order_id = orders.order_id) as nop"),'u.name as customer_name','orders.*')->where('orders.customer_id',$me->id)->get();
@@ -23,7 +23,7 @@ class OrderController extends Controller
     public function orderSingle($orderID)
     {
 //        dd(route("my.order.list"));
-        $headerData = ['app'=>'Online Food Delivery System','role'=>'User','title'=>'My Order view'];
+        $headerData = ['app'=>str_replace("_"," ",config("app.name")) ,'role'=>'User','title'=>'My Order view'];
         $cID = Auth::user()->id;
         $order = order::where('order_id',$orderID)->where('customer_id',$cID)->first();
         $order_products = Order_product::leftJoin("products as p",'p.id','order_products.product_id')->where('order_products.order_id',$orderID)->where('order_products.customer_id',$cID)->select('p.p_name as product_name','order_products.*')->get();
@@ -113,7 +113,25 @@ class OrderController extends Controller
                                 ]);
                             }
                         }
-                        echo route("my.order.list");
+                        if (Auth::user()->hasRole('user'))
+                        {
+                            echo route("my.order.list");
+                        }elseif (Auth::user()->hasRole('community'))
+                        {
+                            echo route("community.my.order");
+                        }elseif (Auth::user()->hasRole('vendor'))
+                        {
+                            echo route("vendor.my.order");
+                        }elseif (Auth::user()->hasRole('admin'))
+                        {
+                            echo route("admin.my.order");
+                        }elseif (Auth::user()->hasRole('superadmin'))
+                        {
+                            echo route("super.my.order");
+                        }else {
+                            echo route('login');
+                        }
+
                     }catch (\Throwable $exception)
                     {
                         echo json_encode(array(
