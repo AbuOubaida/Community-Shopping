@@ -8,7 +8,7 @@
             <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
                 <div class="heading heading-3 mb-30 mt-10 text--center">
                     <p class="heading--subtitle">Discover</p>
-                    <h2 class="heading--title mb-0">Latest Dishes</h2>
+                    <h2 class="heading--title mb-0">Latest Products</h2>
                     <div class="divider--shape-4"></div>
                 </div>
             </div>
@@ -166,6 +166,11 @@
 {{--            Product List Start Here--}}
             @include('client-site.product._product-list')
 {{--            Product List End Here--}}
+        </div>
+        <div class="row text-center">
+            <div class="product--action">
+                <a href="{{route("client.product.list")}}" class="btn btn-success">View More</a>
+            </div>
         </div>
     </div>
 </section>
