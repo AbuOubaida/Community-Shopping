@@ -169,7 +169,7 @@
         </div>
         <div class="row text-center">
             <div class="product--action">
-                <a href="{{route("client.product.list")}}" class="btn btn-success">View More</a>
+                <a href="{{route("client.product.list")}}" class="btn btn-info">Show More</a>
             </div>
         </div>
     </div>
