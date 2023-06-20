@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>@isset($headerData){{$headerData['app']}} || {{$headerData['role']}} || {{$headerData['title']}} @endisset</title>
+    <title>{{str_replace('_',' ',config('app.name'))}} || {{\Illuminate\Support\Facades\Auth::user()->roles()->first()->display_name}} || {{str_replace('.', ' ', \Route::currentRouteName())}}</title>
     <x-community._header_link/>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 </head>

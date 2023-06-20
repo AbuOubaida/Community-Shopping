@@ -4,6 +4,7 @@ namespace App\Http\Controllers\vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\order;
+use App\Models\Order_product;
 use App\Models\shop_info;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -38,16 +39,33 @@ class orderController extends Controller
         }
 
     }
-    public function newOrder ()
+    public function primaryOrder ()
     {
         try {
-            $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'New Order List'];
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'New Order List'];
             $me = Auth::user();
-            $orders = order::leftJoin('users as u','u.id','orders.customer_id')
-                ->leftJoin('products as p','p.id','orders.products_id')
-                ->select('u.name as customer_name','p.p_name as product','p.p_image as image','orders.*')
-                ->where('orders.order_complete_status','0')->where('orders.vendor_id',$me->id)->get();
-            return view('back-end.vendor.orders.order-list',compact('headerData','orders'));
+            $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
+                ->leftJoin("products as p",'p.id','order_products.product_id')
+                ->leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')
+                ->where('Order_products.order_status',1)->where('order_products.vendor_id',$me->id)->get();
+            return view('back-end.vendor.orders.primary.order-list',compact('headerData','primaryOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function acceptedOrder ()
+    {
+        try {
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'New Order List'];
+            $me = Auth::user();
+            $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
+                ->leftJoin("products as p",'p.id','order_products.product_id')
+                ->leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')
+                ->where('Order_products.order_status',2)->where('order_products.vendor_id',$me->id)->get();
+            return view('back-end.vendor.orders.accepted.order-list',compact('headerData','primaryOrders'));
         }catch (\Throwable $exception)
         {
             return back()->with('error',$exception->getMessage());
@@ -56,7 +74,7 @@ class orderController extends Controller
 
     public function viewOrder($orderID)
     {
-        $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'New Order View'];
+        $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'New Order View'];
         $me = Auth::user();
         $order = order::leftJoin('users as u','u.id','orders.customer_id')
             ->leftJoin('products as p','p.id','orders.products_id')
@@ -67,7 +85,7 @@ class orderController extends Controller
     }
     public function delOrder ()
     {
-        $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'New Order List'];
+        $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'New Order List'];
         $me = Auth::user();
         $orders = order::leftJoin('users as u','u.id','orders.customer_id')
             ->leftJoin('products as p','p.id','orders.products_id')
@@ -78,7 +96,7 @@ class orderController extends Controller
 
     public function orderDelivery($oID)
     {
-        $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'New Order Delivery'];
+        $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'New Order Delivery'];
         $order = order::where('id',$oID)->first();
         $deliveryPerson = User::leftJoin('role_user as ru','ru.user_id','users.id')->where('ru.role_id','4')->select('users.name as delivery_p_n','users.id as user_id')->get();
         return view('back-end.vendor.orders.delivery',compact('deliveryPerson','order','headerData'));

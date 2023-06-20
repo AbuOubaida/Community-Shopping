@@ -3,10 +3,17 @@
         <div class="sb-sidenav-menu">
             <div class="nav">
                 <div class="sb-sidenav-menu-heading">Core</div>
+            @if("community.dashboard" == Route::currentRouteName() )
+                <a class="nav-link text-active" href="{{route('community.dashboard')}}">
+                    <div class="sb-nav-link-icon text-active"><i class="fas fa-tachometer-alt"></i></div>
+                    Dashboard
+                </a>
+            @else
                 <a class="nav-link" href="{{route('community.dashboard')}}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Dashboard
                 </a>
+            @endif
             @if("my.community" == Route::currentRouteName() )
                 <a class="nav-link text-active" href="{{route('my.community')}}">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-people-group"></i></div>
@@ -49,11 +56,9 @@
                     @else
                         <a class="nav-link" href="{{route('community.my.order')}}">My order list</a>
                     @endif
-
-
                     </nav>
                 </div>
-            {{--Sub-Head Start--}}
+            {{--Sub-Head End--}}
             </div>
         </div>
         <div class="sb-sidenav-footer">

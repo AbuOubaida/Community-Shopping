@@ -2,10 +2,20 @@
 @section('content')
     <main>
         <div class="container-fluid px-4">
-            <h1 class="mt-4">{{$headerData['title']}}</h1>
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">{{$headerData['title']}}</li>
-            </ol>
+            <div class="row">
+                <div class="col-md-4">
+                    <h1 class="mt-4 text-capitalize">{{str_replace('.', ' ', \Route::currentRouteName())}}</h1>
+                    <ol class="breadcrumb mb-4 bg-none">
+                        <li class="breadcrumb-item">
+                            <a href="{{\Illuminate\Support\Facades\URL::previous()}}" class="text-capitalize text-chl">Previous</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a style="text-decoration: none;" href="#" class="text-capitalize text-active">{{str_replace('.', ' ', \Route::currentRouteName())}}</a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card border-0 rounded-lg">

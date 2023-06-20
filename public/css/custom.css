@@ -50,3 +50,9 @@
 .text-active {
     color: #0d6efd!important;
 }
+.bg-none {
+    background: none!important;
+}
+a {
+    color: black;
+}

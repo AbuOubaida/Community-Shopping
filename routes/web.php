@@ -171,7 +171,8 @@ Route::middleware('auth')->group(function () {
             });
 
             Route::controller(\App\Http\Controllers\vendor\orderController::class)->group(function (){
-                Route::get('new-order-list','newOrder')->name('new.order.list');
+                Route::get('primary-order-list','primaryOrder')->name('primary.order.list');
+                Route::get('accepted-order-list','acceptedOrder')->name('accepted.order.list');
                 Route::get('del-order-list','delOrder')->name('del.order.list');
                 Route::match(['get'],'view-order/{orderID}','viewOrder')->name('vendor.view.order');
                 Route::delete('delete-order','destroy')->name('vendor.delete.order');
