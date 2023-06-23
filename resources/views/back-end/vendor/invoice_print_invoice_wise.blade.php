@@ -200,30 +200,30 @@
                     <td>
                         <div class="box-text">
                             <p> {!! $order->c_name !!},</p>
-                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('user') ||\Illuminate\Support\Facades\Auth::user()->hasRole('admin') ||\Illuminate\Support\Facades\Auth::user()->hasRole('superadmin'))
-                            <p>{!! $order->delivery_address !!}</p>
-                            <p>Contact: {!! $order->c_phone !!}</p>
-                            <p>Email: {!! $order->c_email !!}</p>
-                        @endif
+                            @if(\Illuminate\Support\Facades\Auth::user()->hasRole('user') ||\Illuminate\Support\Facades\Auth::user()->hasRole('admin') ||\Illuminate\Support\Facades\Auth::user()->hasRole('superadmin'))
+                                <p>{!! $order->delivery_address !!}</p>
+                                <p>Contact: {!! $order->c_phone !!}</p>
+                                <p>Email: {!! $order->c_email !!}</p>
+                            @endif
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
         @if(\Illuminate\Support\Facades\Auth::user()->hasRole('user') ||\Illuminate\Support\Facades\Auth::user()->hasRole('admin') ||\Illuminate\Support\Facades\Auth::user()->hasRole('superadmin'))
-        <div class="table-section bill-tbl w-100 mt-10">
-            <table class="table w-100 mt-10">
-                <tr>
-                    <th class="w-50">Payment Method</th>
-                    <th class="w-50">Shipping Method</th>
-                </tr>
-                <tr>
-                    <td>@if($order->payment_method == 1) {{"Online Payment"}} @elseif($order->payment_method == 2){{"Cash On Delivery"}} @else
-                        {{"Undefined"}} @endif</td>
-                    <td>Community Shipping Charge BDT {!! $order->shipping_charge !!}/=</td>
-                </tr>
-            </table>
-        </div>
+            <div class="table-section bill-tbl w-100 mt-10">
+                <table class="table w-100 mt-10">
+                    <tr>
+                        <th class="w-50">Payment Method</th>
+                        <th class="w-50">Shipping Method</th>
+                    </tr>
+                    <tr>
+                        <td>@if($order->payment_method == 1) {{"Online Payment"}} @elseif($order->payment_method == 2){{"Cash On Delivery"}} @else
+                                {{"Undefined"}} @endif</td>
+                        <td>Community Shipping Charge BDT {!! $order->shipping_charge !!}/=</td>
+                    </tr>
+                </table>
+            </div>
         @endif
         <div class="table-section bill-tbl w-100 mt-10">
             <table class="table w-100 mt-10">
@@ -262,6 +262,7 @@
                         <td colspan="1">Not Found!</td>
                     </tr>
                 @endif
+
             </table>
             <div class="total-part float-right">
                 <table class="table w-100 mt-10">

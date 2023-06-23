@@ -62,27 +62,27 @@
                                             @foreach($primaryOrders as $o)
                                                 <tr>
                                                     <td>{{$i++}}</td>
-                                                    <td><a href=""><img style="height: 50px; border-radius: 5px" src="{!! url("assets/back-end/vendor/product/".$o->p_image) !!}" alt=""> &nbsp;{{$o->p_name}}</a></td>
+                                                    <td><a target="_blank" href="{{route('vendor.edit.product',['productID'=>$o->product_id])}}"><img style="height: 50px; border-radius: 5px" src="{!! url("assets/back-end/vendor/product/".$o->p_image) !!}" alt=""> &nbsp;{{$o->p_name}}</a></td>
                                                     <td>{{date('d-m-Y',strtotime($o->created_at))}}</td>
-                                                    <td><a href="">{{$o->invoice_id}}</a></td>
-                                                    <td><a href="{{route('vendor.view.order',['orderID'=>$o->id])}}">{{$o->order_id}}</a></td>
+                                                    <td><a href="{!! route('vendor.view.invoice',['invoiceID'=>encrypt($o->invoice_id)]) !!}">{{$o->invoice_id}}</a></td>
+                                                    <td><a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}">{{$o->order_id}}</a></td>
                                                     <td>{{$o->order_quantity}}</td>
                                                     <td>BDT {{$o->unite_price}}/=</td>
                                                     <td class="text-capitalize"> {{$o->customer_name}}</td>
                                                     <td>{{$o->p_quantity}}</td>
                                                     <td class="text-center">
-                                                        <a href="{{route('vendor.view.order',['orderID'=>$o->id])}}" class="text-primary" title="View Order"><i class="fas fa-eye"></i></a>
-                                                        <form action="#" method="post" class="d-inline-block">
+                                                        <a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}" class="text-primary" title="View Order"><i class="fas fa-eye"></i></a>
+                                                        <form action="{!! route("accepted.order") !!}" method="post" class="d-inline-block">
                                                             {!! method_field('put') !!}
                                                             {!! csrf_field() !!}
-                                                            <input type="hidden" name="product_id" value="{{$o->id}}">
-                                                            <button title="Accept Order" class="btn-style-none d-inline-block text-success" onclick="return confirm('Are you sure Accept this Order?')" type="submit"><i class="fas fa-check"></i></button>
+                                                            <input type="hidden" name="product_id" value="{{encrypt($o->id)}}">
+                                                            <button title="Accept Order" class="btn-style-none d-inline-block text-success" onclick="return confirm('Are you sure accept this Order?')" type="submit"><i class="fas fa-check"></i></button>
                                                         </form>
                                                         <form action="{{route('vendor.delete.order')}}" method="post" class="d-inline-block">
                                                             {!! method_field('delete') !!}
                                                             {!! csrf_field() !!}
-                                                            <input type="hidden" name="product_id" value="{{$o->id}}">
-                                                            <button title="Cancel Order" class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure Cancel this Order?')" type="submit"><i class="fas fa-trash"></i></button>
+                                                            <input type="hidden" name="product_id" value="{{encrypt($o->id)}}">
+                                                            <button title="Cancel Order" class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure cancel this Order?')" type="submit"><i class="fas fa-trash"></i></button>
                                                         </form>
                                                     </td>
                                                 </tr>

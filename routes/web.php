@@ -48,7 +48,7 @@ Route::group(['prefix'=>'hidden-dirr'],function (){
     });
 });
 
-
+//Front site start here
 Route::controller(ClientProductController::class)->group(function (){
     Route::match(['get','post'],'single-view-product/{productSingleID}','index')->name('client.single.product.view');
     Route::match(['get','post'],'shop','show')->name('client.product.list');
@@ -171,15 +171,26 @@ Route::middleware('auth')->group(function () {
             });
 
             Route::controller(\App\Http\Controllers\vendor\orderController::class)->group(function (){
+                //Shop order start
                 Route::get('primary-order-list','primaryOrder')->name('primary.order.list');
+
                 Route::get('accepted-order-list','acceptedOrder')->name('accepted.order.list');
-                Route::get('del-order-list','delOrder')->name('del.order.list');
+                Route::put('accepted-order','acceptedOrder')->name('accepted.order');
+
                 Route::match(['get'],'view-order/{orderID}','viewOrder')->name('vendor.view.order');
-                Route::delete('delete-order','destroy')->name('vendor.delete.order');
+                Route::match(['post','get'],'invoice-pdf-product-wise/{orderID}','InvoicePDF')->name('vendor.invoice.pdf.product');
 
-                Route::get('new-order-delivery/{oID}','orderDelivery')->name('order.delivery');
-                Route::post('update-order-delivery','updateOrderDelivery')->name('update.order');
+                Route::match(['get'],'view-invoice/{invoiceID}','viewInvoice')->name('vendor.view.invoice');
+                Route::match(['get'],'view-invoice-pdf/{invoiceID}','viewInvoicePdf')->name('vendor.view.invoice.pdf');
 
+                Route::put('submit-order','submitAdmin')->name('submit.order.admin');
+
+                Route::get('cancel-order-list','canceledOrder')->name('cancel.order.list');
+                Route::delete('cancel-order','destroy')->name('vendor.delete.order');
+
+                Route::match(['get'],'complete-order-list','completeOrderList')->name('vendor.complete.order.list');
+
+                // Shop order end
                 Route::get('my-order-list','myOrder')->name('vendor.my.order');
                 Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('vendor.my.order.single');
             });
@@ -204,12 +215,15 @@ Route::middleware('auth')->group(function () {
             Route::match(['get','post'],'my-community','myCommunity')->name('my.community');
             Route::match(['get','post'],'create-community','createCommunity')->name('create.community');
             Route::match(['get','post'],'edit-community','editCommunity')->name('edit.community');
-            Route::match(['get','post'],'my-community','myCommunity')->name('my.community');
+//            Route::match(['get','post'],'my-community','myCommunity')->name('my.community');
         });
+        // Community self order (My order)
         Route::controller(\App\Http\Controllers\community\OrderController::class)->group(function (){
             Route::match(['get','post'],'my-order','myOrder')->name('community.my.order');
             Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('community.order.single');
         });
+
+        // Community order (Order for delivery)
 
 //        Route::controller(OrderController::class)->group(function (){
 //            Route::get('my-order-list','myOrder')->name('my.order.list');

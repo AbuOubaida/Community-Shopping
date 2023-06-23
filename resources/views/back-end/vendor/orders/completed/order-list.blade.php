@@ -100,14 +100,6 @@
                                             <td>{{$o->p_quantity}}</td>
                                             <td>
                                                 <a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}" class="text-primary" title="View Order"><i class="fas fa-eye"></i></a>
-                                                @if($o->order_status == 2)
-                                                    <form action="{!! route("submit.order.admin") !!}" method="post" class="d-inline-block">
-                                                        @csrf
-                                                        @method('put')
-                                                        <input type="hidden" name="order_id" value="{{encrypt($o->id)}}">
-                                                        <button title="Send request to admin" class="btn-style-none d-inline-block text-success" onclick="return confirm('Are you sure submit this order to admin?')" type="submit"><i class="fas fa-check"></i></button>
-                                                    </form>
-                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

@@ -31,7 +31,7 @@
 {{--        My Shop Start--}}
                 <div class="sb-sidenav-menu-heading">Interface</div>
 {{----------Order Start here--}}
-            @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "del.order.list" || Route::currentRouteName() == "accepted.order.list")
+            @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list" || Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list")
                 <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
                     Order
@@ -48,7 +48,7 @@
             @endif
                     <nav class="sb-sidenav-menu-nested nav">
 {{----------------------Shop Order Start Here--}}
-                        @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list")
+                        @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list"||Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list")
                             <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
                                 Shop Order
                                 <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
@@ -76,8 +76,30 @@
                                 <a class="nav-link text-capitalize" href="{{route('accepted.order.list')}}">Accepted list</a>
                             @endif
 {{--                        Accepted Order List End --}}
-
-                                <a class="nav-link" href="{{route('del.order.list')}}">Complete list</a>
+{{--------------------------Compplete Order List Start--}}
+                            @if(Route::currentRouteName() == "vendor.complete.order.list")
+                                <a class="nav-link text-active text-capitalize" href="{!! route('vendor.complete.order.list') !!}">Completed list</a>
+                            @else
+                                <a class="nav-link text-capitalize" href="{!! route('vendor.complete.order.list') !!}">Completed list</a>
+                            @endif
+{{--                        Compplete Order List End --}}
+{{--------------------------Cancled Order List Start--}}
+                            @if(Route::currentRouteName() == "cancel.order.list")
+                                <a class="nav-link text-active text-capitalize" href="{{route('cancel.order.list')}}">Canceled list</a>
+                            @else
+                                <a class="nav-link text-capitalize" href="{{route('cancel.order.list')}}">Canceled list</a>
+                            @endif
+{{--                        Cancled Order List End --}}
+{{--------------------------Order view Start--}}
+                            @if(Route::currentRouteName() == "vendor.view.order")
+                                <a class="nav-link text-active text-capitalize" href="{{route("vendor.view.order",['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}">View Order</a>
+                            @endif
+{{--                        Order view End --}}
+{{--------------------------Order view Start--}}
+                            @if(Route::currentRouteName() == "vendor.view.invoice")
+                                <a class="nav-link text-active text-capitalize" href="{{route("vendor.view.invoice",['invoiceID'=>\Illuminate\Support\Facades\Request::route('invoiceID')])}}">View Invoice</a>
+                            @endif
+{{--                        Order view End --}}
                             </nav>
                         </div>
 {{--                    Shop Order End Here--}}
@@ -129,8 +151,11 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
+            <div class="small">
+                Welcome @if(\Illuminate\Support\Facades\Auth::user()->gender == 1) {{"Mr. "}} @elseif(\Illuminate\Support\Facades\Auth::user()->gender == 2) {{"Ms. "}}@else  @endif
+                {!! \Illuminate\Support\Facades\Auth::user()->name !!}
+            </div>
             <div class="small">Logged in as: {!! \Illuminate\Support\Facades\Auth::user()->roles->first()->display_name !!}</div>
-            {!! str_replace('_'," ",config("app.name")) !!}
         </div>
     </nav>
 </div>

@@ -146,8 +146,8 @@
     }
 </style>
 <body>
-@if(isset($order) && isset($order_products))
-    @if(($order == null && count($order_products) <= 0))
+@if(isset($order_product))
+    @if($order_product == null)
         <h4 style="display: block;text-align: center"><strong>404!</strong> Not Found!</h4>
     @else
         <div class="head-title">
@@ -155,9 +155,9 @@
         </div>
         <div class="add-detail mt-10">
             <div class="w-50 float-left mt-10">
-                <p class="m-0 pt-5 text-bold w-100">Invoice Id - <span class="gray-color">#{!! $order->invoice_id !!}</span></p>
-                <p class="m-0 pt-5 text-bold w-100">Order Id - <span class="gray-color">{!! $order->order_id !!}</span></p>
-                <p class="m-0 pt-5 text-bold w-100">Order Date - <span class="gray-color">{!! date('d-M-y', strtotime($order->created_at)) !!}</span></p>
+                <p class="m-0 pt-5 text-bold w-100">Invoice Id - <span class="gray-color">#{!! $order_product->invoice_id !!}</span></p>
+                <p class="m-0 pt-5 text-bold w-100">Order Id - <span class="gray-color">{!! $order_product->order_id !!}</span></p>
+                <p class="m-0 pt-5 text-bold w-100">Order Date - <span class="gray-color">{!! date('d-M-y', strtotime($order_product->created_at)) !!}</span></p>
             </div>
             <div class="w-50 float-left logo mt-10 position-relative">
                 <img class="logo-light " src="{{url("client-site/images/logo/cms.png")}}"/>
@@ -199,32 +199,12 @@
                     </td>
                     <td>
                         <div class="box-text">
-                            <p> {!! $order->c_name !!},</p>
-                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('user') ||\Illuminate\Support\Facades\Auth::user()->hasRole('admin') ||\Illuminate\Support\Facades\Auth::user()->hasRole('superadmin'))
-                            <p>{!! $order->delivery_address !!}</p>
-                            <p>Contact: {!! $order->c_phone !!}</p>
-                            <p>Email: {!! $order->c_email !!}</p>
-                        @endif
+                            <p>Mr./Ms. {!! $order_product->customer_name !!},</p>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
-        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('user') ||\Illuminate\Support\Facades\Auth::user()->hasRole('admin') ||\Illuminate\Support\Facades\Auth::user()->hasRole('superadmin'))
-        <div class="table-section bill-tbl w-100 mt-10">
-            <table class="table w-100 mt-10">
-                <tr>
-                    <th class="w-50">Payment Method</th>
-                    <th class="w-50">Shipping Method</th>
-                </tr>
-                <tr>
-                    <td>@if($order->payment_method == 1) {{"Online Payment"}} @elseif($order->payment_method == 2){{"Cash On Delivery"}} @else
-                        {{"Undefined"}} @endif</td>
-                    <td>Community Shipping Charge BDT {!! $order->shipping_charge !!}/=</td>
-                </tr>
-            </table>
-        </div>
-        @endif
         <div class="table-section bill-tbl w-100 mt-10">
             <table class="table w-100 mt-10">
                 <tr>
@@ -236,27 +216,25 @@
                     <th style="width: 15%">Tax Amount</th>
                     <th style="width: 15%">Grand Total</th>
                 </tr>
-                @if(count($order_products))
+                @if($order_product)
                     @php
                         $n = 1;
                         $total=0;
                         $totalTax=0;
                     @endphp
-                    @foreach($order_products as $op)
-                        <tr align="center">
-                            <td>{!! $n++ !!}</td>
-                            <td>{!! $op->product_name !!}</td>
-                            <td>BDT {!! $op->unite_price !!}/=</td>
-                            <td>{!! $op->order_quantity !!}</td>
-                            <td>BDT {!! $op->total_price !!}/=</td>
-                            <td>BDT {!! $op->tax_amount !!}/=</td>
-                            <td>BDT {!!($op->total_price + $op->tax_amount) !!}/=</td>
-                        </tr>
-                        @php
-                            $total += $op->total_price;
-                            $totalTax += $op->tax_amount;
-                        @endphp
-                    @endforeach
+                    <tr align="center">
+                        <td>{!! $n++ !!}</td>
+                        <td>{!! $order_product->product_name !!}</td>
+                        <td>BDT {!! $order_product->unite_price !!}/=</td>
+                        <td>{!! $order_product->order_quantity !!}</td>
+                        <td>BDT {!! $order_product->total_price !!}/=</td>
+                        <td>BDT {!! $order_product->tax_amount !!}/=</td>
+                        <td>BDT {!!($order_product->total_price + $order_product->tax_amount) !!}/=</td>
+                    </tr>
+                    @php
+                        $total += $order_product->total_price;
+                        $totalTax += $order_product->tax_amount;
+                    @endphp
                 @else
                     <tr align="center">
                         <td colspan="1">Not Found!</td>
@@ -271,16 +249,12 @@
                         <td class="w-112-right">BDT {!! $total !!}/=</td>
                     </tr>
                     <tr>
-                        <th class="w-200-right">Shipping Charge:</th>
-                        <td class="w-112-right">BDT {!! $order->shipping_charge !!}/=</td>
-                    </tr>
-                    <tr>
                         <th class="w-200-right">Tax (0%):</th>
                         <td class="w-112-right">BDT {!! $totalTax !!}/=</td>
                     </tr>
                     <tr>
                         <th class="w-200-right">Total Payable:</th>
-                        <td class="w-112-right">BDT {!! ($total + $totalTax + $order->shipping_charge) !!}/=</td>
+                        <td class="w-112-right">BDT {!! ($total + $totalTax) !!}/=</td>
                     </tr>
                     </tbody>
                 </table>
@@ -291,5 +265,6 @@
 @else
     <h4 style="display: block;text-align: center"><strong>404!</strong> Not Found!</h4>
 @endif
+
 </body>
 </html>

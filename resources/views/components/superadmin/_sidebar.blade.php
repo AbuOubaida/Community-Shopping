@@ -113,8 +113,11 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <div class="small">Logged in as: {!! \Illuminate\Support\Facades\Auth::user()->roles()->first()->display_name !!}</div>
-            {!! str_replace('_', ' ', config('app.name')) !!}
+            <div class="small">
+                Welcome @if(\Illuminate\Support\Facades\Auth::user()->gender == 1) {{"Mr. "}} @elseif(\Illuminate\Support\Facades\Auth::user()->gender == 2) {{"Ms. "}}@else  @endif
+                {!! \Illuminate\Support\Facades\Auth::user()->name !!}
+            </div>
+            <div class="small">Logged in as: {!! \Illuminate\Support\Facades\Auth::user()->roles->first()->display_name !!}</div>
         </div>
     </nav>
 </div>
