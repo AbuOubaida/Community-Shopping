@@ -38,6 +38,7 @@ class ClientProductController extends Controller
             ->leftJoin('categories as cate','cate.id','products.category_id')//cate as categories table
             ->leftJoin('shop_infos as shop','shop.owner_id','v.id')//shop as shop_info table
             ->select('v.name as vendor_name','shop.shop_name as shop_name','shop.shop_profile_image as v_image','shop.profile_image_path as v_img_path','c.name as creater_name','up.name as updater_name','cate.c_name as category_name','products.*')->where("products.p_status", 1)->where('products.id',$productID)->first();
+//            dd($product);
             return view('client-site.view-single-product',compact('headerData','product','pageInfo')); // view from resources folder.
         }catch (\Throwable $exception)
         {
@@ -141,7 +142,7 @@ class ClientProductController extends Controller
                     'p_id' => $product->id,
                     'name' => $product->p_name,
                     'quantity' => 1,
-                    'price' => ($product->p_price - $discount),
+                    'price' => round($product->p_price - $discount),
                     'discount' => $discount,
                     'photo' => $product->p_image,
                     'category' => $product->category_name,
@@ -451,7 +452,9 @@ class ClientProductController extends Controller
                             'order_status'=>1,//primary
                             'order_quantity'=>$details['quantity'],
                             'unite_price'=>$details['price'],
-                            'total_price'=>($details['quantity'] * $details['price']),
+                            'total_price'=>round($details['quantity'] * $details['price']),
+                            'discount'=>$details['discount'],
+                            'discount_total'=>round($details['quantity'] * $details['discount']),
                             'payment_status'=>0,//not complete
                             'created_by'=>Auth::user()->id,//not complete
                         ]);

@@ -79,7 +79,7 @@
                                 <br><br>
                             @endif
                             <div class="product--price">
-                                @if($p->offer_status)
+                                @if($p->offer_status && $p->offer_percentage != null && $p->offer_percentage > 0)
                                     <small class="text-red"><del>BDT {{$p->p_price}}/=</del>
                                         @php
                                             $offer = $p->offer_percentage;
@@ -89,7 +89,7 @@
                                     </small>
                                     <br>
                                     <br>
-                                    <span>BDT {{($p->p_price - $discount)}}/=</span>
+                                    <span>BDT {{round($p->p_price - $discount)}}/=</span>
                                 @else
                                     <br><br>
                                     <span>BDT {{$p->p_price}}/=</span>

@@ -31,7 +31,7 @@
 
                         <div class="product--title">
                             <span><a href="#"><div class="product--type text--capitalize"><span>{{$pl->category_name}}</span></div></a></span>
-                            <h3>{{$pl->p_name}}</h3>
+                            <a href="{{route('client.single.product.view',['productSingleID'=>encrypt($pl->id)])}}"><h3>{{$pl->p_name}}</h3></a>
                             <small>
                             @if($pl->shop_name)
                                 <span>A Product by</span><br>
@@ -55,7 +55,7 @@
                             <br><br>
                         @endif
                         <div class="product--price">
-                            @if($pl->offer_status)
+                            @if($pl->offer_status && $pl->offer_percentage != null && $pl->offer_percentage > 0)
                                 <small class="text-red"><del>BDT {{$pl->p_price}}/=</del>
                                 @php
                                 $offer = $pl->offer_percentage;
@@ -65,7 +65,7 @@
                                 </small>
                                 <br>
                                 <br>
-                                <span>BDT {{($pl->p_price - $discount)}}/=</span>
+                                <span>BDT {{round($pl->p_price - $discount)}}/=</span>
                             @else
                                 <br><br>
                                 <span>BDT {{$pl->p_price}}/=</span>

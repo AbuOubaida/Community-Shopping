@@ -142,6 +142,36 @@ input:required:valid {
 [type=radio]:checked + .community-class {
     background: #663398;
 }
+.shop-product .product-cta .btn {
+    margin-left: 0!important;
+}
+.img-zoom-lens {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    /*set the size of the lens:*/
+    width: 100px;
+    height: 100px;
+}
+.img-zoom-container {
+    position: relative!important;
+}
+.product-preview {
+    position: absolute;
+    width: 1000px;
+    height: 800px;
+    z-index: -1;
+    background: white;
+    top: -75px;
+}
+.hide{
+    display: none;
+}
+.show {
+    display: block;
+}
+.img-zoom-container:hover +.product-preview {
+    display: block!important;
+}
 @media screen and (min-width: 992px) {
     .logo-text {
         margin-top: 26px;

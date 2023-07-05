@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <meta name="author" content="zytheme" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+{{--    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />--}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Elegant Restaurant & Cafe Html5 Template" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 {{--    <link href="{{url("client-site//images/favicon/favicon.png")}}" rel="icon" />--}}
@@ -14,9 +15,74 @@
 @else
     <x-client._header_link/> <!--Components from views -->
 @endif
-
-
     <title>{{$headerData['app']}} || {{$headerData['role']}} || {{$headerData['title']}}</title>
+    <script>
+        function imageZoom(imgID, resultID) {
+            let img, lens, result, cx, cy;
+            img = document.getElementById(imgID);
+            result = document.getElementById(resultID);
+            /*create lens:*/
+            lens = document.createElement("DIV");
+            lens.setAttribute("class", "img-zoom-lens");
+            /*insert lens:*/
+            img.parentElement.insertBefore(lens, img);
+            /*calculate the ratio between result DIV and lens:*/
+            cx = result.offsetWidth / lens.offsetWidth;
+            cy = result.offsetHeight / lens.offsetHeight;
+            /*set background properties for the result DIV:*/
+            result.style.backgroundImage = "url('" + img.src + "')";
+            result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+            img.onmouseover = function (){mouseOver()}
+            lens.onmouseover = function (){mouseOver()}
+            img.onmouseout = function (){mouseOut()}
+            lens.onmouseout = function (){mouseOut()}
+            function mouseOver() {
+                result.style.zIndex = 111;
+            }
+            function mouseOut() {
+                result.style.zIndex = -1;
+            }
+            /*execute a function when someone moves the cursor over the image, or the lens:*/
+            lens.addEventListener("mousemove", moveLens);
+            img.addEventListener("mousemove", moveLens);
+            /*and also for touch screens:*/
+            lens.addEventListener("touchmove", moveLens);
+            img.addEventListener("touchmove", moveLens);
+            function moveLens(e) {
+                var pos, x, y;
+                /*prevent any other actions that may occur when moving over the image:*/
+                e.preventDefault();
+                /*get the cursor's x and y positions:*/
+                pos = getCursorPos(e);
+                /*calculate the position of the lens:*/
+                x = pos.x - (lens.offsetWidth / 2);
+                y = pos.y - (lens.offsetHeight / 2);
+                /*prevent the lens from being positioned outside the image:*/
+                if (x > img.width - lens.offsetWidth) {x = img.width - lens.offsetWidth;}
+                if (x < 0) {x = 0;}
+                if (y > img.height - lens.offsetHeight) {y = img.height - lens.offsetHeight;}
+                if (y < 0) {y = 0;}
+                /*set the position of the lens:*/
+                lens.style.left = x + "px";
+                lens.style.top = y + "px";
+                /*display what the lens "sees":*/
+                result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+            }
+            function getCursorPos(e) {
+                var a, x = 0, y = 0;
+                e = e || window.event;
+                /*get the x and y positions of the image:*/
+                a = img.getBoundingClientRect();
+                /*calculate the cursor's x and y coordinates, relative to the image:*/
+                x = e.pageX - a.left;
+                y = e.pageY - a.top;
+                /*consider any page scrolling:*/
+                x = x - window.pageXOffset;
+                y = y - window.pageYOffset;
+                return {x : x, y : y};
+            }
+        }
+    </script>
 </head>
 <body>
     @if(\Request::url() == route('invoice'))
@@ -144,6 +210,10 @@
                 });
             }
         });
+    </script>
+    <script>
+        // Initiate zoom effect:
+        imageZoom("product-src", "product-preview");
     </script>
 </body>
 </html>

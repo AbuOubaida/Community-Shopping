@@ -32,6 +32,7 @@ class HomeController extends Controller
             ->leftJoin('shop_infos as shop','shop.owner_id','v.id')//shop as shop_info table
             ->select('v.name as vendor_name','shop.shop_name as shop_name','shop.shop_profile_image as v_image','shop.profile_image_path as v_img_path','c.name as creater_name','up.name as updater_name','cate.c_name as category_name','products.*')
                 ->where("products.p_status", 1)->where('p_image','!=',null)->orderBy("id", "ASC")->take(4)->get();
+//            dd($productLists);
             return view('client-site.home',compact('uniques','headerData','products','productLists','pageInfo'));
 
         }catch (\Throwable $exception)
