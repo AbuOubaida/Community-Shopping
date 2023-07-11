@@ -85,7 +85,6 @@ class SuperAdminUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'profile' => ['mimes:jpeg,jpg,png,gif,webp|sometimes|nullable|max:20000'],
         ]);
-
         try {
             extract($request->post());
             $img_name = null;
@@ -151,7 +150,7 @@ class SuperAdminUserController extends Controller
     {
         $headerData = ['app'=>'Community Shopping','role'=>'admin','title'=>'User List'];
         $AuthUser = Auth::user();
-        $userList = user::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id','!=',$AuthUser->id)->where('delete_status',0)->select('r.name as role_name','r.id as role_id','users.*')->get();
+        $userList = user::leftJoin('role_user as r_user','users.id','=','r_user.user_id')->leftJoin('roles as r','r_user.role_id','r.id')->where('users.id','!=',$AuthUser->id)->where('delete_status',0)->select('r.name as role_name','r.id as role_id','users.*')->orderBy('id','desc')->get();
         return view('back-end.superadmin.users.show-list',compact('userList','headerData'));
     }
 
@@ -293,7 +292,18 @@ class SuperAdminUserController extends Controller
             ]);
             if (DB::table('roles')->where('id',$roles)->first())
             {
-                DB::table('role_user')->where('user_id',$id)->update(['role_id'=>$roles]);
+                if (DB::table('role_user')->where('user_id',$id)->first())
+                {
+                    DB::table('role_user')->where('user_id',$id)->update(['role_id'=>$roles]);
+                }
+                else
+                {
+                    DB::table('role_user')->insert([
+                        'user_id' => $id,
+                        'role_id' => $roles,
+                        'user_type'=> 'App\Models\User',
+                    ]);
+                }
                 return back()->with('success','Data update successfully');
             }else{
                 return back()->with('error','Invalid User Roles')->withInput();

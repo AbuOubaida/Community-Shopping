@@ -184,7 +184,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="district">District <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="districtlist" name="district" id="district" type="text" placeholder="district" value="@if(old('district')) {{old('district')}} @else @isset($user->district) {{$user->district}} @endisset @endif" onchange="return Obj.district(this,'upazilalist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required/>
+                                            <input class="form-control" list="districtlist" name="district" id="district" type="text" placeholder="district" value="@if(old('district')){{old('district')}}@else @isset($user->district) {{$user->district}}@endisset @endif" onchange="return Obj.district(this,'upazilalist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required/>
                                             <datalist id="districtlist">
                                                 @if(count($districts))
                                                     @foreach($districts as $dt)

@@ -298,6 +298,7 @@ class CommunityController extends Controller
             'community_name' => ['required', 'string', 'max:255'],
             'community_phone' => ['required', 'numeric'],
             'community_email' => ['sometimes', 'nullable', 'regex:/(.+)@(.+)\.(.+)/i'],
+            'type' => ['required', 'string'],
             'country' => ['required', 'string'],
             'division' => ['required', 'string'],
             'district' => ['required', 'string'],
@@ -363,7 +364,7 @@ class CommunityController extends Controller
                 'status'  => 1,// 5 = inactive, 2 = incomplete, 1 = active
                 'delete_status'  => 0, //0 = not deleted, 1 = deleted
                 'community_phone'  => $community_phone,
-                'community_type'  => $community_name,
+                'community_type'  => $type,
                 'community_email'  => $community_email,
                 'home'  => $home,
                 'village'  => $village,

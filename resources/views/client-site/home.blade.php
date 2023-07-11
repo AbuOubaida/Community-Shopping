@@ -55,7 +55,7 @@
                         <a href="{{route('client.single.product.view',['productSingleID'=>encrypt($p->id)])}}">
                             <div class="product--title">
                                 <span><a href="#"><div class="product--type text--capitalize"><span>{{$p->category_name}}</span></div></a></span>
-                                <h3>{{$p->p_name}}</h3>
+                                <a href="{{route('client.single.product.view',['productSingleID'=>encrypt($p->id)])}}"><h3>{{$p->p_name}}</h3></a>
                                 <small>
                                     @if($p->shop_name)
                                         <span>A Product by</span><br>

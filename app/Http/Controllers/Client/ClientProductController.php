@@ -278,25 +278,25 @@ class ClientProductController extends Controller
     private function communityGet(User $user)
     {
         try {
-            $comm = communities::where('village',$user->village)->where('status',1)->get();
+            $comm = communities::where('village',$user->village)->where('village','!=',null)->where('status',1)->get();
             if (count($comm) == 0)
             {
-                $comm = communities::where('word',$user->word)->where('status',1)->take(4)->get();
+                $comm = communities::where('word',$user->word)->where('word','!=',null)->where('status',1)->take(4)->get();
                 if (count($comm) == 0)
                 {
-                    $comm = communities::where('union',$user->union)->where('status',1)->take(4)->get();
+                    $comm = communities::where('union',$user->union)->where('union','!=',null)->where('status',1)->take(4)->get();
                     if (count($comm) == 0)
                     {
-                        $comm = communities::where('upazila',$user->upazila)->where('status',1)->take(4)->get();
+                        $comm = communities::where('upazila',$user->upazila)->where('upazila','!=',null)->where('status',1)->take(4)->get();
                         if (count($comm) == 0)
                         {
-                            $comm = communities::where('district',$user->district)->where('status',1)->take(4)->get();
+                            $comm = communities::where('district',$user->district)->where('district','!=',null)->where('status',1)->take(4)->get();
                             if (count($comm) == 0)
                             {
-                                $comm = communities::where('division',$user->division)->where('status',1)->take(4)->get();
+                                $comm = communities::where('division',$user->division)->where('division','!=',null)->where('status',1)->take(4)->get();
                                 if (count($comm) == 0)
                                 {
-                                    $comm = communities::where('country',$user->country)->where('status',1)->take(4)->get();
+                                    $comm = communities::where('country',$user->country)->where('country','!=',null)->where('status',1)->take(4)->get();
                                     if (count($comm) == 0)
                                     {
                                         $comm = communities::where('status',1)->where(function ($query) use ($user){

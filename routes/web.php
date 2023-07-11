@@ -134,7 +134,11 @@ Route::middleware('auth')->group(function () {
             Route::controller(AdminUserController::class)->group(function (){
                 Route::match(['get','post'],'add','create')->name('admin.add.user');
                 Route::match(['get'],'list','show')->name('admin.list.user');
-                Route::delete('delete-user','destroy')->name('admin.delete.user');
+                Route::match(['get','post'],'user-view/{UserID}','singleViewUser')->name('admin.single.view.user');
+                Route::match(['get','post','put'],'user-edit/{UserID}','edit')->name('admin.edit.single.user');
+                Route::put('user-password-update','passwordUpdate')->name('admin.user.password.update');
+                Route::put('user-status-update','statusUpdate')->name('admin.user.status.update');
+//                Route::delete('delete-user','destroy')->name('admin.delete.user');
             });
         });
         Route::controller(\App\Http\Controllers\admin\OrderController::class)->group(function (){
@@ -166,7 +170,7 @@ Route::middleware('auth')->group(function () {
                 Route::match(['get'],'list-category','showCategory')->name('vendor.list.category');
                 Route::match(['get','post'],'edit-category/{categoryID}','editCategory')->name('vendor.edit.category');
                 Route::match(['get'],'view-category/{categoryID}','viewCategory')->name('vendor.view.category');
-                Route::delete('delete-category','destroyCategory')->name('vendor.delete.category');
+//                Route::delete('delete-category','destroyCategory')->name('vendor.delete.category');
 
             });
 

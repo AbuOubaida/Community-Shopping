@@ -21,9 +21,9 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Category Name</th>
-                                            <th>For Vendor</th>
                                             <th>Create by</th>
                                             <th>Status</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -31,9 +31,9 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Category Name</th>
-                                            <th>For Vendor</th>
                                             <th>Create by</th>
                                             <th>Status</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                         </tfoot>
@@ -46,12 +46,15 @@
                                                 <tr>
                                                     <td>{{$i++}}</td>
                                                     <td>{{$c->c_name}}</td>
-                                                    <td>{{$c->vendor_name}}</td>
-                                                    <td>{{$c->creater_name}}</td>
+                                                    <td>@if(\Illuminate\Support\Facades\Auth::user()->name == $c->creater_name) <span class="badge bg-danger">{{\Illuminate\Support\Facades\Auth::user()->name}} (Me)</span> @else *** @endif</td>
                                                     <td>@if($c->status == 0) <span class="label text-danger">Inactive</span> @else <span class="label text-success">Active</span> @endif</td>
                                                     <td>
-                                                        <a href="{{route('vendor.view.category',['categoryID'=>$c->id])}}" class="text-primary">View</a>
-                                                        <a href="{{route('vendor.edit.category',['categoryID'=>$c->id])}}" class="text-success"> Edit</a>
+                                                        {{$c->c_description}}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{route('vendor.view.category',['categoryID'=>$c->id])}}" class="text-primary"><i class="fas fa-eye"></i></a>
+                                                        @if(\Illuminate\Support\Facades\Auth::user()->name == $c->creater_name) <a href="{{route('vendor.edit.category',['categoryID'=>$c->id])}}" class="text-success"> <i class="fas fa-edit"></i></a> @endif
+
 {{--                                                        <form action="{{route('vendor.delete.category')}}" method="post" class="d-inline-block">--}}
 {{--                                                            {!! method_field('delete') !!}--}}
 {{--                                                            {!! csrf_field() !!}--}}

@@ -165,7 +165,7 @@
                                                     <td>
                                                         <a href="" class="text-primary">View</a>
                                                         <a href="" class="text-success">Edit</a>
-                                                        <form action="{{route('admin.delete.user')}}" method="post" class="d-inline-block">
+                                                        <form action="" method="post" class="d-inline-block">
                                                             {!! method_field('delete') !!}
                                                             {!! csrf_field() !!}
                                                             <input type="hidden" name="user_id" value="{{$slider->id}}">

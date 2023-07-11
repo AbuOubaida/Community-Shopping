@@ -53,14 +53,14 @@
                                                     <td>{{$ul->email}}</td>
                                                     <td>{{$ul->phone}}</td>
                                                     <td>
-{{--                                                        <a href="" class="text-primary">View</a>--}}
-{{--                                                        <a href="" class="text-success">Edit</a>--}}
-                                                        <form action="{{route('admin.delete.user')}}" method="post" class="d-inline-block">
-                                                            {!! method_field('delete') !!}
-                                                            {!! csrf_field() !!}
-                                                            <input type="hidden" name="user_id" value="{{$ul->id}}">
-                                                            <button class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure delete this User?')" type="submit">Delete</button>
-                                                        </form>
+                                                        <a title="View" href="{{route('super.single.view.user',['UserID'=>\Illuminate\Support\Facades\Crypt::encryptString($ul->id)])}}" class="text-primary"><i class="fas fa-eye"></i></a>
+                                                        <a title="Edit" href="{{route('super.edit.single.user',['UserID'=>\Illuminate\Support\Facades\Crypt::encryptString($ul->id)])}}" class="text-success"><i class="fas fa-edit"></i></a>
+{{--                                                        <form action="{{route('admin.delete.user')}}" method="post" class="d-inline-block">--}}
+{{--                                                            {!! method_field('delete') !!}--}}
+{{--                                                            {!! csrf_field() !!}--}}
+{{--                                                            <input type="hidden" name="user_id" value="{{$ul->id}}">--}}
+{{--                                                            <button class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure delete this User?')" type="submit">Delete</button>--}}
+{{--                                                        </form>--}}
                                                     </td>
                                                 </tr>
                                             @endforeach

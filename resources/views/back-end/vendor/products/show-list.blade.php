@@ -59,13 +59,13 @@
                                                     <td>{{$p->creater_name}}</td>
                                                     <td>@if($p->status == "0") <span class="label text-danger">Inactive</span> @else <span class="label text-success">Active</span> @endif</td>
                                                     <td>
-                                                        <a href="{{route('vendor.view.product',['productID'=>$p->id])}}" class="text-primary">View</a>
-                                                        <a href="{{route('vendor.edit.product',['productID'=>$p->id])}}" class="text-success"> Edit</a>
+                                                        <a href="{{route('vendor.view.product',['productID'=>$p->id])}}" class="text-primary"><i class="fas fa-eye"></i></a>
+                                                        <a href="{{route('vendor.edit.product',['productID'=>$p->id])}}" class="text-success"> <i class="fas fa-edit"></i></a>
                                                         <form action="{{route('vendor.delete.product')}}" method="post" class="d-inline-block">
                                                             {!! method_field('delete') !!}
                                                             {!! csrf_field() !!}
                                                             <input type="hidden" name="product_id" value="{{$p->id}}">
-                                                            <button class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure delete this Product?')" type="submit">Delete</button>
+                                                            <button class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure delete this Product?')" type="submit"><i class="fas fa-trash"></i></button>
                                                         </form>
                                                     </td>
                                                 </tr>

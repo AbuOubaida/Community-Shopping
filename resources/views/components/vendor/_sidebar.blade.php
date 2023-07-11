@@ -48,19 +48,19 @@
             @endif
                     <nav class="sb-sidenav-menu-nested nav">
 {{----------------------Shop Order Start Here--}}
-                        @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list"||Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list")
-                            <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
-                                Shop Order
-                                <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse show" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                        @else
-                            <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="false" aria-controls="shopOrder">
-                                Shop Order
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                        @endif
+                    @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list"||Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list")
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
+                            Shop Order
+                            <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse show" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @else
+                        <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="false" aria-controls="shopOrder">
+                            Shop Order
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @endif
                             <nav class="sb-sidenav-menu-nested nav">
 {{--------------------------Primary Order List Start--}}
                             @if(Route::currentRouteName() == "primary.order.list")
@@ -117,32 +117,89 @@
                     </nav>
                 </div>
 {{--            Order End here--}}
-{{--------------user section--}}
+{{--------------Product section start--}}
+            @if(Route::currentRouteName() == "vendor.add.product" || Route::currentRouteName() == "vendor.list.product" || Route::currentRouteName() == "vendor.add.category" || Route::currentRouteName() == "vendor.list.category" || Route::currentRouteName() == "vendor.view.category" || Route::currentRouteName() == "vendor.edit.category" || Route::currentRouteName() == "vendor.view.product" || Route::currentRouteName() == "vendor.edit.product")
+                <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#productPagesLayout" aria-expanded="true" aria-controls="productPagesLayout">
+                    <div class="sb-nav-link-icon text-active"><i class="fas fa-book-open"></i></div>
+                    Products
+                    <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse show" id="productPagesLayout" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+            @else
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                     <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                     Products
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+            @endif
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                    @if(Route::currentRouteName() == "vendor.add.product" || Route::currentRouteName() == "vendor.list.product" || Route::currentRouteName() == "vendor.view.product" || Route::currentRouteName() == "vendor.edit.product")
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#productPages" aria-expanded="true" aria-controls="productPages">
+                            Product
+                            <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse show" id="productPages" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @else
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#productPages" aria-expanded="false" aria-controls="productPages">
                             Product
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                        <div class="collapse" id="productPages" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @endif
                             <nav class="sb-sidenav-menu-nested nav">
+                                @if(Route::currentRouteName() == "vendor.add.product")
+                                <a class="nav-link text-active" href="{{route('vendor.add.product')}}">Add New</a>
+                                @else
                                 <a class="nav-link" href="{{route('vendor.add.product')}}">Add New</a>
+                                @endif
+
+                                @if(Route::currentRouteName() == "vendor.list.product")
+                                <a class="nav-link text-active" href="{{route('vendor.list.product')}}">Show List</a>
+                                @else
                                 <a class="nav-link" href="{{route('vendor.list.product')}}">Show List</a>
+                                @endif
+
+                                @if(Route::currentRouteName() == "vendor.view.product")
+                                    <a class="nav-link text-active text-capitalize" href="{{route("vendor.view.product",['productID'=>\Illuminate\Support\Facades\Request::route('productID')])}}">View Product</a>
+                                @endif
+                                @if(Route::currentRouteName() == "vendor.edit.product")
+                                    <a class="nav-link text-active text-capitalize" href="{{route("vendor.edit.product",['productID'=>\Illuminate\Support\Facades\Request::route('productID')])}}">Edit Product</a>
+                                @endif
                             </nav>
                         </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                    @if(Route::currentRouteName() == "vendor.add.category" || Route::currentRouteName() == "vendor.list.category" || Route::currentRouteName() == "vendor.view.category" || Route::currentRouteName() == "vendor.edit.category")
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#categoryPages" aria-expanded="true" aria-controls="categoryPages">
+                            Category
+                            <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse show" id="categoryPages" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @else
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#categoryPages" aria-expanded="false" aria-controls="categoryPages">
                             Category
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                        <div class="collapse" id="categoryPages" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @endif
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{route('vendor.add.category')}}">Add New</a>
-                                <a class="nav-link" href="{{route('vendor.list.category')}}">Show List</a>
+                                @if(Route::currentRouteName() == "vendor.add.category")
+                                    <a class="nav-link text-active" href="{{route('vendor.add.category')}}">Add New</a>
+                                @else
+                                    <a class="nav-link" href="{{route('vendor.add.category')}}">Add New</a>
+                                @endif
+
+                                @if(Route::currentRouteName() == "vendor.list.category")
+                                    <a class="nav-link text-active" href="{{route('vendor.list.category')}}">Show List</a>
+                                @else
+                                    <a class="nav-link" href="{{route('vendor.list.category')}}">Show List</a>
+                                @endif
+
+                                @if(Route::currentRouteName() == "vendor.view.category")
+                                    <a class="nav-link text-active text-capitalize" href="{{route("vendor.view.category",['categoryID'=>\Illuminate\Support\Facades\Request::route('categoryID')])}}">View Category</a>
+                                @endif
+                                @if(Route::currentRouteName() == "vendor.edit.category")
+                                    <a class="nav-link text-active text-capitalize" href="{{route("vendor.edit.category",['categoryID'=>\Illuminate\Support\Facades\Request::route('categoryID')])}}">View Category</a>
+                                @endif
                             </nav>
                         </div>
                     </nav>

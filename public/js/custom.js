@@ -223,6 +223,7 @@ if(window.location.port)
                     data:{"country":country,"division":division,"district":district,"upazila":upazila,"union":union,"word":word,"village":village},
                     success:function (data)
                     {
+                        // console.log(data)
                         $('#card_total').html(data)
                     }
                 })

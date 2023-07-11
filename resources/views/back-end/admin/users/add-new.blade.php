@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="card border-0 rounded-lg mt-5">
                         <div class="card-body">
-                            <form method="POST" action="{{ route('admin.add.user') }}">
+                            <form method="POST" action="{{ route('admin.add.user') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row mb-3">
                                     <div class="col-md-3">
@@ -39,6 +39,56 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
+                                    <div class="col-md-3">
+                                        <div class="form-floating">
+                                            <input class="form-control" name="dob" id="dob" type="date" placeholder="Date of Birth" value="{{old('dob')}}" required/>
+                                            <label for="dob">Date of Birth<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-floating">
+                                            <select class="form-control" name="gender" id="gender" required>
+                                                <option value="">-- select one --</option>
+                                                <option value="1" @if(old('gender') == 1) {{'selected'}} @endif>Male</option>
+                                                <option value="2" @if(old('gender') == 2) {{'selected'}}@endif>Female</option>
+                                                <option value="3" @if(!(old('gender') == 1 || old('gender') != 2)) {{'selected'}}@endif>Other</option>
+                                            </select>
+                                            <label for="gender">Gender<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-floating">
+                                            <select class="form-control" name="religion" id="religion">
+                                                <option value="">-- select one --</option>
+                                                <option value="African Traditional & Diasporic">African Traditional & Diasporic</option>
+                                                <option value="Agnostic">Agnostic</option>
+                                                <option value="Atheist">Atheist</option>
+                                                <option value="Baha'i">Baha'i</option>
+                                                <option value="Buddhism">Buddhism</option>
+                                                <option value="Cao Dai">Cao Dai</option>
+                                                <option value="Chinese traditional religion">Chinese traditional religion</option>
+                                                <option value="Christianity">Christianity</option>
+                                                <option value="Hinduism">Hinduism</option>
+                                                <option value="Islam">Islam</option>
+                                                <option value="Jainism">Jainism</option>
+                                                <option value="Juche">Juche</option>
+                                                <option value="Judaism">Judaism</option>
+                                                <option value="Neo-Paganism">Neo-Paganism</option>
+                                                <option value="Nonreligious">Nonreligious</option>
+                                                <option value="Rastafarianism">Rastafarianism</option>
+                                                <option value="Secular">Secular</option>
+                                                <option value="Shinto">Shinto</option>
+                                                <option value="Sikhism">Sikhism</option>
+                                                <option value="Spiritism">Spiritism</option>
+                                                <option value="Tenrikyo">Tenrikyo</option>
+                                                <option value="Unitarian-Universalism">Unitarian-Universalism</option>
+                                                <option value="Zoroastrianism">Zoroastrianism</option>
+                                                <option value="primal-indigenous">primal-indigenous</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            <label for="religion">Religion</label>
+                                        </div>
+                                    </div>
                                     {{--                                        Country--}}
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3 mb-md-0">
@@ -51,6 +101,8 @@
                                             <label for="country">Country</label>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row mb-3">
                                     {{--                                        Devision--}}
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3 mb-md-0">
@@ -83,9 +135,6 @@
                                             <label for="upazila">Upazila</label>
                                         </div>
                                     </div>
-
-                                </div>
-                                <div class="row md-3">
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <input class="form-control" list="ziplist" name="zip_code" id="zip_code" type="number" placeholder="zip code" value="{{old('zip_code')}}"/>
@@ -95,6 +144,9 @@
                                             <label for="zip_code">Zip Code</label>
                                         </div>
                                     </div>
+
+                                </div>
+                                <div class="row md-3">
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <input class="form-control" list="unionlist" name="union" id="union" type="text" placeholder="union" value="{{old('union')}}"/>
@@ -118,17 +170,16 @@
                                             <label for="village">Village</label>
                                         </div>
                                     </div>
-
-                                </div>
-                                <br>
-                                <div class="row md-3">
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3 mb-md-0">
-                                            <input class="form-control" name="home" id="home" type="number" placeholder="home" value="{{old('home')}}"/>
+                                            <input class="form-control" name="home" id="home" type="text" placeholder="home" value="{{old('home')}}"/>
                                             <label for="home">Home No.</label>
                                         </div>
                                     </div>
 
+                                </div>
+                                <br>
+                                <div class="row md-3">
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <select class="form-control" name="roles" id="roles">
@@ -154,10 +205,16 @@
                                             <label for="inputPasswordConfirm">Confirm Password</label>
                                         </div>
                                     </div>
+                                    <div class="col-md-3">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input class="form-control" id="profile" onchange="Product.mustImage(this,'2048')" name="profile" type="file" />
+                                            <label for="profile">Profile Image</label>
+                                        </div>
+                                    </div>
 
                                 </div>
-                                <div class="mt-4 mb-0">
-                                    <div class="d-grid"><input class="btn btn-primary btn-block" type="submit" value="Create Account"></div>
+                                <div class="mt-4 mb-0 float-end">
+                                    <input class="btn btn-primary" type="submit" value="Create Account">
                                 </div>
                             </form>
                         </div>

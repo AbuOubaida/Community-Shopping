@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Intervention\Image\Facades\Image;
 
 class AdminUserController extends Controller
 {
+    private $productImage = "assets/img/profile/";
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +40,7 @@ class AdminUserController extends Controller
             $countries = null;
             try {
                 $countries = DB::table('countries')->distinct()->get();
-                $roles = DB::table('roles')->distinct()->get();
+                $roles = DB::table('roles')->where('name','!=','admin')->where('name','!=','superadmin')->distinct()->get();
             }catch (\Throwable $exception)
             {
                 return back()->with('error', $exception->getMessage());
@@ -58,9 +60,12 @@ class AdminUserController extends Controller
     {
         $request->validate([
             'fname' => ['required', 'string', 'max:255'],
-            'lname' => ['required', 'string', 'max:255'],
+            'lname' => ['sometimes','nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'phone' => ['required', 'numeric', 'unique:'.User::class],
+            'dob' => ['required', 'date'],
+            'gender' => ['required', 'numeric'],
+            'religion' => ['string','sometimes','nullable'],
             'home'  => ['string','sometimes','nullable', 'max:255'],
             'village' => ['string','sometimes','nullable', 'max:255'],
             'word_no' => ['string','sometimes','nullable', 'max:255'],
@@ -72,10 +77,31 @@ class AdminUserController extends Controller
             'country' => ['string','sometimes','nullable', 'max:255'],
             'roles' => ['required','string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'profile' => ['mimes:jpeg,jpg,png,gif,webp|sometimes|nullable|max:20000'],
         ]);
 
         try {
             extract($request->post());
+            if ($district != Auth::user()->district)
+            {
+                return back()->with('warning','You can not create other district user/vendor/community');
+            }
+            $img_name = null;
+            if ($request->hasFile('profile')) {
+                extract($request->file());
+                if (@$profile)
+                {
+                    try {
+                        $ext = $profile->getClientOriginalExtension();
+                        $img_name = str_replace(' ','_',$fname).'_'.rand(111,99999).'_'.$profile->getClientOriginalName();
+                        $imageUploadPath = $this->productImage.$img_name;
+                        Image::make($profile)->save($imageUploadPath);
+                    }catch (\Throwable $exception)
+                    {
+                        return back()->with('error',$exception->getMessage())->withInput();
+                    }
+                }
+            }
             $user = User::create([
                 'status' => 1,
                 'fname' => $fname,
@@ -83,6 +109,9 @@ class AdminUserController extends Controller
                 'name' => $fname.' '.$lname,
                 'email' => $email,
                 'phone' => $phone,
+                'gender' => $gender,
+                'religion' => $religion,
+                'dob' => $dob,
                 'home' => $home,
                 'village' => $village,
                 'word' => $word_no,
@@ -93,6 +122,8 @@ class AdminUserController extends Controller
                 'division' => $division,
                 'country' => $country,
                 'password' => Hash::make($request->password),
+                'img_path' => $this->productImage,
+                'img_name' => $img_name,
             ]);
             if (DB::table('roles')->where('name',$roles)->first())
             {
@@ -102,7 +133,6 @@ class AdminUserController extends Controller
             }else{
                 return back()->with('error','Invalid User Roles')->withInput();
             }
-
         }catch (\Throwable $exception)
         {
             return back()->with('error',$exception->getMessage())->withInput();

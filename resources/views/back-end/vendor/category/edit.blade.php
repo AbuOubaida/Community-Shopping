@@ -15,7 +15,12 @@
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <div class="form-floating mb-3 mb-md-0">
-                                            <input class="form-control" name="cname" id="cname" type="text" placeholder="Enter your category name" value="{{$category->category_name}}"/>
+                                            <input list="category-list" class="form-control" name="cname" id="cname" type="text" placeholder="Enter your category name" value="{{$category->category_name}}"/>
+                                            <datalist id="category-list">
+                                                @foreach($categories as $c)
+                                                    <option value="{{$c->c_name}}"></option>
+                                                @endforeach
+                                            </datalist>
                                             <label for="inputFirstName">Category name <b class="text-danger">*</b></label>
                                         </div>
                                     </div>
@@ -39,6 +44,7 @@
                                             <textarea rows="20" class="form-control" name="cdescription" id="cdescription" placeholder="Enter your category description" >{{$category->category_description}}</textarea>
                                             <label for="inputFirstName">Category description</label>
                                         </div>
+                                        <p class="text-info"><strong>Note: </strong> If category already exist in database, No need to update same name</p>
                                     </div>
                                 </div>
 

@@ -17,8 +17,8 @@
             @if(isset($comm) && count($comm))
                 @foreach($comm as $c)
                     <div class="col-md-3">
-                        <input type="radio" class="community" id="community" name="community" value="{{$c->id}}" required>
-                        <label class="community-class" for="community" title="Online Payment">
+                        <input type="radio" class="community" id="{{$c->community_name}}" name="community" value="{{$c->id}}" required>
+                        <label class="community-class" for="{{$c->community_name}}" title="Online Payment">
                             <div class="community-body">
                                 <div class="comm-header">
                                     <span>{{$c->community_name}}</span>

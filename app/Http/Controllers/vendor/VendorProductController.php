@@ -67,7 +67,7 @@ class VendorProductController extends Controller
         {
             return $this->store($request);
         }else{
-            $categories = category::where('status',1)->where('vendor_id',$user->id)->get();
+            $categories = category::where('status',1)->get();
             return view('back-end.vendor.products.add-new',compact('headerData','categories'));
         }
     }
@@ -329,23 +329,34 @@ class VendorProductController extends Controller
      */
     public function destroy(Request $request)
     {
-        extract($request->post());
-        $id = $product_id;
-        if (product::where('id',$id)->where('vendor_id',Auth::user()->id)->update(['delete_status'=>1,'updated_at'=>date(now()), 'updater_id'=>Auth::user()->id, ]))
-            return back()->with('success','Data delete Successfully!');
-        else
-            return back()->with('error','Data delete not possible');
+        try {
+            extract($request->post());
+            $id = $product_id;
+            if (product::where('id',$id)->where('vendor_id',Auth::user()->id)->update(['delete_status'=>1,'updated_at'=>date(now()), 'updater_id'=>Auth::user()->id, ]))
+                return back()->with('success','Data delete Successfully!');
+            else
+                return back()->with('error','Data delete not possible');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
     }
 
     // Product Category Start here
     public function createCategory(Request $request)
     {
-        $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'Add Product Category'];
-        if ($request->isMethod('post'))
+        try {
+            $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'Add Product Category'];
+            $categories = category::distinct()->get();
+            if ($request->isMethod('post'))
+            {
+                return $this->storeCategory($request);
+            }else{
+                return view('back-end.vendor.category.add-new',compact('headerData','categories'));
+            }
+        }catch (\Throwable $exception)
         {
-            return $this->storeCategory($request);
-        }else{
-            return view('back-end.vendor.category.add-new',compact('headerData'));
+            return back()->with('error',$exception->getMessage());
         }
     }
 
@@ -379,7 +390,7 @@ class VendorProductController extends Controller
     public function showCategory()
     {
         $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'Product Category List'];
-        $categories = category::leftJoin('users as v','v.id','categories.vendor_id')->leftJoin('users as c','c.id','categories.creater_id')->select('v.name as vendor_name','c.name as creater_name','categories.*')->where('categories.vendor_id',Auth::user()->id)->orderBY('categories.id','desc')->get();// v as vendor and c as creater
+        $categories = category::leftJoin('users as v','v.id','categories.vendor_id')->leftJoin('users as c','c.id','categories.creater_id')->select('v.name as vendor_name','c.name as creater_name','categories.*')->orderBY('categories.id','desc')->get();// v as vendor and c as creater
 
         return \view('back-end.vendor.category.show-list',compact('headerData','categories'));
     }
@@ -388,7 +399,7 @@ class VendorProductController extends Controller
     {
         try {
             $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'Product Category List'];
-            $category = category::leftJoin('users as v','v.id','categories.vendor_id')->leftJoin('users as c','c.id','categories.creater_id')->select('categories.id','categories.c_name as category_name','categories.c_description as category_description','v.name as vendor_name','c.name as creater_name')->where('categories.vendor_id',Auth::user()->id)->where('categories.id',$categoryID)->first();// v as vendor and c as creater
+            $category = category::leftJoin('users as v','v.id','categories.vendor_id')->leftJoin('users as c','c.id','categories.creater_id')->select('categories.id','categories.c_name as category_name','categories.c_description as category_description','v.name as vendor_name','c.name as creater_name')->where('categories.id',$categoryID)->first();// v as vendor and c as creater
             return \view('back-end.vendor.category.view',compact('headerData','category'));
         }catch (\Throwable $exception)
         {
@@ -404,8 +415,9 @@ class VendorProductController extends Controller
         }else{
             try {
                 $headerData = ['app'=>'Community Shopping','role'=>'vendor','title'=>'Product Category List'];
+                $categories = category::distinct()->get();
                 $category = category::leftJoin('users as v','v.id','categories.vendor_id')->leftJoin('users as c','c.id','categories.creater_id')->select('categories.id','categories.c_name as category_name','categories.c_description as category_description','categories.status')->where('categories.vendor_id',Auth::user()->id)->where('categories.id',$categoryID)->first();// v as vendor and c as creater
-                return \view('back-end.vendor.category.edit',compact('headerData','category'));
+                return \view('back-end.vendor.category.edit',compact('headerData','category','categories'));
             }catch (\Throwable $exception)
             {
                 return back()->with('error',$exception->getMessage())->withInput();

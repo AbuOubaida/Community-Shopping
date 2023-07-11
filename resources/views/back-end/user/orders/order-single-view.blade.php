@@ -123,11 +123,11 @@
                                                             <span class="badge bg-success">Delivered</span>
                                                             @elseif($op->order_status == 7)
                                                             <span class="badge bg-info">Received</span>
-                                                            @elseif($order_product->order_status == 8)
+                                                            @elseif($op->order_status == 8)
                                                             <span class="badge bg-warning">Reviewed</span>
-                                                            @elseif($order_product->order_status == 9)
+                                                            @elseif($op->order_status == 9)
                                                             <span class="badge bg-info">Vendor to Admin</span>
-                                                            @elseif($order_product->order_status == 10)
+                                                            @elseif($op->order_status == 10)
                                                             <span class="badge bg-info">Admin to Admin</span>
                                                             @else
                                                             <span class="badge bg-danger">Unknown</span>

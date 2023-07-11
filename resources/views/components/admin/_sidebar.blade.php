@@ -3,21 +3,47 @@
         <div class="sb-sidenav-menu">
             <div class="nav">
                 <div class="sb-sidenav-menu-heading">Core</div>
-                <a class="nav-link" href="{{route('admin.dashboard')}}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    Dashboard
-                </a>
+{{--        Start Dashboard--}}
+                @if(Route::currentRouteName() == 'admin.dashboard')
+                    <a class="nav-link text-active" href="{{route('admin.dashboard')}}">
+                        <div class="sb-nav-link-icon text-active"><i class="fas fa-tachometer-alt"></i></div>
+                        Dashboard
+                    </a>
+                @else
+                    <a class="nav-link" href="{{route('admin.dashboard')}}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Dashboard
+                    </a>
+                @endif
+{{--        Dashboard End--}}
                 <div class="sb-sidenav-menu-heading">Interface</div>
-{{--                user section--}}
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+{{--        user section--}}
+            @if(Route::currentRouteName() == 'admin.add.user' || Route::currentRouteName() == 'admin.list.user')
+                <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#userLayouts" aria-expanded="false" aria-controls="userLayouts">
+                    <div class="sb-nav-link-icon text-active"><i class="fa-solid fa-user"></i></div>
+                    Users
+                    <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse show" id="userLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+            @else
+                <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#userLayouts" aria-expanded="false" aria-controls="userLayouts">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
                     Users
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse" id="userLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+            @endif
                     <nav class="sb-sidenav-menu-nested nav">
+                    @if(Route::currentRouteName() == 'admin.add.user')
+                        <a class="nav-link text-active" href="{{route('admin.add.user')}}">Add New</a>
+                    @else
                         <a class="nav-link" href="{{route('admin.add.user')}}">Add New</a>
+                    @endif
+                    @if(Route::currentRouteName() == 'admin.list.user')
+                        <a class="nav-link text-active" href="{{route('admin.list.user')}}">Show List</a>
+                    @else
                         <a class="nav-link" href="{{route('admin.list.user')}}">Show List</a>
+                    @endif
                     </nav>
                 </div>
 
