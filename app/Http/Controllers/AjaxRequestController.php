@@ -241,25 +241,27 @@ class AjaxRequestController extends Controller
         try {
             $record = 4;
             extract($request->post());
-            $comm = communities::where('village',$village)->where('village','!=',null)->where('status',1)->get();
+//            $comm = $comm = communities::where('upazila',$upazila)->where('upazila','!=',null)->where('status',1)->take($record)->get();
+            $comm = communities::where('village',$village)->where('word',$word)->where('union',$union)->where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('village','!=',null)->where('status',1)->get();
             if (count($comm) == 0)
             {
-                $comm = communities::where('word',$word)->where('word','!=',null)->where('status',1)->take($record)->get();
+                $comm = communities::where('word',$word)->where('union',$union)->where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('word','!=',null)->where('status',1)->take($record)->get();
                 if (count($comm) == 0)
                 {
-                    $comm = communities::where('union',$union)->where('union','!=',null)->where('status',1)->take($record)->get();
+                    $comm = communities::where('union',$union)->where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('union','!=',null)->where('status',1)->take($record)->get();
                     if (count($comm) == 0)
                     {
-                        $comm = communities::where('upazila',$upazila)->where('upazila','!=',null)->where('status',1)->take($record)->get();
+                        $comm = communities::where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('upazila','!=',null)->where('status',1)->take($record)->get();
                         if (count($comm) == 0)
                         {
-                            $comm = communities::where('district','like',"%$district%")->where('district','!=',null)->where('status',1)->take($record)->get();
+                            $comm = communities::where('district',$district)->where('division',$division)->where('district','!=',null)->where('status',1)->take($record)->get();
                             if (count($comm) == 0)
                             {
                                 $comm = communities::where('division',$division)->where('division','!=',null)->where('status',1)->take($record)->get();
-                            }
-                            else{
-                                $comm = null;
+                                if (count($comm) == 0)
+                                {
+                                    $comm == null;
+                                }
                             }
                         }
                     }

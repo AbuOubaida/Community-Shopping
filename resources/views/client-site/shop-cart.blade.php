@@ -143,7 +143,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="name">Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="customer_name" id="name" placeholder="Name:" required value="@if(old('customer_name')) {{old('customer_name')}} @else @isset($user->name) {{$user->name}} @endisset @endif">
+                                        <input type="text" class="form-control" name="customer_name" id="name" placeholder="Name:" required @if(old('customer_name')) value="{{old('customer_name')}}" @else @isset($user->name) value="{{$user->name}}" @endisset @endif>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="email">Email <span class="text-danger">*</span></label>
@@ -151,12 +151,12 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="phone">Phone <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="phone" id="phone" value="@if(old('phone')) {{old('phone')}} @else @isset($user->phone) {{$user->phone}} @endisset @endif" placeholder="Phone:" required>
+                                        <input type="number" class="form-control" name="phone" id="phone" @if(old('phone')) value="{{old('phone')}}" @else @isset($user->phone) value="{{$user->phone}}" @endisset @endif placeholder="Phone:" required>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="country">Country <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="countrylist" name="country" id="country" value="@if(old('country')) {{old('country')}} @else @isset($user->country) {{$user->country}} @endisset @endif" onchange="return Obj.country(this,'divisionlist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required>
+                                            <input class="form-control" list="countrylist" name="country" id="country" @if(old('country')) value="{{old('country')}}" @else @isset($user->country) value="{{$user->country}}" @endisset @endif onchange="return Obj.country(this,'divisionlist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required>
                                             <datalist id="countrylist">
                                                 @foreach($countries as $c)
                                                     <option value="{{$c->nicename}}"></option>
@@ -169,7 +169,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="division">Division <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="divisionlist" name="division" id="division" type="text" placeholder="division" value="@if(old('division')) {{old('division')}} @else @isset($user->division) {{$user->division}} @endisset @endif" onchange=" Obj.division(this,'districtlist'), Obj.changeAddress(this,'2','country','division','district','upazila','union')" required/>
+                                            <input class="form-control" list="divisionlist" name="division" id="division" type="text" placeholder="division" @if(old('division')) value="{{old('division')}}" @else @isset($user->division) value="{{$user->division}}" @endisset @endif onchange=" Obj.division(this,'districtlist'), Obj.changeAddress(this,'2','country','division','district','upazila','union')" required/>
                                             <datalist id="divisionlist">
                                                 @if(count($divisions))
                                                     @foreach($divisions as $d)
@@ -184,7 +184,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="district">District <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="districtlist" name="district" id="district" type="text" placeholder="district" value="@if(old('district')){{old('district')}}@else @isset($user->district) {{$user->district}}@endisset @endif" onchange="return Obj.district(this,'upazilalist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required/>
+                                            <input class="form-control" list="districtlist" name="district" id="district" type="text" placeholder="district" @if(old('district'))value="{{old('district')}}"@else @isset($user->district) value="{{$user->district}}"@endisset @endif onchange="return Obj.district(this,'upazilalist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" required/>
                                             <datalist id="districtlist">
                                                 @if(count($districts))
                                                     @foreach($districts as $dt)
@@ -198,7 +198,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="upazila">Upazila <span class="text-danger">*</span></label>
-                                            <input class="form-control" list="upazilalist" name="upazila" id="upazila" type="text" placeholder="upazila" onchange="return Obj.upazilla(this,'ziplist','unionlist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('upazila')) {{old('upazila')}} @else @isset($user->upazila) {{$user->upazila}} @endisset @endif" required/>
+                                            <input class="form-control" list="upazilalist" name="upazila" id="upazila" type="text" placeholder="upazila" onchange="return Obj.upazilla(this,'ziplist','unionlist'), Obj.changeAddress(this,'1','country','division','district','upazila','union')" @if(old('upazila')) value="{{old('upazila')}}" @else @isset($user->upazila) value="{{$user->upazila}}" @endisset @endif required/>
                                             <datalist id="upazilalist">
                                                 @if(count($upazilas))
                                                     @foreach($upazilas as $u)
@@ -211,7 +211,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="zip_code">Zip Code</label>
-                                            <input class="form-control" list="ziplist" name="zip_code" id="zip_code" type="number" placeholder="zip code" value="@if(old('zip_code')) {{old('zip_code')}} @else @isset($user->zip_code) {{$user->zip_code}} @endisset @endif"/>
+                                            <input class="form-control" list="ziplist" name="zip_code" id="zip_code" type="number" placeholder="zip code" @if(old('zip_code')) value="{{old('zip_code')}}" @else @isset($user->zip_code) value="{{$user->zip_code}}" @endisset @endif"/>
                                             <datalist id="ziplist">
                                                 @if(count($zip_codes))
                                                     @foreach($zip_codes as $z)
@@ -224,7 +224,7 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="union">Union</label>
-                                            <input class="form-control" list="unionlist" name="union" id="union" type="text" placeholder="union" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('union')) {{old('union')}} @else @isset($user->union) {{$user->union}} @endisset @endif"/>
+                                            <input class="form-control" list="unionlist" name="union" id="union" type="text" placeholder="union" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" @if(old('union')) value="{{old('union')}}" @else @isset($user->union) value="{{$user->union}}" @endisset @endif/>
                                             <datalist id="unionlist">
                                                 @if(count($unions))
                                                     @foreach($unions as $u)
@@ -238,26 +238,26 @@
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="word_no">Word No</label>
-                                            <input class="form-control" name="word_no" id="word_no" type="number" placeholder="word no" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('word_no')) {{old('word_no')}} @else @isset($user->word_no) {{$user->word_no}} @endisset @endif"/>
+                                            <input class="form-control" name="word_no" id="word_no" type="number" placeholder="word no" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" @if(old('word_no')) value="{{old('word_no')}}" @else @isset($user->word_no) value="{{$user->word_no}}" @endisset @endif"/>
                                         </div>
                                     </div>
 
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="village">Village</label>
-                                            <input class="form-control" name="village" id="village" type="text" placeholder="village" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" value="@if(old('village')) {{old('village')}} @else @isset($user->village) {{$user->village}} @endisset @endif"/>
+                                            <input class="form-control" name="village" id="village" type="text" placeholder="village" onchange="Obj.changeAddress(this,'1','country','division','district','upazila','union')" @if(old('village')) value="{{old('village')}}" @else @isset($user->village) value="{{$user->village}}" @endisset @endif/>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="road">Road No</label>
-                                            <input class="form-control" name="road" id="road" type="text" placeholder="e.g. Road no 1" value="@if(old('road')) {{old('road')}} @endif"/>
+                                            <input class="form-control" name="road" id="road" type="text" placeholder="e.g. Road no 1" @if(old('road')) value="{{old('road')}}" @endif/>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-floating mb-3 mb-md-0">
                                             <label for="house">House No</label>
-                                            <input class="form-control" name="house" id="house" type="text" placeholder="e.g. House no 110" value="@if(old('house')) {{old('house')}} @endif"/>
+                                            <input class="form-control" name="house" id="house" type="text" placeholder="e.g. House no 110" @if(old('house')) value="{{old('house')}}" @endif/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
