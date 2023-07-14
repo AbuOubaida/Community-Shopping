@@ -29,6 +29,19 @@
                 </a>
             @endif
 {{--        My Shop Start--}}
+{{--        My Community Start--}}
+                @if(Route::currentRouteName() == 'vendor.my.community')
+                    <a class="nav-link text-active" href="{{route('vendor.my.community')}}">
+                        <div class="sb-nav-link-icon text-active"><i class="fas fa-people-group"></i></div>
+                        My Community
+                    </a>
+                @else
+                    <a class="nav-link" href="{{route('vendor.my.community')}}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-people-group"></i></div>
+                        My Community
+                    </a>
+                @endif
+{{--        My Community Start--}}
                 <div class="sb-sidenav-menu-heading">Interface</div>
 {{----------Order Start here--}}
             @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list" || Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list")

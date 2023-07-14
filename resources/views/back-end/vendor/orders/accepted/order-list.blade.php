@@ -87,6 +87,10 @@
                                                     <span class="badge bg-warning">Vendor to Admin</span>
                                                 @elseif($o->order_status == 10)
                                                     <span class="badge bg-info">Admin to Admin</span>
+                                                @elseif($order_product->order_status == 11)
+                                                    <span class="badge bg-info">vendor to community</span>
+                                                @elseif($order_product->order_status == 12)
+                                                    <span class="badge bg-info" title="Vendor site community Hub">vendor community Hub</span>
                                                 @else
                                                     <span class="badge bg-danger">Unknown</span>
                                                 @endif

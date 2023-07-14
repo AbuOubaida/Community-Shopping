@@ -156,6 +156,8 @@ Route::middleware('auth')->group(function () {
             Route::match(['get','post'],'create-shop','createShop')->name('create.shop');
             Route::match(['get','post'],'edit-shop','editShop')->name('edit.shop');
             Route::match(['get','post'],'my-shop','myShop')->name('my.shop');
+            Route::match(['get','post'],'my-community','myCommunity')->name('vendor.my.community');
+            Route::delete('delete-vendor-community','deleteCommunity')->name('vendor.delete.community');
         });
 
         Route::group(['prefix'=>'product'],function (){

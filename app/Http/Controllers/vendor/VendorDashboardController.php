@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\communities;
 use App\Models\order;
 use App\Models\shop_info;
 use App\Models\user;
+use App\Models\vendor_community_list;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 
@@ -391,6 +394,104 @@ class VendorDashboardController extends Controller
         //
     }
 
+    public function myCommunity(Request $request)
+    {
+        try {
+            if ($request->isMethod('post'))
+            {
+                return $this->myCommunityStore($request);
+            }
+            else
+            {
+                $user = Auth::user();
+                $headerData = ['app'=>'Community Shopping','role'=>$user->roles->first()->display_name,'title'=>'Dashboard'];
+                extract($user->toArray());
+                $comm = communities::where('village',$village)->where('word',$word)->where('union',$union)->where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('village','!=',null)->where('status',1)->get();
+                if (count($comm) == 0)
+                {
+                    $comm = communities::where('word',$word)->where('union',$union)->where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('word','!=',null)->where('status',1)->get();
+                    if (count($comm) == 0)
+                    {
+                        $comm = communities::where('union',$union)->where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('union','!=',null)->where('status',1)->get();
+                        if (count($comm) == 0)
+                        {
+                            $comm = communities::where('upazila',$upazila)->where('district',$district)->where('division',$division)->where('upazila','!=',null)->where('status',1)->get();
+                            if (count($comm) == 0)
+                            {
+                                $comm = communities::where('district',$district)->where('division',$division)->where('district','!=',null)->where('status',1)->get();
+                                if (count($comm) == 0)
+                                {
+                                    $comm = communities::where('division',$division)->where('division','!=',null)->where('status',1)->get();
+                                    if (count($comm) == 0)
+                                    {
+                                        $comm == null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                $vendor_communities = vendor_community_list::leftJoin('communities as c','c.id','vendor_community_lists.community_id')->where('vendor_community_lists.vendor_id',$user->id)->where('vendor_community_lists.status',1)->select('c.community_name as community','c.community_type','c.village','c.home','c.word','c.union','c.upazila','c.district','c.division','c.country','vendor_community_lists.*')->get();
+                return view('back-end.vendor.community.view-community',compact('headerData','comm','vendor_communities'));
+            }
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+
+    private function myCommunityStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'community'  => ['required', 'numeric',],
+                'remarks'  => ['nullable','sometimes','string'],
+            ]);
+            extract($request->post());
+            $user = Auth::user();
+            if (!(communities::where('id',$community)->where('status',1)->where('delete_status',0)->first()))
+            {
+                return back()->with('error','Community not found in database!');
+            }
+            if (vendor_community_list::where('vendor_id',$user->id)->where('community_id',$community)->first())
+            {
+                if (vendor_community_list::where('vendor_id',$user->id)->where('status','!=',1)->where('community_id',$community)->first())
+                {
+                    vendor_community_list::where('vendor_id',$user->id)->where('community_id',$community)->update([
+                        'status'    =>  1,
+                        'community_id'  =>  $community,
+                        'remarks'       =>  $remarks,
+                    ]);
+                    return back()->with('success','Data save successfully!');
+                }
+                return back()->with('warning','Data already exist in database!');
+            }
+            vendor_community_list::create([
+                'status'    =>  1,
+                'vendor_id'     =>  $user->id,
+                'community_id'  =>  $community,
+                'remarks'       =>  $remarks,
+            ]);
+            return back()->with('success','Data save successfully!');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+
+    public function deleteCommunity(Request $request)
+    {
+        $request->validate([
+            'id'  => ['required', 'string',]
+        ]);
+        $user = Auth::user();
+        extract($request->post());
+        $id = Crypt::decryptString($id);
+        vendor_community_list::where('id',$id)->where('vendor_id',$user->id)->update([
+            'status'    =>  0,
+        ]);
+        return back()->with('success','Data delete successfully!');
+    }
 
 
 }
