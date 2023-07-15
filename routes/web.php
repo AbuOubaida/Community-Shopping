@@ -190,7 +190,7 @@ Route::middleware('auth')->group(function () {
                 Route::match(['get'],'view-invoice-pdf/{invoiceID}','viewInvoicePdf')->name('vendor.view.invoice.pdf');
 
                 Route::put('submit-order','submitAdmin')->name('submit.order.admin');
-
+                Route::post('submit-order-community','submitOrderCommunity')->name('vendor.submit.order.community');
                 Route::get('cancel-order-list','canceledOrder')->name('cancel.order.list');
                 Route::delete('cancel-order','destroy')->name('vendor.delete.order');
 

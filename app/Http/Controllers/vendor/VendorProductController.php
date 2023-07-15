@@ -7,6 +7,7 @@ use App\Models\category;
 use App\Models\Product;
 use App\Models\shop_info;
 use App\Models\user;
+use App\Models\vendor_community_list;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -313,7 +314,6 @@ class VendorProductController extends Controller
             $user = Auth::user();
             $categories = category::where('status',1)->get();
             $product = Product::where('id',$productID)->where('vendor_id',$user->id)->first();
-
             return \view('back-end.vendor.products.view',compact('categories','product','headerData'));
         }catch (\Throwable $exception)
         {

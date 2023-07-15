@@ -7,6 +7,7 @@ use App\Models\order;
 use App\Models\Order_product;
 use App\Models\shop_info;
 use App\Models\User;
+use App\Models\vendor_community_list;
 use Barryvdh\DomPDF\Facade\Pdf;
 use http\Exception\BadConversionException;
 use Illuminate\Http\Request;
@@ -118,6 +119,23 @@ class orderController extends Controller
         }
     }
 
+    public function submitOrderCommunity(Request $request)
+    {
+        try {
+            $request->validate([
+                'order_id' => ['required','string'],
+                'community' => ['required','string'],
+            ]);
+            extract($request->post());
+            $oID = decrypt($order_id);
+            $cID = decrypt($community);
+            dd($oID,$cID);
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+
     public function viewOrder($orderID)
     {
         try {
@@ -128,8 +146,8 @@ class orderController extends Controller
                 ->leftJoin('users as u','u.id','Order_products.customer_id')
                 ->leftJoin('orders as o','o.order_id','order_products.order_id')
                 ->where('order_products.id',$oID)->where('order_products.vendor_id',$cID)->select('p.p_name as product_name','order_products.*','o.invoice_id','u.name as customer_name')->first();
-//            dd($order_product);
-            return view("back-end/vendor/orders/order-single-view",compact('order_product','headerData'));
+            $vendorCommunities = vendor_community_list::leftJoin('communities as c','c.id','vendor_community_lists.community_id')->where('vendor_community_lists.vendor_id',$cID)->where('vendor_community_lists.status',1)->select('c.community_name as community','c.community_type','c.village','c.home','c.word','c.union','c.upazila','c.district','c.division','c.country','vendor_community_lists.*')->get();
+            return view("back-end/vendor/orders/order-single-view",compact('order_product','headerData','vendorCommunities'));
         }catch (\Throwable $exception)
         {
             return back()->with('error',$exception->getMessage());
@@ -145,6 +163,7 @@ class orderController extends Controller
                 ->leftJoin('users as u','u.id','Order_products.customer_id')
                 ->leftJoin('orders as o','o.order_id','order_products.order_id')
                 ->where('order_products.id',$oID)->where('order_products.vendor_id',$cID)->select('p.p_name as product_name','order_products.*','o.invoice_id','u.name as customer_name')->first();
+//            dd($order_product->product_name);
 //        return view("back-end/vendor/invoice_print_product_wise",compact("order_product"));
             $pdf = PDF::loadView('back-end/vendor/invoice_print_product_wise',compact('order_product'));
             $output = $pdf->output();

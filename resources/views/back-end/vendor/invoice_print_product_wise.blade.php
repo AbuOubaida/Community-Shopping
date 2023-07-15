@@ -223,7 +223,7 @@
                         $totalTax=0;
                     @endphp
                     <tr align="center">
-                        <td>{!! $n++ !!}</td>
+                        <td>{!! $n !!}</td>
                         <td>{!! $order_product->product_name !!}</td>
                         <td>BDT {!! $order_product->unite_price !!}/=</td>
                         <td>{!! $order_product->order_quantity !!}</td>

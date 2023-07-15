@@ -193,13 +193,34 @@
                                         <input type="hidden" name="product_id" value="{{encrypt($order_product->id)}}">
                                         <button title="Accept Order" class="btn btn-outline-success float-end" onclick="return confirm('Are you sure accept this Order?')" type="submit"><i class="fas fa-check"></i> Accept Order</button>
                                     </form>
-                                @elseif ($order_product->order_status == 2)
-                                    <form action="{!! route("submit.order.admin") !!}" method="post" class="d-inline-block">
-                                        @csrf
-                                        @method('put')
-                                        <input type="hidden" name="order_id" value="{{encrypt($order_product->id)}}">
-                                        <button title="Accept Order" class="btn btn-outline-primary float-end" onclick="return confirm('Are you sure accept this Order?')" type="submit"><i class="fas fa-check"></i> Submit to admin</button>
-                                    </form>
+                                @elseif ($order_product->order_status == 2 )
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <form action="{!! route('vendor.submit.order.community') !!}" method="post">
+                                                @csrf
+                                                <div class="input-group">
+                                                    <input type="hidden" name="order_id" value="{{encrypt($order_product->id)}}">
+                                                    <select class="form-control" name="community" id="community">
+                                                        <option value="">--Select Option--</option>
+                                                        @if(count($vendorCommunities))
+                                                            @foreach($vendorCommunities as $c)
+                                                                <option value="{{encrypt($c->id)}}">Name: {!! $c->community  !!} || ( Type:{!! $c->community_type !!}) || (Address: #Home-{!! $c->home !!}, Village-{!! $c->village !!}, Word-{!! $c->word !!}, Union-{!! $c->union !!}, Upazila-{!! $c->upazilla !!}, District-{!! $c->district !!}, Division-{!! $c->division !!})</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                    <button class="btn btn-outline-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-check"></i> Submit to community <i class="fas fa-people-group"></i></button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <form action="{!! route("submit.order.admin") !!}" method="post" class="d-inline-block float-end">
+                                                @csrf
+                                                @method('put')
+                                                <input type="hidden" name="order_id" value="{{encrypt($order_product->id)}}">
+                                                <button title="Accept Order" class="btn btn-outline-primary mr--30" onclick="return confirm('Are you sure accept this Order?')" type="submit"><i class="fas fa-check"></i> Submit to admin</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 @endif
 
                             </div>
