@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\communities;
+use App\Models\community_order_from_shop;
 use App\Models\order;
 use App\Models\Order_product;
 use App\Models\shop_info;
@@ -74,6 +76,7 @@ class orderController extends Controller
                 ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')->where('order_products.vendor_id',$me->id)->where(function ($query){
                     $query->where('Order_products.order_status',2);
                     $query->orWhere('Order_products.order_status',9);
+                    $query->orWhere('Order_products.order_status',11);
                 })->get();
             return view('back-end.vendor.orders.accepted.order-list',compact('headerData','primaryOrders'));
         }catch (\Throwable $exception)
@@ -81,6 +84,7 @@ class orderController extends Controller
             return back()->with('error',$exception->getMessage());
         }
     }
+
     private function acceptedOrderSubmit(Request $request)
     {
         try {
@@ -90,10 +94,36 @@ class orderController extends Controller
             extract($request->post());
             $oID = decrypt($product_id); //oID = order_product table primary key (id)
             $user = Auth::user();
+            $userOrder = Order_product::where('order_status',1)->where('id',$oID)->where('vendor_id',$user->id)->first();
             Order_product::where('order_status',1)->where('id',$oID)->where('vendor_id',$user->id)->update([
                 'order_status' => 2,
+                'updated_by' =>  $user->id,
+                'number_of_updated'  =>  ($userOrder->number_of_updated + 1),
             ]);
             return back()->with('success','Order accept successfully');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+
+    public function sendingAdminOrder (Request $request)
+    {
+        try {
+            if ($request->isMethod('put'))
+            {
+                return $this->acceptedOrderSubmit($request);
+            }
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'New Order List'];
+            $me = Auth::user();
+            $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
+                ->leftJoin("products as p",'p.id','order_products.product_id')
+                ->leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')->where('order_products.vendor_id',$me->id)->where(function ($query){
+                    $query->where('Order_products.order_status',9);
+                    $query->orWhere('Order_products.order_status',10);
+                })->get();
+            return view('back-end.vendor.orders.sending.order-list',compact('headerData','primaryOrders'));
         }catch (\Throwable $exception)
         {
             return back()->with('error',$exception->getMessage());
@@ -119,6 +149,28 @@ class orderController extends Controller
         }
     }
 
+    public function sendingCommunityOrder (Request $request)
+    {
+        try {
+            if ($request->isMethod('put'))
+            {
+                return $this->acceptedOrderSubmit($request);
+            }
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'New Order List'];
+            $me = Auth::user();
+            $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
+                ->leftJoin("products as p",'p.id','order_products.product_id')
+                ->leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')->where('order_products.vendor_id',$me->id)->where(function ($query){
+                    $query->where('Order_products.order_status',11);
+                    $query->orWhere('Order_products.order_status',12);
+                })->get();
+            return view('back-end.vendor.orders.sending.order-list',compact('headerData','primaryOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
     public function submitOrderCommunity(Request $request)
     {
         try {
@@ -129,7 +181,35 @@ class orderController extends Controller
             extract($request->post());
             $oID = decrypt($order_id);
             $cID = decrypt($community);
-            dd($oID,$cID);
+            $user = Auth::user();
+            $userOrder = Order_product::where('vendor_id',$user->id)->where('id',$oID)->first();
+            if (!($userOrder))
+            {
+                return back()->with('error','Access denied! Invalid order id');
+            }
+            $userCommunity = vendor_community_list::where('vendor_id',$user->id)->where('id',$cID)->where('status',1)->first();
+            if (!($userCommunity))
+            {
+                return back()->with('error','Access denied! Invalid community id');
+            }
+            $community = communities::where('id',$userCommunity->community_id)->where('status',1)->first();
+            $shop = shop_info::where('owner_id',$user->id)->where('status',1)->first();
+            if (community_order_from_shop::where('order_id',$userOrder->id)->where('status',1)->first())
+            {
+                return back()->with('error','Data already exist in database!');
+            }
+            community_order_from_shop::create([
+                'order_id'      =>  $userOrder->id,
+                'shop_id'       =>  $shop->id,
+                'community_id'  =>  $userCommunity->id,
+                'status'        =>  1,//1= Shop request to community
+            ]);
+            Order_product::where('vendor_id',$user->id)->where('id',$oID)->where('order_status',2)->update([
+                'order_status'    =>  11,// Vendor request to community
+                'updated_by' =>  $user->id,
+                'number_of_updated'  =>  ($userOrder->number_of_updated + 1),
+            ]);
+            return back()->with('success', "Request send successfully");
         }catch (\Throwable $exception)
         {
             return back()->with('error',$exception->getMessage());

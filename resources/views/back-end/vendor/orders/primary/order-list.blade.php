@@ -64,8 +64,8 @@
                                                     <td>{{$i++}}</td>
                                                     <td><a target="_blank" href="{{route('vendor.edit.product',['productID'=>$o->product_id])}}"><img style="height: 50px; border-radius: 5px" src="{!! url("assets/back-end/vendor/product/".$o->p_image) !!}" alt=""> &nbsp;{{$o->p_name}}</a></td>
                                                     <td>{{date('d-m-Y',strtotime($o->created_at))}}</td>
-                                                    <td><a href="{!! route('vendor.view.invoice',['invoiceID'=>encrypt($o->invoice_id)]) !!}">{{$o->invoice_id}}</a></td>
-                                                    <td><a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}">{{$o->order_id}}</a></td>
+                                                    <td><a href="{!! route('vendor.view.invoice',['invoiceID'=>encrypt($o->invoice_id)]) !!}">#{{$o->invoice_id}}</a></td>
+                                                    <td><a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}" title="Single order product view">{{$o->order_id}}</a></td>
                                                     <td>{{$o->order_quantity}}</td>
                                                     <td>BDT {{$o->unite_price}}/=</td>
                                                     <td class="text-capitalize"> {{$o->customer_name}}</td>

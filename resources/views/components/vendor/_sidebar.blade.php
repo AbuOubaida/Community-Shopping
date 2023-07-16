@@ -44,7 +44,7 @@
 {{--        My Community Start--}}
                 <div class="sb-sidenav-menu-heading">Interface</div>
 {{----------Order Start here--}}
-            @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list" || Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list")
+            @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list" || Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list" || Route::currentRouteName() == "sending.community.order.list" || Route::currentRouteName() == "sending.admin.order.list")
                 <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
                     Order
@@ -61,7 +61,7 @@
             @endif
                     <nav class="sb-sidenav-menu-nested nav">
 {{----------------------Shop Order Start Here--}}
-                    @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list"||Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list")
+                    @if(Route::currentRouteName() == "primary.order.list" || Route::currentRouteName() == "accepted.order.list"||Route::currentRouteName() == "cancel.order.list" || Route::currentRouteName() == "vendor.view.order" || Route::currentRouteName() == "vendor.view.invoice" || Route::currentRouteName() == "vendor.complete.order.list" || Route::currentRouteName() == "sending.community.order.list" || Route::currentRouteName() == "sending.admin.order.list")
                         <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
                             Shop Order
                             <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
@@ -89,6 +89,20 @@
                                 <a class="nav-link text-capitalize" href="{{route('accepted.order.list')}}">Accepted list</a>
                             @endif
 {{--                        Accepted Order List End --}}
+{{--------------------------Sending Order to community List Start--}}
+                                @if(Route::currentRouteName() == "sending.community.order.list")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('sending.community.order.list')}}" title="Request sending list to community">To comm. list</a>
+                                @else
+                                    <a class="nav-link text-capitalize" href="{{route('sending.community.order.list')}}" title="Request sending list to community">To comm. list</a>
+                                @endif
+{{--                        Sending Order to community List End --}}
+{{--------------------------Sending Order to admin List Start--}}
+                                @if(Route::currentRouteName() == "sending.admin.order.list")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('sending.admin.order.list')}}" title="Request sending list to admin">To admin list</a>
+                                @else
+                                    <a class="nav-link text-capitalize" href="{{route('sending.admin.order.list')}}" title="Request sending list to admin">To admin list</a>
+                                @endif
+{{--                        Sending Order to admin List End --}}
 {{--------------------------Compplete Order List Start--}}
                             @if(Route::currentRouteName() == "vendor.complete.order.list")
                                 <a class="nav-link text-active text-capitalize" href="{!! route('vendor.complete.order.list') !!}">Completed list</a>

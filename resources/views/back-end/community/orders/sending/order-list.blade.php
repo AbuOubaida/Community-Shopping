@@ -90,28 +90,20 @@
                                                 @elseif($o->order_status == 11)
                                                     <span class="badge bg-warning" title="Vendor request to community">Request to community </span>
                                                 @elseif($o->order_status == 12)
-                                                    <span class="badge bg-info" title="Vendor site community Hub">vendor community Hub</span>
+                                                    <span class="badge bg-info" title="Vendor site community Hub">Vendor community Hub</span>
                                                 @else
                                                     <span class="badge bg-danger">Unknown</span>
                                                 @endif
                                             </td>
                                             <td>{{date('d-m-Y',strtotime($o->created_at))}}</td>
-                                            <td><a href="{!! route('vendor.view.invoice',['invoiceID'=>encrypt($o->invoice_id)]) !!}">#{{$o->invoice_id}}</a></td>
-                                            <td><a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}" title="Single order product view">{{$o->order_id}}</a></td>
+                                            <td><a href="{!! route('vendor.view.invoice',['invoiceID'=>encrypt($o->invoice_id)]) !!}">{{$o->invoice_id}}</a></td>
+                                            <td><a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}">{{$o->order_id}}</a></td>
                                             <td>{{$o->order_quantity}}</td>
                                             <td>BDT {{$o->unite_price}}/=</td>
                                             <td class="text-capitalize"> {{$o->customer_name}}</td>
                                             <td>{{$o->p_quantity}}</td>
                                             <td>
                                                 <a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}" class="text-primary" title="View Order"><i class="fas fa-eye"></i></a>
-                                                @if($o->order_status == 2)
-                                                    <form action="{!! route("submit.order.admin") !!}" method="post" class="d-inline-block">
-                                                        @csrf
-                                                        @method('put')
-                                                        <input type="hidden" name="order_id" value="{{encrypt($o->id)}}">
-                                                        <button title="Send request to admin" class="btn-style-none d-inline-block text-success" onclick="return confirm('Are you sure submit this order to admin?')" type="submit"><i class="fas fa-check"></i></button>
-                                                    </form>
-                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

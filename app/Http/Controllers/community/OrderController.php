@@ -106,4 +106,24 @@ class OrderController extends Controller
     {
         //
     }
+
+    public function ShopOrder ()
+    {
+        try {
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'Request form shop List'];
+            $me = Auth::user();
+//            $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
+//                ->leftJoin("products as p",'p.id','order_products.product_id')
+//                ->leftJoin('orders as o','o.order_id','order_products.order_id')
+//                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')->where('order_products.vendor_id',$me->id)->where(function ($query){
+//                    $query->where('Order_products.order_status',11);
+//                    $query->orWhere('Order_products.order_status',12);
+//                })->get();
+//            dd($primaryOrders);
+//            return view('back-end.community.orders.sending.order-list',compact('headerData','primaryOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
 }

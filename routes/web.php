@@ -189,8 +189,12 @@ Route::middleware('auth')->group(function () {
                 Route::match(['get'],'view-invoice/{invoiceID}','viewInvoice')->name('vendor.view.invoice');
                 Route::match(['get'],'view-invoice-pdf/{invoiceID}','viewInvoicePdf')->name('vendor.view.invoice.pdf');
 
+                Route::get('sending-admin-list','sendingAdminOrder')->name('sending.admin.order.list');
                 Route::put('submit-order','submitAdmin')->name('submit.order.admin');
+
+                Route::get('sending-community-list','sendingCommunityOrder')->name('sending.community.order.list');
                 Route::post('submit-order-community','submitOrderCommunity')->name('vendor.submit.order.community');
+
                 Route::get('cancel-order-list','canceledOrder')->name('cancel.order.list');
                 Route::delete('cancel-order','destroy')->name('vendor.delete.order');
 
@@ -225,6 +229,8 @@ Route::middleware('auth')->group(function () {
         });
         // Community self order (My order)
         Route::controller(\App\Http\Controllers\community\OrderController::class)->group(function (){
+            //Shop order start
+            Route::get('shop-order-list','ShopOrder')->name('community.shop.order.list');
             Route::match(['get','post'],'my-order','myOrder')->name('community.my.order');
             Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('community.order.single');
         });

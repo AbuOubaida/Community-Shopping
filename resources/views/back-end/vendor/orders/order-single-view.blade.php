@@ -123,11 +123,11 @@
                                                     @elseif($order_product->order_status == 8)
                                                     <span class="badge bg-warning">Reviewed</span>
                                                     @elseif($order_product->order_status == 9)
-                                                    <span class="badge bg-warning">Vendor to Admin</span>
+                                                    <span class="badge bg-warning" title="Vendor request to admin">Request to Admin</span>
                                                     @elseif($order_product->order_status == 10)
                                                     <span class="badge bg-info">Admin to Admin</span>
                                                     @elseif($order_product->order_status == 11)
-                                                    <span class="badge bg-info">vendor to community</span>
+                                                    <span class="badge bg-warning" title="Vendor request to community">Request to community </span>
                                                     @elseif($order_product->order_status == 12)
                                                     <span class="badge bg-info" title="Vendor site community Hub">vendor community Hub</span>
 
