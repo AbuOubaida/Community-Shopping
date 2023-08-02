@@ -193,6 +193,7 @@ class orderController extends Controller
                 return back()->with('error','Access denied! Invalid community id');
             }
             $community = communities::where('id',$userCommunity->community_id)->where('status',1)->first();
+            dd($community);
             $shop = shop_info::where('owner_id',$user->id)->where('status',1)->first();
             if (community_order_from_shop::where('order_id',$userOrder->id)->where('status',1)->first())
             {
@@ -201,7 +202,7 @@ class orderController extends Controller
             community_order_from_shop::create([
                 'order_id'      =>  $userOrder->id,
                 'shop_id'       =>  $shop->id,
-                'community_id'  =>  $userCommunity->id,
+                'community_id'  =>  $community->id,// communities table id is here
                 'status'        =>  1,//1= Shop request to community
             ]);
             Order_product::where('vendor_id',$user->id)->where('id',$oID)->where('order_status',2)->update([
@@ -227,6 +228,7 @@ class orderController extends Controller
                 ->leftJoin('orders as o','o.order_id','order_products.order_id')
                 ->where('order_products.id',$oID)->where('order_products.vendor_id',$cID)->select('p.p_name as product_name','order_products.*','o.invoice_id','u.name as customer_name')->first();
             $vendorCommunities = vendor_community_list::leftJoin('communities as c','c.id','vendor_community_lists.community_id')->where('vendor_community_lists.vendor_id',$cID)->where('vendor_community_lists.status',1)->select('c.community_name as community','c.community_type','c.village','c.home','c.word','c.union','c.upazila','c.district','c.division','c.country','vendor_community_lists.*')->get();
+//            dd($vendorCommunities);
             return view("back-end/vendor/orders/order-single-view",compact('order_product','headerData','vendorCommunities'));
         }catch (\Throwable $exception)
         {

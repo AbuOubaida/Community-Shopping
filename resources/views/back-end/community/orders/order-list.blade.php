@@ -1,4 +1,4 @@
-@extends('back-end.user.main')
+@extends('back-end.community.main')
 @section('content')
     <main>
         <div class="container-fluid px-4">

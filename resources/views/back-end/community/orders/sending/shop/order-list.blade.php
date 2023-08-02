@@ -1,4 +1,4 @@
-@extends('back-end.vendor.main')
+@extends('back-end.community.main')
 @section('content')
     <main>
         <div class="container-fluid px-4">
@@ -28,42 +28,46 @@
                                     <thead>
                                     <tr >
                                         <th>No</th>
-                                        <th>Product</th>
-                                        <th>Status</th>
                                         <th>Date</th>
-                                        <th>Invoice</th>
-                                        <th>Order ID</th>
-                                        <th>Qnt</th>
-                                        <th>Unit Price</th>
-                                        <th>Customer</th>
-                                        <th>Stoke</th>
+                                        <th>Shop</th>
+                                        <th><span title="Shop Address">Shop Address</span></th>
+                                        <th><span title="Shop Phone">Shop Phone</span></th>
+                                        <th>Qut.</th>
+                                        <th>Status</th>
+                                        <th><span title="Shop Open">S. Open</span></th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tfoot>
                                     <tr>
                                         <th>No</th>
-                                        <th>Product</th>
-                                        <th>Status</th>
                                         <th>Date</th>
-                                        <th>Invoice</th>
-                                        <th>Order ID</th>
-                                        <th>Qnt</th>
-                                        <th>Unit Price</th>
-                                        <th>Customer</th>
-                                        <th>Stoke</th>
+                                        <th>Shop</th>
+                                        <th title="Shop Address">Shop Address</th>
+                                        <th><span title="Shop Phone">Shop Phone</span></th>
+                                        <th>Qut.</th>
+                                        <th>Status</th>
+                                        <th title="Shop Open">S. Open</th>
                                         <th>Action</th>
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                @if(count(@$primaryOrders) > 0)
+                                @if(count(@$shopOrders) > 0)
                                     @php
                                         $i = 1;
                                     @endphp
-                                    @foreach($primaryOrders as $o)
+                                    @foreach($shopOrders as $o)
                                         <tr>
                                             <td>{{$i++}}</td>
-                                            <td><a target="_blank" href="{{route('vendor.edit.product',['productID'=>$o->product_id])}}"><img style="height: 50px; border-radius: 5px" src="{!! url("assets/back-end/vendor/product/".$o->p_image) !!}" alt=""> &nbsp;{{$o->p_name}}</a></td>
+                                            <td>{{date('d-M-y',strtotime($o->request_time))}}</td>
+                                            <td><a target="_blank" href="">{{$o->shop_name}}</a></td>
+                                            <td>
+                                                <span title="Home: {{$o->shop_home}},Vill: {{$o->shop_vill}}, Word: {{$o->shop_word}}, Union: {{$o->shop_union}}, Upazila: {{$o->shop_upazilla}}, District: {{$o->shop_dist}}, Division: {{$o->shop_div}}, Country: {{$o->shop_country}}">
+                                                    Home: {{$o->shop_home}},Vill: {{$o->shop_vill}}, Word: {{$o->shop_word}}, Union: {{$o->shop_union}}, Upazila: {{$o->shop_upazilla}}, District: {{$o->shop_dist}}, Division: {{$o->shop_div}}, Country: {{$o->shop_country}}
+                                                </span>
+                                            </td>
+                                            <td>{{$o->shop_phone}}</td>
+                                            <td>{{$o->order_quantity}}</td>
                                             <td>
                                                 @if($o->order_status == 0)
                                                     <span class="badge bg-danger">Canceled</span>
@@ -95,15 +99,9 @@
                                                     <span class="badge bg-danger">Unknown</span>
                                                 @endif
                                             </td>
-                                            <td>{{date('d-m-Y',strtotime($o->created_at))}}</td>
-                                            <td><a href="{!! route('vendor.view.invoice',['invoiceID'=>encrypt($o->invoice_id)]) !!}">{{$o->invoice_id}}</a></td>
-                                            <td><a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}">{{$o->order_id}}</a></td>
-                                            <td>{{$o->order_quantity}}</td>
-                                            <td>BDT {{$o->unite_price}}/=</td>
-                                            <td class="text-capitalize"> {{$o->customer_name}}</td>
-                                            <td>{{$o->p_quantity}}</td>
+                                            <td>{{date('h:i a',strtotime($o->open_at))}} To {{date('h:i a',strtotime($o->closed_at))}}</td>
                                             <td>
-                                                <a href="{{route('vendor.view.order',['orderID'=>encrypt($o->id)])}}" class="text-primary" title="View Order"><i class="fas fa-eye"></i></a>
+                                                <a href="{{route('community.shop.request.view',['orderID'=>encrypt($o->id)])}}" class="text-primary" title="View Order"><i class="fas fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

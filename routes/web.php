@@ -230,7 +230,9 @@ Route::middleware('auth')->group(function () {
         // Community self order (My order)
         Route::controller(\App\Http\Controllers\community\OrderController::class)->group(function (){
             //Shop order start
-            Route::get('shop-order-list','ShopOrder')->name('community.shop.order.list');
+            Route::get('shop-request-list','ShopOrder')->name('community.shop.request.list');
+            Route::match(['get','post'],'shop-request-view/{orderID}','ShopOrderView')->name('community.shop.request.view');
+            Route::put('shop-order-accepted','shopOrderAccepted')->name('shop.order.accepted');
             Route::match(['get','post'],'my-order','myOrder')->name('community.my.order');
             Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('community.order.single');
         });
