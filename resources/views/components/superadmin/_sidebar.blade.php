@@ -39,6 +39,20 @@
 
                     </nav>
                 </div>
+                <div class="collapse" id="site-setting" aria-labelledby="headingTwo" data-bs-parent="#site">
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sitePages">
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#status" aria-expanded="false" aria-controls="status">
+                            Status
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="status" aria-labelledby="headingOne" data-bs-parent="#statusPages">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{!! route('set.order.status') !!}">Order Status</a>
+                            </nav>
+                        </div>
+
+                    </nav>
+                </div>
 {{--                Settings section--}}
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#all-setting" aria-expanded="false" aria-controls="all-setting">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>

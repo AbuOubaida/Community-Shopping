@@ -131,7 +131,7 @@
                                                         @elseif($op->order_status == 5)
                                                             <span class="badge bg-warning" title="Handed over on your community partner">H/O Community</span>
                                                         @elseif($op->order_status == 6)
-                                                            <span class="badge bg-success">Delivered</span>
+                                                            <span class="badge bg-success">Received delivery community</span>
                                                         @elseif($op->order_status == 7)
                                                             <span class="badge bg-info">Received</span>
                                                         @elseif($op->order_status == 8)
@@ -144,6 +144,8 @@
                                                             <span class="badge bg-warning" title="Vendor request to community">Request to community </span>
                                                         @elseif($op->order_status == 12)
                                                             <span class="badge bg-info" title="Vendor site community Hub">vendor community Hub</span>
+                                                        @elseif($op->order_status == 13)
+                                                            <span class="badge bg-warning" title="Vendor site community Hub">Community to Customer</span>
                                                         @else
                                                             <span class="badge bg-danger">Unknown</span>
                                                         @endif

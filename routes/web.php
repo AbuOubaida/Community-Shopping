@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\superadmin\ProtocolController;
 use App\Http\Controllers\superadmin\SettingController;
+use App\Http\Controllers\superadmin\StatusController;
 use App\Http\Controllers\superadmin\SuperAdminDashboardController;
 use App\Http\Controllers\superadmin\SuperAdminUserController;
 use App\Http\Controllers\user\OrderController;
@@ -114,6 +115,12 @@ Route::middleware('auth')->group(function () {
                     Route::match(['get','post'],'set-shipping-charge','setShippingCharge')->name('set.shipping.charge');
                     Route::match(['get','post'],'edit-shipping-charge/{ID}','editShippingCharge')->name('edit.shipping.charge');
                     Route::delete('delete-shipping','destroyShipping')->name('delete.shipping');
+                });
+            });
+
+            Route::group(['prefix'=>'status'],function (){
+                Route::controller(StatusController::class)->group(function (){
+                    Route::match(['get','post'],'set-order-status','setOrderStatus')->name('set.order.status');
                 });
             });
         });
@@ -233,6 +240,9 @@ Route::middleware('auth')->group(function () {
             Route::get('shop-request-list','ShopOrder')->name('community.shop.request.list');
             Route::match(['get','post'],'shop-request-view/{orderID}','ShopOrderView')->name('community.shop.request.view');
             Route::put('shop-order-accepted','shopOrderAccepted')->name('shop.order.accepted');
+            Route::get('accepted-shop-order-list','shopAcceptedOrderList')->name('community.accepted.shop.order.list');
+            Route::put('delivery-direct-customer','deliveryDirectCustomer')->name('delivery.direct.customer');
+            Route::put('send-to-admin','sendAdmin')->name('send.to.admin');
             Route::match(['get','post'],'my-order','myOrder')->name('community.my.order');
             Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('community.order.single');
         });

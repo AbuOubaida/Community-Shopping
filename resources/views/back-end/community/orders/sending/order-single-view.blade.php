@@ -32,7 +32,8 @@
                                         <th>Invoice ID</th>
                                         <th>Order ID</th>
                                         <th>Status</th>
-                                        <th>Quantity</th>
+                                        <th>Order Quantity</th>
+                                        <th>Received Quantity</th>
                                         <th>User</th>
                                         <th>Shop</th>
                                     </tr>
@@ -57,7 +58,7 @@
                                             @elseif($singleOrder->order_status == 5)
                                                 <span class="badge bg-warning" title="Handed over on your community partner">H/O Community</span>
                                             @elseif($singleOrder->order_status == 6)
-                                                <span class="badge bg-success">Delivered</span>
+                                                <span class="badge bg-success">Received delivery community</span>
                                             @elseif($singleOrder->order_status == 7)
                                                 <span class="badge bg-info">Received</span>
                                             @elseif($singleOrder->order_status == 8)
@@ -70,11 +71,14 @@
                                                 <span class="badge bg-warning" title="Vendor request to community">Request to community </span>
                                             @elseif($singleOrder->order_status == 12)
                                                 <span class="badge bg-info" title="Vendor site community Hub">Vendor community Hub</span>
+                                            @elseif($singleOrder->order_status == 13)
+                                                <span class="badge bg-warning" title="Vendor site community Hub">Community to Customer</span>
                                             @else
                                                 <span class="badge bg-danger">Unknown</span>
                                             @endif
                                         </td>
                                         <td>{{$singleOrder->order_quantity}}</td>
+                                        <td>@if($singleOrder->delivery_quantity) {{$singleOrder->delivery_quantity}} @else 0 @endif</td>
                                         <td>{{$singleOrder->c_name}}</td>
                                         <td>{{$singleOrder->shop_name}}</td>
                                     </tr>
@@ -122,13 +126,22 @@
                             <div class="card-header text-capitalize">
                                 Customer Community Info
                             </div>
-                            <div class="card-body">
+                            <div class="card-body text-center">
                             @if($singleOrder->d_c_owner_id == \Illuminate\Support\Facades\Auth::user()->id)
                                 <table>
                                     <tr>
                                         <th class="text-center" colspan="2"> You are the customer choices community! </th>
                                     </tr>
                                 </table>
+                                @if($singleOrder->order_status == 12 && $singleOrder->status == 2)
+                                <br>
+                                <form action="{!! route('delivery.direct.customer') !!}" method="post">
+                                    @csrf
+                                    {{ method_field('put') }}
+                                    <input type="hidden" name="ref" value="{!! encrypt($singleOrder->id) !!}">
+                                    <button class="btn btn-outline-success" type="submit" onclick="return confirm('Are you sure!')"><i class="fas fa-check"></i> Delivery to Customer</button>
+                                </form>
+                                @endif
                             @else
                                 <table>
                                     <tr>
@@ -197,21 +210,53 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <form action="{!! route('shop.order.accepted') !!}" method="post">
-                        @csrf
-                        {{ method_field('put') }}
-                        <div class="row">
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3">
-                                <input class="form-control" name="qnt" id="qnt" type="number" placeholder="Received Quantity" value="{{old('qnt')}}"/>
+            @if($singleOrder->order_status == 12 && $singleOrder->status == 2)
+                @if($singleOrder->d_c_owner_id != \Illuminate\Support\Facades\Auth::user()->id)
+{{--                @if($singleOrder->d_c_owner_id == \Illuminate\Support\Facades\Auth::user()->id)--}}
+                <div class="row">
+                    <div class="col-md-6">
+                        <form action="{!! route('delivery.direct.customer') !!}" method="post">
+                            @csrf
+                            {{ method_field('put') }}
+                            <input type="hidden" name="ref" value="{!! encrypt($singleOrder->id) !!}">
+                            <div class="alert alert-info">
+                                <strong>Option 1: </strong> If you are able to delivery directly this order to this customer then please choose this option.
+                                <button class="btn btn-outline-success float-end" type="submit" onclick="return confirm('Are you sure!')"><i class="fas fa-check"></i> Delivery to Customer</button>
                             </div>
-                            <div class="col-md-2">
-                                <input type="hidden" name="ref" value="{!! encrypt($singleOrder->id) !!}">
-                                <button class="btn btn-outline-success">Received Order</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form action="{!! route('send.to.admin') !!}" method="post">
+                            @csrf
+                            {{ method_field('put') }}
+                            <input type="hidden" name="ref" value="{!! encrypt($singleOrder->id) !!}">
+                            <div class="alert alert-warning">
+                                <strong>Option 2: </strong> If you need help with admin for delivery of this order to the customer.
+                                <button class="btn btn-outline-danger float-end" type="submit" onclick="return confirm('Are you sure!')"><i class="fas fa-check"></i> Order submit to admin</button>
                             </div>
-                            <div class="col-md-4"></div>
+                        </form>
+                    </div>
+                </div>
+               @endif
+            @elseif($singleOrder->order_status == 11 && $singleOrder->status == 1)
+                <form action="{!! route('shop.order.accepted') !!}" method="post">
+                    @csrf
+                    {{ method_field('put') }}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="text-end">Receiving Quantity:</h5>
                         </div>
-                    </form>
+                        <div class="col-md-3">
+                            <input class="form-control" name="qnt" id="qnt" type="number" placeholder="Received Quantity" value="@if(old('qnt')){{old('qnt')}}@else{{$singleOrder->order_quantity}}@endif"/>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="hidden" name="ref" value="{!! encrypt($singleOrder->id) !!}">
+                            <button class="btn btn-outline-success" type="submit" onclick="return confirm('Are you sure!')">Received Order</button>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </form>
+            @endif
                 </div>
                 <br>
                 <br>
