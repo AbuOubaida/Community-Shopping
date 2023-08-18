@@ -46,7 +46,55 @@
                     @endif
                     </nav>
                 </div>
+{{--        user section end--}}
+            @if(Route::currentRouteName() == "admin.shop.order.list" || Route::currentRouteName() == "admin.shop.order.view")
+                <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
+                    <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
+                    Order
+                    <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse show" id="orderLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+            @else
+                <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="false" aria-controls="orderLayouts">
+                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                    Order
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse" id="orderLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+            @endif
+                    <nav class="sb-sidenav-menu-nested nav">
+{{----------------------Community Order Start Here--}}
+                    @if(Route::currentRouteName() == "admin.shop.order.list" || Route::currentRouteName() == "admin.shop.order.view" )
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
+                            Shop Order
+                            <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse show" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @else
+                        <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="false" aria-controls="communityOrder">
+                            Shop Order
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @endif
+                            <nav class="sb-sidenav-menu-nested nav">
+{{--------------------------Shop Order List Start--}}
+                        @if(Route::currentRouteName() == "admin.shop.order.list")
+                            <a class="nav-link text-active text-capitalize" href="{{route('admin.shop.order.list')}}" title="Shop order list">All list</a>
+                        @else
+                            <a class="nav-link text-capitalize" href="{{route('admin.shop.order.list')}}" title="Shop order list">All list</a>
+                        @endif
+{{--                    Shop Order List End--}}
+{{--------------------------Shop Order View Start--}}
+                        @if(Route::currentRouteName() == "admin.shop.order.view")
+                            <a class="nav-link text-active text-capitalize" href="{{route('admin.shop.order.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Shop order view">View Order</a>
+                        @endif
+{{--                    Shop Order View End--}}
+                            </nav>
+                        </div>
 
+                    </nav>
+                </div>
 {{--                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">--}}
 {{--                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>--}}
 {{--                    Layouts--}}

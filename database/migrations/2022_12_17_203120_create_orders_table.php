@@ -20,6 +20,9 @@ return new class extends Migration
             $table->bigInteger('customer_id');
             $table->bigInteger('delivery_person_id')->nullable();
             $table->string('delivery_address');
+            $table->text('district')->nullable();
+            $table->text('division')->nullable();
+            $table->text('country')->nullable();
             $table->string('c_name');
             $table->string('c_phone');
             $table->string('c_email');

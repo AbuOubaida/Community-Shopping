@@ -45,34 +45,8 @@
                                         <td>#{{$singleOrder->invoice_id}}</td>
                                         <td>{{$singleOrder->product_order_id}}</td>
                                         <td>
-                                            @if($singleOrder->order_status == 0)
-                                                <span class="badge bg-danger">Canceled</span>
-                                            @elseif($singleOrder->order_status == 1)
-                                                <span class="badge bg-primary">Primary</span>
-                                            @elseif($singleOrder->order_status == 2)
-                                                <span class="badge bg-info">Accepted</span>
-                                            @elseif($singleOrder->order_status == 3)
-                                                <span class="badge bg-primary" title="Handed over on vendor site logistic partner">H/O Logistic</span>
-                                            @elseif($singleOrder->order_status == 4)
-                                                <span class="badge bg-success">Admin Hub</span>
-                                            @elseif($singleOrder->order_status == 5)
-                                                <span class="badge bg-warning" title="Handed over on your community partner">H/O Community</span>
-                                            @elseif($singleOrder->order_status == 6)
-                                                <span class="badge bg-success">Received delivery community</span>
-                                            @elseif($singleOrder->order_status == 7)
-                                                <span class="badge bg-info">Received</span>
-                                            @elseif($singleOrder->order_status == 8)
-                                                <span class="badge bg-warning">Reviewed</span>
-                                            @elseif($singleOrder->order_status == 9)
-                                                <span class="badge bg-warning" title="Vendor request to admin">Request to Admin</span>
-                                            @elseif($singleOrder->order_status == 10)
-                                                <span class="badge bg-info">Admin to Admin</span>
-                                            @elseif($singleOrder->order_status == 11)
-                                                <span class="badge bg-warning" title="Vendor request to community">Request to community </span>
-                                            @elseif($singleOrder->order_status == 12)
-                                                <span class="badge bg-info" title="Vendor site community Hub">Vendor community Hub</span>
-                                            @elseif($singleOrder->order_status == 13)
-                                                <span class="badge bg-warning" title="Vendor site community Hub">Community to Customer</span>
+                                            @if($singleOrder->status_name)
+                                                <span class="badge {!! $singleOrder->badge !!}" title="{!! $singleOrder->title !!}">{!! $singleOrder->status_name !!}</span>
                                             @else
                                                 <span class="badge bg-danger">Unknown</span>
                                             @endif
@@ -126,7 +100,7 @@
                             <div class="card-header text-capitalize">
                                 Customer Community Info
                             </div>
-                            <div class="card-body text-center">
+                            <div class="card-body text-justify">
                             @if($singleOrder->d_c_owner_id == \Illuminate\Support\Facades\Auth::user()->id)
                                 <table>
                                     <tr>
@@ -141,6 +115,8 @@
                                     <input type="hidden" name="ref" value="{!! encrypt($singleOrder->id) !!}">
                                     <button class="btn btn-outline-success" type="submit" onclick="return confirm('Are you sure!')"><i class="fas fa-check"></i> Delivery to Customer</button>
                                 </form>
+                                @elseif($singleOrder->order_status == 13)
+                                        <span class="badge {!! $singleOrder->badge !!}"> Waiting for customer acceptance </span>
                                 @endif
                             @else
                                 <table>

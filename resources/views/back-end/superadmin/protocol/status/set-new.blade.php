@@ -95,7 +95,7 @@
                                             <th>Status Value</th>
                                             <th>BADGE / BG-Color</th>
                                             <th>Title</th>
-                                            <th>Action</th>
+{{--                                            <th>Action</th>--}}
                                         </tr>
                                         </thead>
                                         <tfoot>
@@ -105,7 +105,7 @@
                                             <th>Status Value</th>
                                             <th>BADGE / BG-Color</th>
                                             <th>Title</th>
-                                            <th>Action</th>
+{{--                                            <th>Action</th>--}}
                                         </tr>
                                         </tfoot>
                                         <tbody>
@@ -120,14 +120,14 @@
                                             <td>{!! $status->status_value !!}</td>
                                             <td><span class="badge {!! $status->badge !!}">{!! $status->badge !!}</span></td>
                                             <td>{!! $status->title !!}</td>
-                                            <td>
-                                                <form action="" method="post" class="d-inline-block">
-                                                    @csrf
-                                                    @method('put')
-                                                    <input type="hidden" name="order_id" value="">
-                                                    <button title="Send request to admin" class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure to delete this data?')" type="submit"><i class="fas fa-trash"></i></button>
-                                                </form>
-                                            </td>
+{{--                                            <td>--}}
+{{--                                                <form action="" method="post" class="d-inline-block">--}}
+{{--                                                    @csrf--}}
+{{--                                                    @method('put')--}}
+{{--                                                    <input type="hidden" name="order_id" value="">--}}
+{{--                                                    <button title="Send request to admin" class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure to delete this data?')" type="submit"><i class="fas fa-trash"></i></button>--}}
+{{--                                                </form>--}}
+{{--                                            </td>--}}
                                         </tr>
                                     @endforeach
                                 @endif

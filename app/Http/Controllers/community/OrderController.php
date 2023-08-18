@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use function Psy\sh;
 
 class OrderController extends Controller
 {
@@ -120,10 +121,11 @@ class OrderController extends Controller
             $shopOrders = community_order_from_shop::leftJoin('order_products as op','op.id','community_order_from_shops.order_id')
                 ->leftJoin('orders as o','o.order_id','op.order_id')
                 ->leftJoin('shop_infos as si','si.id','community_order_from_shops.shop_id')
+                ->leftJoin('order_statuses as os','op.order_status','os.status_value')
                 ->where('community_order_from_shops.status',1)
                 ->where('op.order_status',11)
                 ->where('community_order_from_shops.community_id',$userComm->id)
-                ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*')->get();
+                ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*','os.status_name','os.status_value','os.title','os.badge')->get();
 //            dd($shopOrders);
 //            $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
 //                ->leftJoin("products as p",'p.id','order_products.product_id')
@@ -148,11 +150,12 @@ class OrderController extends Controller
             ->leftJoin('orders as o','o.order_id','op.order_id')
             ->leftJoin('shop_infos as si','si.id','community_order_from_shops.shop_id')
             ->leftJoin('communities as delivery_person','delivery_person.id','o.delivery_person_id')
+            ->leftJoin('order_statuses as os','op.order_status','os.status_value')
 //            ->where('community_order_from_shops.status',1)
 //            ->where('op.order_status',11)
             ->where('community_order_from_shops.community_id',$userComm->id)
             ->where('community_order_from_shops.id',$orderID)
-            ->select('op.order_id as product_order_id','op.order_quantity','op.delivery_quantity','op.order_status','o.invoice_id','o.c_name','o.c_email','o.c_phone','o.delivery_address','o.delivery_person_id','delivery_person.owner_id as d_c_owner_id','delivery_person.community_name','delivery_person.community_type','delivery_person.community_phone','delivery_person.community_email','delivery_person.home as d_home','delivery_person.village as d_village','delivery_person.word as d_word','delivery_person.union as d_union','delivery_person.upazila as d_upazila','delivery_person.district as d_district','delivery_person.division as d_division','delivery_person.country as d_country','si.shop_name','si.shop_phone','si.shop_email','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*')->first();
+            ->select('op.order_id as product_order_id','op.order_quantity','op.delivery_quantity','op.order_status','o.invoice_id','o.c_name','o.c_email','o.c_phone','o.delivery_address','o.delivery_person_id','delivery_person.owner_id as d_c_owner_id','delivery_person.community_name','delivery_person.community_type','delivery_person.community_phone','delivery_person.community_email','delivery_person.home as d_home','delivery_person.village as d_village','delivery_person.word as d_word','delivery_person.union as d_union','delivery_person.upazila as d_upazila','delivery_person.district as d_district','delivery_person.division as d_division','delivery_person.country as d_country','si.shop_name','si.shop_phone','si.shop_email','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*','os.status_name','os.status_value','os.title','os.badge')->first();
         if ($singleOrder != null)
         {
             community_order_from_shop::where('id',$orderID)->where('seen_status',"!=",1)->update(['seen_status'=>1]);
@@ -205,10 +208,54 @@ class OrderController extends Controller
             $shopOrders = community_order_from_shop::leftJoin('order_products as op','op.id','community_order_from_shops.order_id')
                 ->leftJoin('orders as o','o.order_id','op.order_id')
                 ->leftJoin('shop_infos as si','si.id','community_order_from_shops.shop_id')
+                ->leftJoin('order_statuses as os','op.order_status','os.status_value')
                 ->where('community_order_from_shops.status',2)
                 ->where('op.order_status',12)
                 ->where('community_order_from_shops.community_id',$userComm->id)
-                ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*')->get();
+                ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*','os.status_name','os.status_value','os.title','os.badge')->get();
+            return view('back-end.community.orders.sending.shop.order-list',compact('headerData','shopOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function waitingCustomerAcceptanceList()
+    {
+        try {
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'Request form shop List'];
+            $me = Auth::user();
+            $userComm = communities::where('owner_id',$me->id)->where('status',1)->first();
+            $shopOrders = community_order_from_shop::leftJoin('order_products as op','op.id','community_order_from_shops.order_id')
+                ->leftJoin('orders as o','o.order_id','op.order_id')
+                ->leftJoin('shop_infos as si','si.id','community_order_from_shops.shop_id')
+                ->leftJoin('order_statuses as os','op.order_status','os.status_value')
+                ->where('community_order_from_shops.status',3)
+                ->where('op.order_status',13)
+                ->where('community_order_from_shops.community_id',$userComm->id)
+                ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*','os.status_name','os.status_value','os.title','os.badge')->get();
+            return view('back-end.community.orders.sending.shop.order-list',compact('headerData','shopOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function shopCompleteOrderList()
+    {
+        try {
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'Request form shop List'];
+            $me = Auth::user();
+            $userComm = communities::where('owner_id',$me->id)->where('status',1)->first();
+            $shopOrders = community_order_from_shop::leftJoin('order_products as op','op.id','community_order_from_shops.order_id')
+                ->leftJoin('orders as o','o.order_id','op.order_id')
+                ->leftJoin('shop_infos as si','si.id','community_order_from_shops.shop_id')
+                ->leftJoin('order_statuses as os','op.order_status','os.status_value')
+                ->where('community_order_from_shops.status',3)
+                ->where('community_order_from_shops.community_id',$userComm->id)
+                ->where(function ($query){
+                    $query->where('op.order_status',7);
+                    $query->orWhere('op.order_status',8);
+                })
+                ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*','os.status_name','os.status_value','os.title','os.badge')->get();
             return view('back-end.community.orders.sending.shop.order-list',compact('headerData','shopOrders'));
         }catch (\Throwable $exception)
         {
@@ -235,7 +282,7 @@ class OrderController extends Controller
                     ]);
 
                     Order_product::where('id',$order->order_id)->update([
-                        'order_status'      => 6,//6=received delivery man
+                        'order_status'      => 13,//13=community request to customer
                         'updated_by'        => $me->id,
                     ]);
                     return back()->with('success','Data update successfully!');

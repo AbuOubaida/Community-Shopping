@@ -4,7 +4,9 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\order;
+use App\Models\Order_product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -82,5 +84,77 @@ class OrderController extends Controller
     public function destroy(order $order)
     {
         //
+    }
+
+    public function shopOrderList()
+    {
+        try {
+            $user = Auth::user();
+            $order_products = Order_product::leftJoin('users as u','u.id','Order_products.vendor_id')
+                ->leftJoin('shop_infos as si','u.id','si.owner_id')
+                ->leftJoin("products as p",'p.id','order_products.product_id')
+                ->leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->leftJoin('order_statuses as os','Order_products.order_status','os.status_value')
+                ->select('u.name as vendor','si.shop_name','si.status as shop_active_status','si.shop_phone','si.home as shop_home','si.village as shop_vill','si.union as shop_union','si.upazila as shop_upazila','o.invoice_id','p.p_name','p.p_image','os.status_name','os.status_value','os.title','os.badge','Order_products.*')
+                ->where('si.district','like',"%$user->district%")
+                ->get();
+            return view("back-end/admin/orders/shop/order-list",compact('order_products'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function shopOrderView($oID)
+    {
+        try {
+            $order_id = decrypt($oID);
+            $user = Auth::user();
+            $order_product = Order_product::leftJoin('users as vendor','vendor.id','Order_products.vendor_id')
+                ->leftJoin('shop_infos as si','vendor.id','si.owner_id')
+                ->leftJoin('users as customer', 'customer.id','Order_products.customer_id')
+                ->leftJoin("products as p",'p.id','order_products.product_id')
+                ->leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->leftJoin('communities as community', 'community.id','o.delivery_person_id')
+                ->leftJoin('users as community_user', 'community_user.id','community.creater_id')
+                ->leftJoin('order_statuses as os','Order_products.order_status','os.status_value')
+                ->select('vendor.name as vendor','vendor.phone as vendor_phone','si.shop_name','si.status as shop_active_status','si.shop_phone','si.shop_email','si.home as shop_home','si.village as shop_vill','si.union as shop_union','si.upazila as shop_upazila','o.invoice_id','p.p_name','p.p_image','os.status_name','os.status_value','os.title','os.badge','customer.name as customer','customer.phone as customer_phone','o.c_name as receiver_name','o.c_phone as receiver_phone','o.c_email as receiver_email','o.delivery_address','o.order_status as order_active_status','o.shipping_charge','o.payment_method','o.district as delivery_district','community_user.name as community_user_name','community_user.phone as community_user_phone','community.community_name','community.community_type','community.community_phone','community.community_email','community.village as community_village','community.union as community_union','community.upazila as community_upazila','community.district as community_district','community.division as community_division','community.country as community_country','Order_products.*')
+                ->where('si.district','like',"%$user->district%")
+                ->where('Order_products.id',$order_id)
+                ->first();
+//            dd($order_product);
+            return view("back-end/admin/orders/shop/order-single-view",compact('order_product'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+
+    public function shopOrderSendAdmin(Request $request)
+    {
+        try {
+            if ($request->isMethod('put'))
+            {
+                $request->validate([
+                    'orderId' => ['required','string'],
+                ]);
+                extract($request->post());
+                $oID = decrypt($orderId);
+                if ($o = Order_product::where('id',$oID)->where('order_status',3)->first())//3=vendor regional admin
+                {
+                    $nou = $o->number_of_updated++;
+                    Order_product::where('id',$oID)->update([
+                        'order_status'  =>  10,// 10=admin to admin request
+                        'updated_by'    =>  Auth::user()->id,
+                        'number_of_updated' => $nou,
+                        'updated_at'    =>  now(),
+                    ]);
+                    return back()->with('success','Data Update Successfully');
+                }
+            }
+            return back()->with('error','Access denied!');
+        }catch (\Throwable $exception)
+        {
+            back()->with('error',$exception->getMessage());
+        }
     }
 }

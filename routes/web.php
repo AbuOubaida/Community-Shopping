@@ -149,6 +149,12 @@ Route::middleware('auth')->group(function () {
             });
         });
         Route::controller(\App\Http\Controllers\admin\OrderController::class)->group(function (){
+            //Shop Order
+            Route::match(['get'],'shop-order-list','shopOrderList')->name('admin.shop.order.list');
+            Route::match(['get'],'shop-order-view/{orderID}','shopOrderView')->name('admin.shop.order.view');
+            Route::put('shop-order-send-to-admin','shopOrderSendAdmin')->name('admin.shop.order.admin');
+
+            //My Order
             Route::get('my-order-list','myOrder')->name('admin.my.order');
             Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('admin.my.order.single');
         });
@@ -241,6 +247,8 @@ Route::middleware('auth')->group(function () {
             Route::match(['get','post'],'shop-request-view/{orderID}','ShopOrderView')->name('community.shop.request.view');
             Route::put('shop-order-accepted','shopOrderAccepted')->name('shop.order.accepted');
             Route::get('accepted-shop-order-list','shopAcceptedOrderList')->name('community.accepted.shop.order.list');
+            Route::get('shop-complete-order-list','shopCompleteOrderList')->name('community.complete.order.list');
+            Route::get('waiting-customer-acceptance-list','waitingCustomerAcceptanceList')->name('community.waiting.for.customer.acceptance');
             Route::put('delivery-direct-customer','deliveryDirectCustomer')->name('delivery.direct.customer');
             Route::put('send-to-admin','sendAdmin')->name('send.to.admin');
             Route::match(['get','post'],'my-order','myOrder')->name('community.my.order');

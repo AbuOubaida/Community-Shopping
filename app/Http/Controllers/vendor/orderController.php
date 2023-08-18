@@ -161,7 +161,8 @@ class orderController extends Controller
             $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
                 ->leftJoin("products as p",'p.id','order_products.product_id')
                 ->leftJoin('orders as o','o.order_id','order_products.order_id')
-                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')->where('order_products.vendor_id',$me->id)->where(function ($query){
+                ->leftJoin('order_statuses as os','Order_products.order_status','os.status_value')
+                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*','os.status_name','os.status_value','os.title','os.badge')->where('order_products.vendor_id',$me->id)->where(function ($query){
                     $query->where('Order_products.order_status',11);
                     $query->orWhere('Order_products.order_status',12);
                 })->get();
@@ -193,7 +194,6 @@ class orderController extends Controller
                 return back()->with('error','Access denied! Invalid community id');
             }
             $community = communities::where('id',$userCommunity->community_id)->where('status',1)->first();
-            dd($community);
             $shop = shop_info::where('owner_id',$user->id)->where('status',1)->first();
             if (community_order_from_shop::where('order_id',$userOrder->id)->where('status',1)->first())
             {
@@ -226,7 +226,8 @@ class orderController extends Controller
             $order_product = Order_product::leftJoin("products as p",'p.id','order_products.product_id')
                 ->leftJoin('users as u','u.id','Order_products.customer_id')
                 ->leftJoin('orders as o','o.order_id','order_products.order_id')
-                ->where('order_products.id',$oID)->where('order_products.vendor_id',$cID)->select('p.p_name as product_name','order_products.*','o.invoice_id','u.name as customer_name')->first();
+                ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+                ->where('order_products.id',$oID)->where('order_products.vendor_id',$cID)->select('p.p_name as product_name','order_products.*','o.invoice_id','u.name as customer_name','os.status_name','os.status_value','os.title','os.badge')->first();
             $vendorCommunities = vendor_community_list::leftJoin('communities as c','c.id','vendor_community_lists.community_id')->where('vendor_community_lists.vendor_id',$cID)->where('vendor_community_lists.status',1)->select('c.community_name as community','c.community_type','c.village','c.home','c.word','c.union','c.upazila','c.district','c.division','c.country','vendor_community_lists.*')->get();
 //            dd($vendorCommunities);
             return view("back-end/vendor/orders/order-single-view",compact('order_product','headerData','vendorCommunities'));

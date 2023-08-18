@@ -69,34 +69,8 @@
                                             <td>{{$o->shop_phone}}</td>
                                             <td>{{$o->order_quantity}}</td>
                                             <td>
-                                                @if($o->order_status == 0)
-                                                    <span class="badge bg-danger">Canceled</span>
-                                                @elseif($o->order_status == 1)
-                                                    <span class="badge bg-primary">Primary</span>
-                                                @elseif($o->order_status == 2)
-                                                    <span class="badge bg-info">Accepted</span>
-                                                @elseif($o->order_status == 3)
-                                                    <span class="badge bg-primary" title="Handed over on vendor site logistic partner">H/O Logistic</span>
-                                                @elseif($o->order_status == 4)
-                                                    <span class="badge bg-success">Admin Hub</span>
-                                                @elseif($o->order_status == 5)
-                                                    <span class="badge bg-warning" title="Handed over on your community partner">H/O Community</span>
-                                                @elseif($o->order_status == 6)
-                                                    <span class="badge bg-success">Received delivery community</span>
-                                                @elseif($o->order_status == 7)
-                                                    <span class="badge bg-info">Received</span>
-                                                @elseif($o->order_status == 8)
-                                                    <span class="badge bg-warning">Reviewed</span>
-                                                @elseif($o->order_status == 9)
-                                                    <span class="badge bg-warning" title="Vendor request to admin">Request to Admin</span>
-                                                @elseif($o->order_status == 10)
-                                                    <span class="badge bg-info">Admin to Admin</span>
-                                                @elseif($o->order_status == 11)
-                                                    <span class="badge bg-warning" title="Vendor request to community">Request to community </span>
-                                                @elseif($o->order_status == 12)
-                                                    <span class="badge bg-info" title="Vendor site community Hub">Vendor community Hub</span>
-                                                @elseif($o->order_status == 13)
-                                                    <span class="badge bg-warning" title="Vendor site community Hub">Community to Customer</span>
+                                                @if($o->status_name)
+                                                    <span class="badge {!! $o->badge !!}" title="{!! $o->title !!}">{!! $o->status_name !!}</span>
                                                 @else
                                                     <span class="badge bg-danger">Unknown</span>
                                                 @endif

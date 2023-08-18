@@ -26,7 +26,7 @@
                 </a>
             @endif
                 <div class="sb-sidenav-menu-heading">Interface</div>
-            @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view"|| Route::currentRouteName() == "community.accepted.shop.order.list")
+            @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view"|| Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.waiting.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list")
                 <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
                     Order
@@ -43,7 +43,7 @@
             @endif
                     <nav class="sb-sidenav-menu-nested nav">
 {{----------------------Community Order Start Here--}}
-                        @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view"|| Route::currentRouteName() == "community.accepted.shop.order.list")
+                        @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view" || Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.waiting.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list" )
                             <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#communityOrder" aria-expanded="true" aria-controls="communityOrder">
                                 Community Order
                                 <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
@@ -71,6 +71,20 @@
                                     <a class="nav-link text-capitalize" href="{{route('community.accepted.shop.order.list')}}" title="Shop Accepted list">Shop Acc. list</a>
                                 @endif
 {{--                        Request accepted from Shop Order List End--}}
+{{--------------------------Waiting for customer acceptance List Start--}}
+                                @if(Route::currentRouteName() == "community.waiting.for.customer.acceptance")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('community.waiting.for.customer.acceptance')}}" title="Community waiting for customer acceptance">Waiting Acc. List</a>
+                                @else
+                                    <a class="nav-link text-capitalize" href="{{route('community.waiting.for.customer.acceptance')}}" title="Community waiting for customer acceptance">Waiting Acc. List</a>
+                                @endif
+{{--                        Waiting for customer acceptance List End--}}
+{{--------------------------Community complete order list Start--}}
+                                @if(Route::currentRouteName() == "community.complete.order.list")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('community.complete.order.list')}}" title="Community complete order list">Completed list</a>
+                                @else
+                                    <a class="nav-link text-capitalize" href="{{route('community.complete.order.list')}}" title="Community complete order list">Completed list</a>
+                                @endif
+{{--                        Community complete order list End--}}
                                 @if(Route::currentRouteName() == "community.shop.request.view")
                                     <a class="nav-link text-active text-capitalize" href="{{route('community.shop.request.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Request from Shop">Single Order</a>
                                 @endif
