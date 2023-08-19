@@ -22,13 +22,23 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <table class="table table-bordered table-hover">
-                                        <tbody>
+                                        <thead>
                                             <tr class="table-warning">
+                                                <th>Order Active Status:</th>
                                                 <th>Invoice ID:</th>
                                                 <th>Order ID:</th>
                                                 <th>Order Date:</th>
                                             </tr>
+                                        </thead>
+                                        <tbody>
                                             <tr class="table-info">
+                                                <td>
+                                                    @if($order_product->order_active_status)
+                                                        <span class="badge bg-success">Active</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Inactive</span>
+                                                    @endif
+                                                </td>
                                                 <td><a href="{!! route('vendor.view.invoice',['invoiceID'=>encrypt($order_product->invoice_id)]) !!}">#{!! $order_product->invoice_id !!}</a></td>
                                                 <td>{!! $order_product->order_id !!}</td>
                                                 <td>{!! date('d-M-y', strtotime($order_product->created_at)) !!}</td>
@@ -36,6 +46,145 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr class="table-warning">
+                                                <th colspan="9"><i class="fas fa-qrcode"></i> Order Product Information</th>
+                                            </tr>
+                                        </thead>
+                                        <tr >
+                                            <th style="width: 20%">Product</th>
+                                            <th style="width: 10%">Status</th>
+                                            <th style="width: 8%" title="Order Quantity">O. Qty.</th>
+                                            <th style="width: 8%" title="Delivery Quantity">D. Qty.</th>
+                                            <th style="width: 10%">Price</th>
+                                            <th style="width: 10%">Discount</th>
+                                            <th style="width: 12%">Subtotal</th>
+                                            <th style="width: 10%">Tax</th>
+                                            <th style="width: 12%">Total</th>
+                                        </tr>
+                                        @if($order_product)
+                                            @php
+                                                $n = 1;
+                                                $total=0;
+                                                $totalTax=0;
+                                            @endphp
+                                            <tr align="center" class="table-secondary">
+                                                <td>
+                                                    <img width="50%" src="{!! url('assets/back-end/vendor/product').'/'.$order_product->p_image !!}" alt="">
+                                                    <a href="">
+                                                        {!! $order_product->p_name !!}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @if($order_product->status_name)
+                                                        <span class="badge {!! $order_product->badge !!}" title="{!! $order_product->title !!}">{!! $order_product->status_name !!}</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Unknown</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {!! $order_product->order_quantity !!}
+                                                </td>
+                                                <td>
+                                                    {!! $order_product->delivery_quantity !!}
+                                                </td>
+                                                <td>BDT {!! $order_product->total_price !!}/=</td>
+                                                <td>BDT {!! $order_product->discount !!}/=</td>
+                                                <td>BDT {!! $order_product->total_price !!}/=</td>
+                                                <td>BDT {!! $order_product->tax_amount !!}/=</td>
+                                                <td>BDT {!!($order_product->total_price + $order_product->tax_amount) !!}/=</td>
+                                            </tr>
+                                            @php
+                                                $total += $order_product->total_price;
+                                                $totalTax += $order_product->tax_amount;
+                                            @endphp
+
+                                        @else
+                                            <tr align="center">
+                                                <td colspan="1">Not Found!</td>
+                                            </tr>
+                                        @endif
+                                        <tr class="table-success">
+                                            <td colspan="9">
+                                                <div class="total-part float-right margin-right-9-minus">
+                                                    <table>
+                                                        <tbody>
+                                                        <tr>
+                                                            <th class="w-200-right">Sub Total:</th>
+                                                            <td class="w-112-right">BDT {!! $total !!}/=</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div style="clear: both;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <thead>
+                                        <tr>
+                                            <th colspan="9" class="table-warning"><i class="fas fa-credit-card"></i> Payment Information</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-info">
+                                        <tr>
+                                            <th colspan="3">Payment Method</th>
+                                            <th colspan="3" class="text-center">Payment Status</th>
+                                            <th colspan="3" class="text-end">Delivery Charge</th>
+{{--                                            <th colspan="1" class="text-center">Grand Total</th>--}}
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                @if($order_product->payment_method == 1)
+                                                    <strong class="text-danger">Online Payment</strong>
+                                                @elseif($order_product->payment_method == 2)
+                                                    <strong class="text-success">Cash On Delivery</strong>
+                                                @endif
+                                            </td>
+                                            <td colspan="3" class="text-center">
+                                                @if($order_product->payment_status)
+                                                    <strong class="badge bg-success">Paid</strong>
+                                                @else
+                                                    <strong class="badge bg-danger">Unpaid</strong>
+                                                @endif
+                                            </td>
+                                            <td colspan="3" class="text-end">BDT {!! $order_product->shipping_charge !!}/=</td>
+{{--                                            <td colspan="1" class="text-end">BDT {!! ($total + $totalTax + $order_product->shipping_charge) !!}/=</td>--}}
+                                        </tr>
+                                        </tbody>
+                                        <tr class="table-secondary">
+                                            <td colspan="9">
+                                                <div class="total-part float-right margin-right-9-minus">
+                                                    <table>
+                                                        <tbody>
+                                                        <tr>
+                                                            <th class="w-200-right">Delivery Charge: </th>
+                                                            <td class="w-112-right">BDT {!! $order_product->shipping_charge !!}/=</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="w-200-right">Tax (0%):</th>
+                                                            <td class="w-112-right">BDT {!! $totalTax !!}/=</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="w-200-right">Grand Total: </th>
+                                                            <td class="float-end">BDT {!! ($total + $totalTax + $order_product->shipping_charge) !!}/=</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div style="clear: both;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-hover">
+
+                                    </table>
+                                </div>
+
                                 <div class="col-md-12">
                                     <table class="table table-borderless text-justify table-hover">
                                         <thead>
@@ -158,175 +307,20 @@
                                                 </form>
                                             @endif
                                         @elseif($order_product->order_status == 10)
-                                                <form class="d-inline-block" action="" method="post">
+                                            @if($order_product->delivery_district == \Illuminate\Support\Facades\Auth::user()->district)
+                                                <form class="d-inline-block" action="{!! route('admin.shop.order.received.admin') !!}" method="post">
                                                     @csrf
                                                     {!! method_field('put') !!}
                                                     <input type="hidden" name="orderId" value="{!! encrypt($order_product->id) !!}">
                                                     <input type="submit" name="" class="btn btn-info" value="Received Order" onclick="return confirm('Are you sure?')" title="Admin Order Received From Vendor Site Admin">
                                                 </form>
+                                            @endif
                                         @endif
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-md-12">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <th class="w-50">From</th>
-                                            <th class="w-50">To</th>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="box-text">
-                                                    <p>{{str_replace('-', ' ', config('app.name'))}},</p>
-                                                    <p>Dhaka,</p>
-                                                    <p>Bangladesh</p>
-                                                    <p>Contact: (+880) 1778-138 129</p>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="box-text">
-                                                    <p>Mr./Ms. {!! $order_product->customer_name !!},</p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <th style="width: 2%">No</th>
-                                            <th style="width: 5%">Action</th>
-                                            <th style="width: 10%">Status</th>
-                                            <th style="width: 30%">Product Name</th>
-                                            <th style="width: 10%">Price</th>
-                                            <th style="width: 3%">Qty</th>
-                                            <th style="width: 15%">Subtotal</th>
-                                            <th style="width: 10%">Tax Amount</th>
-                                            <th style="width: 15%">Grand Total</th>
-                                        </tr>
-                                        @if($order_product)
-                                            @php
-                                                $n = 1;
-                                                $total=0;
-                                                $totalTax=0;
-                                            @endphp
-                                            <tr align="center">
-                                                <td>{!! $n !!}</td>
-                                                <td>
-                                                @if($order_product->order_status == 1)
-                                                    <form action="{{route('vendor.delete.order')}}" method="post" class="d-inline-block">
-                                                        {!! method_field('delete') !!}
-                                                        {!! csrf_field() !!}
-                                                        <input type="hidden" name="product_id" value="{{encrypt($order_product->id)}}">
-                                                        <button title="Cancel Order" class="btn-style-none d-inline-block text-danger" onclick="return confirm('Are you sure cancel this Order?')" type="submit"><i class="fas fa-trash"></i></button>
-                                                    </form>
-                                                @elseif($order_product->order_status == 2)
-                                                    <form action="{!! route("submit.order.admin") !!}" method="post" class="d-inline-block">
-                                                        @csrf
-                                                        @method('put')
-                                                        <input type="hidden" name="order_id" value="{{encrypt($order_product->id)}}">
-                                                        <button title="Send request to admin" class="btn-style-none d-inline-block text-success" onclick="return confirm('Are you sure submit this order to admin?')" type="submit"><i class="fas fa-check"></i></button>
-                                                    </form>
-                                                @endif
-                                                </td>
-                                                <td>
-                                                    @if($order_product->status_name)
-                                                        <span class="badge {!! $order_product->badge !!}" title="{!! $order_product->title !!}">{!! $order_product->status_name !!}</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Unknown</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <a target="_blank" href="{{route('vendor.edit.product',['productID'=>$order_product->product_id])}}">
-                                                        {!! $order_product->p_name !!}
-                                                    </a>
-                                                </td>
-                                                <td>BDT {!! $order_product->unite_price !!}/=</td>
-                                                <td>{!! $order_product->order_quantity !!}</td>
-                                                <td>BDT {!! $order_product->total_price !!}/=</td>
-                                                <td>BDT {!! $order_product->tax_amount !!}/=</td>
-                                                <td>BDT {!!($order_product->total_price + $order_product->tax_amount) !!}/=</td>
-                                            </tr>
-                                            @php
-                                                $total += $order_product->total_price;
-                                                $totalTax += $order_product->tax_amount;
-                                            @endphp
-
-                                        @else
-                                            <tr align="center">
-                                                <td colspan="1">Not Found!</td>
-                                            </tr>
-                                        @endif
-
-                                        <tr>
-                                            <td colspan="9">
-                                                <div class="total-part float-right margin-right-9-minus">
-                                                    <table>
-                                                        <tbody>
-                                                        <tr>
-                                                            <th class="w-200-right">Sub Total:</th>
-                                                            <td class="w-112-right">BDT {!! $total !!}/=</td>
-                                                        </tr>
-{{--                                                        <tr>--}}
-{{--                                                            <th class="w-200-right">Shipping Charge:</th>--}}
-{{--                                                            <td class="w-112-right">BDT {!! $order->shipping_charge !!}/=</td>--}}
-{{--                                                        </tr>--}}
-                                                        <tr>
-                                                            <th class="w-200-right">Tax (0%):</th>
-                                                            <td class="w-112-right">BDT {!! $totalTax !!}/=</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th class="w-200-right">Total Payable:</th>
-                                                            <td class="float-end">BDT {!! ($total + $totalTax) !!}/=</td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                    <div style="clear: both;"></div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                @if($order_product->order_status == 1)
-                                    <form action="{!! route("accepted.order") !!}" method="post" class="d-inline-block">
-                                        {!! method_field('put') !!}
-                                        {!! csrf_field() !!}
-                                        <input type="hidden" name="product_id" value="{{encrypt($order_product->id)}}">
-                                        <button title="Accept Order" class="btn btn-outline-success float-end" onclick="return confirm('Are you sure accept this Order?')" type="submit"><i class="fas fa-check"></i> Accept Order</button>
-                                    </form>
-                                @elseif ($order_product->order_status == 2 )
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <form action="{!! route('vendor.submit.order.community') !!}" method="post">
-                                                @csrf
-                                                <div class="input-group">
-                                                    <input type="hidden" name="order_id" value="{{encrypt($order_product->id)}}">
-                                                    <select class="form-control" name="community" id="community">
-                                                        <option value="">--Select Option--</option>
-{{--                                                        @if(count($vendorCommunities))--}}
-{{--                                                            @foreach($vendorCommunities as $c)--}}
-{{--                                                                <option value="{{encrypt($c->id)}}">Name: {!! $c->community  !!} || ( Type:{!! $c->community_type !!}) || (Address: #Home-{!! $c->home !!}, Village-{!! $c->village !!}, Word-{!! $c->word !!}, Union-{!! $c->union !!}, Upazila-{!! $c->upazilla !!}, District-{!! $c->district !!}, Division-{!! $c->division !!})</option>--}}
-{{--                                                            @endforeach--}}
-{{--                                                        @endif--}}
-                                                    </select>
-                                                    <button class="btn btn-outline-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-check"></i> Submit to community <i class="fas fa-people-group"></i></button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <form action="{!! route("submit.order.admin") !!}" method="post" class="d-inline-block float-end">
-                                                @csrf
-                                                @method('put')
-                                                <input type="hidden" name="order_id" value="{{encrypt($order_product->id)}}">
-                                                <button title="Accept Order" class="btn btn-outline-primary mr--30" onclick="return confirm('Are you sure accept this Order?')" type="submit"><i class="fas fa-check"></i> Submit to admin</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                @endif
-
                             </div>
                         @else
                             <h2 class="text-center text-danger">Not Found!</h2>

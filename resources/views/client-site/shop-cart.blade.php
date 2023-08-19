@@ -25,11 +25,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @php($total = 0)
+                @php
+                    $total = 0; $count=count(session('cart'));
+                @endphp
                 @if(session('cart'))
                     @foreach(session('cart') as $id => $details)
                             <?php
-                            $total += $details['price'] * $details['quantity']
+                            $total += $details['price'] * $details['quantity'];
                             ?>
                             <tr class="cart-product">
                                 <td class="cart-product-item" class="actions" data-th="">

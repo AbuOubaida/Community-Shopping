@@ -157,4 +157,32 @@ class OrderController extends Controller
             back()->with('error',$exception->getMessage());
         }
     }
+    public function shopOrderReceivedAdmin(Request $request)
+    {
+        try {
+            if ($request->isMethod('put'))
+            {
+                $request->validate([
+                    'orderId' => ['required','string'],
+                ]);
+                extract($request->post());
+                $oID = decrypt($orderId);
+                if ($o = Order_product::where('id',$oID)->where('order_status',3)->first())//3=vendor regional admin
+                {
+                    $nou = $o->number_of_updated++;
+                    Order_product::where('id',$oID)->update([
+                        'order_status'  =>  4,// 4=customer regional admin
+                        'updated_by'    =>  Auth::user()->id,
+                        'number_of_updated' => $nou,
+                        'updated_at'    =>  now(),
+                    ]);
+                    return back()->with('success','Data Update Successfully');
+                }
+            }
+            return back()->with('error','Access denied!');
+        }catch (\Throwable $exception)
+        {
+            back()->with('error',$exception->getMessage());
+        }
+    }
 }

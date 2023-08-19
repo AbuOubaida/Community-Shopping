@@ -217,6 +217,7 @@ class AjaxRequestController extends Controller
                     $comm = self::communityGet($request);
                 }
                 $total = 0;
+                $count=count(session('cart'));
                 if(\session('cart'))
                 {
                     foreach(session('cart') as $id => $details)
@@ -224,7 +225,7 @@ class AjaxRequestController extends Controller
                         $total += $details['price'] * $details['quantity'];
                     }
                 }
-                return view('layouts/front-end/_card_total',compact('total','shippingCharge','comm'));
+                return view('layouts/front-end/_card_total',compact('total','shippingCharge','comm','count'));
             }
         }catch (\Throwable $exception)
         {

@@ -153,6 +153,7 @@ Route::middleware('auth')->group(function () {
             Route::match(['get'],'shop-order-list','shopOrderList')->name('admin.shop.order.list');
             Route::match(['get'],'shop-order-view/{orderID}','shopOrderView')->name('admin.shop.order.view');
             Route::put('shop-order-send-to-admin','shopOrderSendAdmin')->name('admin.shop.order.admin');
+            Route::put('shop-order-received-to-admin','shopOrderReceivedAdmin')->name('admin.shop.order.received.admin');
 
             //My Order
             Route::get('my-order-list','myOrder')->name('admin.my.order');

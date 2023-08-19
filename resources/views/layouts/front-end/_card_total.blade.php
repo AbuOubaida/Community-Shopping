@@ -4,8 +4,8 @@
         <ul class="list-unstyled" >
             <li>Cart Subtotal :<b id="total" class="pull-right text-right" data-total="{{$total}}">BDT {{$total}}/=</b></li>
             <li>Shipping ( @if($shippingCharge) {{$shippingCharge->location_name}} @endif @if($shippingCharge->location_type == 1) Country @elseif($shippingCharge->location_type == 2) Division @elseif($shippingCharge->location_type == 3) District @elseif($shippingCharge->location_type == 4) upazila @elseif($shippingCharge->location_type == 5) Union @else Unknown @endif
-                {{")"}} :<b class="pull-right text-right">@if($shippingCharge)BDT {{$shippingCharge->amount}}/= @endif</b></li>
-            <li style="background: rebeccapurple;margin-left: -20px;margin-right: -20px;padding: 5px 20px;font-size: 24px;font-weight: bolder;color: cornsilk;"><strong>Order Total :<b style="font-size: 24px;font-weight: bolder;color: cornsilk;" class="pull-right text-right" id="order-total" data-total="{{($total+$shippingCharge->amount)}}">BDT {{($total+$shippingCharge->amount)}}/=</b></strong></li>
+                {{")"}} :<b class="pull-right text-right">@if($shippingCharge) BDT ({!! $shippingCharge->amount !!} x {!! $count !!}) {{($shippingCharge->amount * $count)}}/= @endif</b></li>
+            <li style="background: rebeccapurple;margin-left: -20px;margin-right: -20px;padding: 5px 20px;font-size: 24px;font-weight: bolder;color: cornsilk;"><strong>Order Total :<b style="font-size: 24px;font-weight: bolder;color: cornsilk;" class="pull-right text-right" id="order-total" data-total="{{($total+($shippingCharge->amount * $count))}}">BDT {{($total+($shippingCharge->amount * $count))}}/=</b></strong></li>
         </ul>
     </div>
 </div>
