@@ -26,7 +26,7 @@
                 </a>
             @endif
                 <div class="sb-sidenav-menu-heading">Interface</div>
-            @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view"|| Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.waiting.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list" || "admin.to.community.request.list" == Route::currentRouteName() || "admin.to.community.request.view" == Route::currentRouteName() || "admin.to.community.accepted.list" == Route::currentRouteName() || "community.to.customer.request.list" == Route::currentRouteName())
+            @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view"|| Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.all.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list" || "admin.to.community.request.list" == Route::currentRouteName() || "admin.to.community.request.view" == Route::currentRouteName() || "admin.to.community.accepted.list" == Route::currentRouteName() || "community.to.customer.request.list" == Route::currentRouteName())
                 <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
                     Order
@@ -43,7 +43,7 @@
             @endif
                     <nav class="sb-sidenav-menu-nested nav">
 {{----------------------Shop Order Start Here--}}
-                        @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view" || Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.waiting.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list" )
+                        @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view" || Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.all.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list" )
                             <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
                                 Shop Order
                                 <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
@@ -72,10 +72,10 @@
                                 @endif
 {{--                        Request accepted from Shop Order List End--}}
 {{--------------------------Waiting for customer acceptance List Start--}}
-                                @if(Route::currentRouteName() == "community.waiting.for.customer.acceptance")
-                                    <a class="nav-link text-active text-capitalize" href="{{route('community.waiting.for.customer.acceptance')}}" title="Community waiting for customer acceptance">Waiting Acc. List</a>
+                                @if(Route::currentRouteName() == "community.all.for.customer.acceptance")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('community.all.for.customer.acceptance')}}" title="Community waiting for customer acceptance">Waiting Acc. List</a>
                                 @else
-                                    <a class="nav-link text-capitalize" href="{{route('community.waiting.for.customer.acceptance')}}" title="Community waiting for customer acceptance">Waiting Acc. List</a>
+                                    <a class="nav-link text-capitalize" href="{{route('community.all.for.customer.acceptance')}}" title="Community waiting for customer acceptance">Waiting Acc. List</a>
                                 @endif
 {{--                        Waiting for customer acceptance List End--}}
 {{--------------------------Community complete order list Start--}}

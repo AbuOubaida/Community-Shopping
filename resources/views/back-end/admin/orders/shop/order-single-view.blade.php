@@ -291,7 +291,7 @@
 {{--                                                Community--}}
                                                 <td class="text-center">
                                                     <button class="btn btn-outline-success d-inline-block">Message <i class="fas fa-paper-plane"></i></button>
-                                        @if($order_product->order_status == 3 || $order_product->order_status == 13 || $order_product->order_status == 12)
+                                        @if($order_product->order_status == 3 || $order_product->order_status == 13)
                                             @if($order_product->delivery_district == \Illuminate\Support\Facades\Auth::user()->district)
                                                 <form class="d-inline-block" action="{!! route('admin.shop.order.request.delivery.community') !!}" method="post">
                                                     @csrf
@@ -314,6 +314,15 @@
                                                     {!! method_field('put') !!}
                                                     <input type="hidden" name="orderId" value="{!! encrypt($order_product->id) !!}">
                                                     <input type="submit" name="" class="btn btn-info" value="Received Order" onclick="return confirm('Are you sure?')" title="Admin Order Received From Vendor Site Admin">
+                                                </form>
+                                            @endif
+                                        @elseif($order_product->order_status == 14)
+                                            @if($order_product->delivery_district == \Illuminate\Support\Facades\Auth::user()->district)
+                                                <form class="d-inline-block" action="{!! route('community.to.admin.order.received') !!}" method="post">
+                                                    @csrf
+                                                    {!! method_field('put') !!}
+                                                    <input type="hidden" name="orderId" value="{!! encrypt($order_product->id) !!}">
+                                                    <input type="submit" name="" class="btn btn-info" value="Received Order" onclick="return confirm('Are you sure to received order from vendor site community?')" title="Admin Received Order From Vendor Site Community">
                                                 </form>
                                             @endif
                                         @endif

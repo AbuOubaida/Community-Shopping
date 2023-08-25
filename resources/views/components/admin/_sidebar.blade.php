@@ -47,7 +47,7 @@
                     </nav>
                 </div>
 {{--        user section end--}}
-            @if(Route::currentRouteName() == "admin.shop.order.list" || Route::currentRouteName() == "admin.shop.order.view" || Route::currentRouteName() == "admin.to.admin.order.list" || Route::currentRouteName() == "admin.to.admin.order.view")
+            @if(Route::currentRouteName() == "admin.shop.order.list" || Route::currentRouteName() == "admin.shop.order.view" || Route::currentRouteName() == "admin.to.admin.order.list" || Route::currentRouteName() == "admin.to.admin.order.view" || Route::currentRouteName() == "community.to.admin.order.list" || Route::currentRouteName() == "community.to.admin.order.view" || Route::currentRouteName() == 'all.order.list' || Route::currentRouteName() == 'order.view')
                 <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
                     Order
@@ -62,10 +62,43 @@
                 </a>
                 <div class="collapse" id="orderLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
             @endif
+{{----------------------All Order Start Here--}}
                     <nav class="sb-sidenav-menu-nested nav">
+                    @if(Route::currentRouteName() == 'all.order.list' || Route::currentRouteName() == 'order.view')
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#allOrder" aria-expanded="true" aria-controls="allOrder">
+                            All Orders
+                            <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse show" id="allOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @else
+                        <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#allOrder" aria-expanded="false" aria-controls="allOrder">
+                            All Orders
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="allOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @endif
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {{--------------------------All order list Start--}}
+                                @if(Route::currentRouteName() == 'all.order.list')
+                                    <a class="nav-link text-active text-capitalize" href="{{route('all.order.list')}}" title="All Order List">All List</a>
+                                @else
+                                    <a class="nav-link text-capitalize" href="{{route('all.order.list')}}" title="All Order List">All List</a>
+                                @endif
+                                {{--                    All order list End--}}
+                                {{--------------------------Order view Start--}}
+                                @if(Route::currentRouteName() == "order.view")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('order.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Order view">View Order</a>
+                                @endif
+                                {{--                        Order view End--}}
+                            </nav>
+                        </div>
+                    </nav>
+{{----------------------All Order End Here--}}
+{{--###################################################################################################--}}
 {{----------------------Admin Order Start Here--}}
+                    <nav class="sb-sidenav-menu-nested nav">
                     @if(Route::currentRouteName() == "admin.to.admin.order.list" || Route::currentRouteName() == "admin.to.admin.order.view" )
-                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#adminOrder" aria-expanded="true" aria-controls="shopOrder">
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#adminOrder" aria-expanded="true" aria-controls="adminOrder">
                             Admin Order
                             <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
                         </a>
@@ -89,7 +122,7 @@
                                 @if(Route::currentRouteName() == "admin.to.admin.order.view")
                                     <a class="nav-link text-active text-capitalize" href="{{route('admin.to.admin.order.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Shop order view">View Order</a>
                                 @endif
-                                {{--                        admin Order View End--}}
+{{--                        admin Order View End--}}
                             </nav>
                     </nav>
                     <nav class="sb-sidenav-menu-nested nav">
@@ -101,7 +134,7 @@
                         </a>
                         <div class="collapse show" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                     @else
-                        <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="false" aria-controls="communityOrder">
+                        <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="false" aria-controls="shopOrder">
                             Shop Order
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
@@ -122,7 +155,38 @@
 {{--                        Shop Order View End--}}
                             </nav>
                         </div>
+                    </nav>
 
+                    <nav class="sb-sidenav-menu-nested nav">
+{{----------------------Community Order Start Here--}}
+                    @if(Route::currentRouteName() == "community.to.admin.order.list" || Route::currentRouteName() == "community.to.admin.order.view")
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#communityOrder" aria-expanded="true" aria-controls="communityOrder">
+                            Community Order
+                            <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse show" id="communityOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @else
+                        <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#communityOrder" aria-expanded="false" aria-controls="communityOrder">
+                            Community Order
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="communityOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @endif
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {{--------------------------Community Order List Start--}}
+                                @if(Route::currentRouteName() == "community.to.admin.order.list")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('community.to.admin.order.list')}}" title="Community order list">All list</a>
+                                @else
+                                    <a class="nav-link text-capitalize" href="{{route('community.to.admin.order.list')}}" title="Community order list">All list</a>
+                                @endif
+                                {{--                    Community Order List End--}}
+                                {{--------------------------Community Order View Start--}}
+                                @if(Route::currentRouteName() == "community.to.admin.order.view")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('community.to.admin.order.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Community order view">View Order</a>
+                                @endif
+                                {{--                        Community Order View End--}}
+                            </nav>
+                        </div>
                     </nav>
                 </div>
 {{--                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">--}}
