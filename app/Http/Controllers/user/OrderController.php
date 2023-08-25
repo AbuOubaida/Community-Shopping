@@ -13,22 +13,69 @@ class OrderController extends Controller
 {
     public function myOrder()
     {
-        $headerData = ['app'=>str_replace("_"," ",config("app.name")),'role'=>'User','title'=>'My Order List'];
-        $me = Auth::user();
-        $orders = order::leftJoin('users as u','u.id','orders.customer_id')
-            ->select(DB::raw("(select count(id) from order_products as op where op.order_id = orders.order_id) as nop"),'u.name as customer_name','orders.*')->where('orders.customer_id',$me->id)->get();
-        return view('back-end.user.orders.order-list',compact('headerData','orders'));
+        try {
+            $headerData = ['app'=>str_replace("_"," ",config("app.name")),'role'=>'User','title'=>'My Order List'];
+            $me = Auth::user();
+            $orders = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->leftJoin('products as p','p.id','order_products.product_id')
+                ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+                ->select('p.id as p_id','p.p_name','p.p_image','o.invoice_id','order_products.*','os.status_name','os.status_value','os.title','os.badge')->where('o.customer_id',$me->id)->get();
+            return view('back-end.user.orders.order-list',compact('headerData','orders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
     }
 
     public function orderSingle($orderID)
     {
-//        dd(route("my.order.list"));
-        $headerData = ['app'=>str_replace("_"," ",config("app.name")) ,'role'=>'User','title'=>'My Order view'];
-        $cID = Auth::user()->id;
-        $order = order::where('order_id',$orderID)->where('customer_id',$cID)->first();
-        $order_products = Order_product::leftJoin("products as p",'p.id','order_products.product_id')->where('order_products.order_id',$orderID)->where('order_products.customer_id',$cID)->select('p.p_name as product_name','order_products.*')->get();
-        return view("back-end/user/orders/order-single-view",compact('order','order_products','headerData'));
+        try {
+            $headerData = ['app'=>str_replace("_"," ",config("app.name")) ,'role'=>'User','title'=>'My Order view'];
+            $oID = decrypt($orderID);
+            $me = Auth::user();
+            $order = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->leftJoin('products as p','p.id','order_products.product_id')
+                ->leftJoin('shop_infos as shop','p.vendor_id','shop.owner_id')
+                ->leftJoin('communities as c','c.id','o.delivery_person_id')
+                ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+                ->select('shop.id as shop_id','shop.shop_name','p.id as p_id','p.p_name','p.p_image','o.invoice_id','os.status_name','o.c_name','o.c_phone','o.c_email','o.delivery_address','o.shipping_charge','o.order_status as status','o.payment_method','os.status_value','os.title','os.badge','c.community_name','c.community_phone','c.community_email','c.community_type','c.home as community_home','c.village as community_village','c.word as community_word','c.union as community_union','c.upazila as community_upazila','c.district as community_district','c.country as community_country','order_products.*')->where('o.customer_id',$me->id)->where('order_products.id',$oID)->first();
+            return view("back-end/user/orders/order-single-view-product-wise",compact('order','headerData'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
 
+    public function userAcceptOrder(Request $request)
+    {
+        try {
+            if ($request->isMethod('put'))
+            {
+                $request->validate([
+                    'ref'   =>  ['required','string']
+                ]);
+                extract($request->post());
+                $oID = decrypt($ref);
+                $me = Auth::user();
+                $order = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')->where('order_products.order_status',6)->where('o.customer_id',$me->id)->where('order_products.id',$oID)->select('o.invoice_id','order_products.*')->first();
+//                dd($order);
+                if ($order)
+                {
+                    $nou = $order->number_of_updated + 1;
+                    Order_product::where('id',$oID)->update([
+                        'order_status'  =>  7, //7=Received
+                        'number_of_updated'=>  $nou,
+                        'updated_by'     => $me->id,
+                    ]);
+                    return back()->with('success','Data update successfully');
+                }
+                return back()->with('error','Order Not Found!');
+            }
+            return back()->with('error','Access Denied!');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
     }
 
     public function cancelProductOrder(Request $request)

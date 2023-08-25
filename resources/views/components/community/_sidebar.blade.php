@@ -26,7 +26,7 @@
                 </a>
             @endif
                 <div class="sb-sidenav-menu-heading">Interface</div>
-            @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view"|| Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.waiting.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list")
+            @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view"|| Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.waiting.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list" || "admin.to.community.request.list" == Route::currentRouteName() || "admin.to.community.request.view" == Route::currentRouteName() || "admin.to.community.accepted.list" == Route::currentRouteName() || "community.to.customer.request.list" == Route::currentRouteName())
                 <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
                     Order
@@ -42,33 +42,33 @@
                 <div class="collapse" id="orderLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
             @endif
                     <nav class="sb-sidenav-menu-nested nav">
-{{----------------------Community Order Start Here--}}
+{{----------------------Shop Order Start Here--}}
                         @if("community.shop.request.list" == Route::currentRouteName() || Route::currentRouteName() == "community.shop.request.view" || Route::currentRouteName() == "community.accepted.shop.order.list" || Route::currentRouteName() == "community.waiting.for.customer.acceptance" || Route::currentRouteName() == "community.complete.order.list" )
-                            <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#communityOrder" aria-expanded="true" aria-controls="communityOrder">
-                                Community Order
+                            <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
+                                Shop Order
                                 <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <div class="collapse show" id="communityOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                            <div class="collapse show" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                         @else
-                            <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#communityOrder" aria-expanded="false" aria-controls="communityOrder">
-                                Community Order
+                            <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="false" aria-controls="shopOrder">
+                                Shop Order
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <div class="collapse" id="communityOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                            <div class="collapse" id="shopOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                         @endif
                                 <nav class="sb-sidenav-menu-nested nav">
 {{--------------------------Request from Shop Order List Start--}}
                                 @if(Route::currentRouteName() == "community.shop.request.list")
-                                    <a class="nav-link text-active text-capitalize" href="{{route('community.shop.request.list')}}" title="Request from shop order list">Shop Req. list</a>
+                                    <a class="nav-link text-active text-capitalize" href="{{route('community.shop.request.list')}}" title="Request from shop order list">Request list</a>
                                 @else
-                                    <a class="nav-link text-capitalize" href="{{route('community.shop.request.list')}}" title="Request from shop order list">Shop Req. list</a>
+                                    <a class="nav-link text-capitalize" href="{{route('community.shop.request.list')}}" title="Request from shop order list">Request list</a>
                                 @endif
 {{--                        Request from Shop Order List End--}}
 {{--------------------------Request accepted from Shop Order List Start--}}
                                 @if(Route::currentRouteName() == "community.accepted.shop.order.list")
-                                    <a class="nav-link text-active text-capitalize" href="{{route('community.accepted.shop.order.list')}}" title="Shop Accepted list">Shop Acc. list</a>
+                                    <a class="nav-link text-active text-capitalize" href="{{route('community.accepted.shop.order.list')}}" title="Accepted Order List">Accepted List</a>
                                 @else
-                                    <a class="nav-link text-capitalize" href="{{route('community.accepted.shop.order.list')}}" title="Shop Accepted list">Shop Acc. list</a>
+                                    <a class="nav-link text-capitalize" href="{{route('community.accepted.shop.order.list')}}" title="Accepted Order List">Accepted List</a>
                                 @endif
 {{--                        Request accepted from Shop Order List End--}}
 {{--------------------------Waiting for customer acceptance List Start--}}
@@ -88,13 +88,6 @@
                                 @if(Route::currentRouteName() == "community.shop.request.view")
                                     <a class="nav-link text-active text-capitalize" href="{{route('community.shop.request.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Request from Shop">Single Order</a>
                                 @endif
-{{--------------------------Request from admin Order List Start--}}
-                                @if(Route::currentRouteName() == "primary.order.list")
-                                    <a class="nav-link text-active text-capitalize" href="{{route('primary.order.list')}}" title="Request from admin">Admin Request</a>
-                                @else
-                                    <a class="nav-link text-capitalize" href="{{route('primary.order.list')}}" title="Request from admin">Admin Request</a>
-                                @endif
-{{--                        Request from admin Order List End--}}
 
 {{--------------------------Cancled Order List Start--}}
                                 @if(Route::currentRouteName() == "cancel.order.list")
@@ -115,23 +108,74 @@
 {{--                        Order view End --}}
                                 </nav>
                             </div>
-{{--                    Community Order End Here--}}
-                                        {{--------------------- My Order End Here--}}
-                                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                            My Order
-                                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                        </a>
-                                        <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                            <nav class="sb-sidenav-menu-nested nav">
-                                                @if("community.my.order" == Route::currentRouteName())
-                                                    <a class="nav-link text-active" href="{{route('community.my.order')}}">My order list</a>
-                                                @else
-                                                    <a class="nav-link" href="{{route('community.my.order')}}">My order list</a>
-                                                @endif
-                                            </nav>
-                                        </div>
-                        </nav>
-                    </div>
+{{--                    Shop Order End Here--}}
+{{--################################################################################################--}}
+{{----------------------Admin Order Start Here--}}
+                        @if("admin.to.community.request.list" == Route::currentRouteName() || "admin.to.community.request.view" == Route::currentRouteName() || "admin.to.community.accepted.list" == Route::currentRouteName() || "community.to.customer.request.list" == Route::currentRouteName())
+                            <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#adminOrder" aria-expanded="true" aria-controls="adminOrder">
+                                Admin Order
+                                <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse show" id="adminOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                        @else
+                            <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#adminOrder" aria-expanded="false" aria-controls="adminOrder">
+                                        Admin Order
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="adminOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                        @endif
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    {{--------------------------Request from admin Order List Start--}}
+                                    @if(Route::currentRouteName() == "admin.to.community.request.list")
+                                        <a class="nav-link text-active text-capitalize" href="{{route('admin.to.community.request.list')}}" title="Request List from admin">Request List</a>
+                                    @else
+                                        <a class="nav-link text-capitalize" href="{{route('admin.to.community.request.list')}}" title="Request List from admin">Request List</a>
+                                    @endif
+                                    {{--                        Request from admin Order List End--}}
+                                    {{--------------------------Accepted from admin Order List Start--}}
+                                    @if(Route::currentRouteName() == "admin.to.community.accepted.list")
+                                        <a class="nav-link text-active text-capitalize" href="{{route('admin.to.community.accepted.list')}}" title="Accepted List from admin">Accepted List</a>
+                                    @else
+                                        <a class="nav-link text-capitalize" href="{{route('admin.to.community.accepted.list')}}" title="Accepted List from admin">Accepted List</a>
+                                    @endif
+                                    {{--                        Accepted from admin Order List End--}}
+                                    {{------------------Waithing for customer receiving Order List Start--}}
+                                    @if(Route::currentRouteName() == "community.to.customer.request.list")
+                                        <a class="nav-link text-active text-capitalize" href="{{route('community.to.customer.request.list')}}" title="Wait for customer receiving order list">Wait Customer Receiving</a>
+                                    @else
+                                        <a class="nav-link text-capitalize" href="{{route('community.to.customer.request.list')}}" title="Wait for customer receiving order list">Wait Customer Receiving</a>
+                                    @endif
+                                    {{--      Waithing for customer receiving Order List End--}}
+
+                                    {{--------------------------Order view Start--}}
+                                    @if(Route::currentRouteName() == "admin.to.community.request.view")
+                                        <a class="nav-link text-active text-capitalize" href="{{route("admin.to.community.request.view",['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}">View Order</a>
+                                    @endif
+                                    {{--                        Order view End --}}
+                                    {{--------------------------Order view Start--}}
+                                    @if(Route::currentRouteName() == "vendor.view.invoice")
+                                        <a class="nav-link text-active text-capitalize" href="{{route("vendor.view.invoice",['invoiceID'=>\Illuminate\Support\Facades\Request::route('invoiceID')])}}">View Invoice</a>
+                                    @endif
+                                    {{--                        Order view End --}}
+                                </nav>
+                            </div>
+{{--                    Admin Order End Here--}}
+{{--------------------- My Order End Here--}}
+{{--                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">--}}
+{{--                                My Order--}}
+{{--                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>--}}
+{{--                            </a>--}}
+{{--                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">--}}
+{{--                                <nav class="sb-sidenav-menu-nested nav">--}}
+{{--                                    @if("community.my.order" == Route::currentRouteName())--}}
+{{--                                        <a class="nav-link text-active" href="{{route('community.my.order')}}">My order list</a>--}}
+{{--                                    @else--}}
+{{--                                        <a class="nav-link" href="{{route('community.my.order')}}">My order list</a>--}}
+{{--                                    @endif--}}
+{{--                                </nav>--}}
+{{--                            </div>--}}
+                    </nav>
+                </div>
 {{--            Order End here--}}
             </div>
         </div>

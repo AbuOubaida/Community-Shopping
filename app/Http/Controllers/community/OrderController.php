@@ -111,7 +111,7 @@ class OrderController extends Controller
         //
     }
 
-    public function ShopOrder ()
+    public function ShopRequestList ()
     {
         try {
             $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'Request form shop List'];
@@ -126,16 +126,70 @@ class OrderController extends Controller
                 ->where('op.order_status',11)
                 ->where('community_order_from_shops.community_id',$userComm->id)
                 ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*','os.status_name','os.status_value','os.title','os.badge')->get();
-//            dd($shopOrders);
-//            $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
-//                ->leftJoin("products as p",'p.id','order_products.product_id')
-//                ->leftJoin('orders as o','o.order_id','order_products.order_id')
-//                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')->where('order_products.vendor_id',$me->id)->where(function ($query){
-//                    $query->where('Order_products.order_status',11);
-//                    $query->orWhere('Order_products.order_status',12);
-//                })->get();
-//            dd($primaryOrders);
             return view('back-end.community.orders.sending.shop.order-list',compact('headerData','shopOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function adminRequestList ()
+    {
+        try {
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'Request form shop List'];
+            $me = Auth::user();
+            $userComm = communities::where('owner_id',$me->id)->where('status',1)->first();
+            $adminOrders = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->leftJoin('users as admin','order_products.updated_by','admin.id')
+                ->leftJoin('users as customer','order_products.customer_id','customer.id')
+                ->leftJoin('products as p','p.id','order_products.product_id')
+                ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+                ->where('o.delivery_person_id',$userComm->id)
+                ->where('order_products.order_status',4)//4=Waiting for Delivery Community
+                ->select('o.invoice_id','customer.name as customer_user_name','customer.phone as customer_user_phone','o.c_name','o.c_phone','o.c_email','o.delivery_address','admin.name as admin_name','admin.phone as admin_phone','admin.home as admin_home','admin.village as admin_village','admin.word as admin_word','admin.union as admin_union','admin.upazila as admin_upazila','admin.district as admin_district','admin.division as admin_division','admin.country as admin_country','os.status_name','os.status_value','os.title','os.badge','order_products.*')->get();
+//            dd($adminOrders);
+            return view('back-end.community.orders.sending.admin.order-list',compact('headerData','adminOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function adminAcceptedList ()
+    {
+        try {
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'Request form shop List'];
+            $me = Auth::user();
+            $userComm = communities::where('owner_id',$me->id)->where('status',1)->first();
+            $adminOrders = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->leftJoin('users as admin','order_products.updated_by','admin.id')
+                ->leftJoin('users as customer','order_products.customer_id','customer.id')
+                ->leftJoin('products as p','p.id','order_products.product_id')
+                ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+                ->where('o.delivery_person_id',$userComm->id)
+                ->where('order_products.order_status',5)//5=Delivery Community Received order
+                ->select('o.invoice_id','customer.name as customer_user_name','customer.phone as customer_user_phone','o.c_name','o.c_phone','o.c_email','o.delivery_address','admin.name as admin_name','admin.phone as admin_phone','admin.home as admin_home','admin.village as admin_village','admin.word as admin_word','admin.union as admin_union','admin.upazila as admin_upazila','admin.district as admin_district','admin.division as admin_division','admin.country as admin_country','os.status_name','os.status_value','os.title','os.badge','order_products.*')->get();
+//            dd($adminOrders);
+            return view('back-end.community.orders.sending.admin.order-list',compact('headerData','adminOrders'));
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function waitingCustomerReceivingList ()
+    {
+        try {
+            $headerData = ['app'=>str_replace('_',' ',config('app.name')),'role'=>Auth::user()->roles()->first()->display_name,'title'=>'Request form shop List'];
+            $me = Auth::user();
+            $userComm = communities::where('owner_id',$me->id)->where('status',1)->first();
+            $adminOrders = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')
+                ->leftJoin('users as admin','order_products.updated_by','admin.id')
+                ->leftJoin('users as customer','order_products.customer_id','customer.id')
+                ->leftJoin('products as p','p.id','order_products.product_id')
+                ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+                ->where('o.delivery_person_id',$userComm->id)
+                ->where('order_products.order_status',6)//6=Community Request to Customer for receive product
+                ->select('o.invoice_id','customer.name as customer_user_name','customer.phone as customer_user_phone','o.c_name','o.c_phone','o.c_email','o.delivery_address','admin.name as admin_name','admin.phone as admin_phone','admin.home as admin_home','admin.village as admin_village','admin.word as admin_word','admin.union as admin_union','admin.upazila as admin_upazila','admin.district as admin_district','admin.division as admin_division','admin.country as admin_country','os.status_name','os.status_value','os.title','os.badge','order_products.*')->get();
+//            dd($adminOrders);
+            return view('back-end.community.orders.sending.admin.order-list',compact('headerData','adminOrders'));
         }catch (\Throwable $exception)
         {
             return back()->with('error',$exception->getMessage());
@@ -160,7 +214,29 @@ class OrderController extends Controller
         {
             community_order_from_shop::where('id',$orderID)->where('seen_status',"!=",1)->update(['seen_status'=>1]);
         }
-        return view("back-end/community/orders/sending/order-single-view",compact('singleOrder'));
+        return view("back-end/community/orders/sending/shop/order-single-view",compact('singleOrder'));
+    }
+    public function AdminOrderView($orderID)
+    {
+        $orderID = decrypt($orderID);//community_order_from_shops id
+
+        $me = Auth::user();
+        $userComm = communities::where('owner_id',$me->id)->where('status',1)->first();
+        $singleOrder = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')
+            ->leftJoin('users as admin','order_products.updated_by','admin.id')
+            ->leftJoin('users as customer','order_products.customer_id','customer.id')
+            ->leftJoin('products as p','p.id','order_products.product_id')
+            ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+            ->where('o.delivery_person_id',$userComm->id)
+            ->where('order_products.id',$orderID)
+            ->where(function ($query){
+                $query->where('order_products.order_status',4);//4=Waiting for Delivery Community
+                $query->orWhere('order_products.order_status',5);//5=Received delivery community
+                $query->orWhere('order_products.order_status',6);//6=Community Request to Customer for receive product
+                $query->orWhere('order_products.order_status',7);//6=Customer Received Product
+            })
+            ->select('o.invoice_id','o.c_name','o.c_email','o.c_phone','o.delivery_address','admin.name as admin_name','admin.phone as admin_phone','admin.home as admin_home','admin.village as admin_village','admin.word as admin_word','admin.union as admin_union','admin.upazila as admin_upazila','admin.district as admin_district','admin.division as admin_division','admin.country as admin_country','order_products.*','os.status_name','os.status_value','os.title','os.badge')->first();
+        return view("back-end/community/orders/sending/admin/order-single-view",compact('singleOrder'));
     }
 
     public function shopOrderAccepted(Request $request)
@@ -186,6 +262,38 @@ class OrderController extends Controller
                         'delivery_quantity' => $qnt,
                         'order_status'      => 12,
                         'updated_by'        => $me->id,
+                    ]);
+                    return back()->with('success','Data update successfully!');
+                }
+                return back()->with('error','Order not found!');
+            }
+            return back()->with('error','Something went wrong!');
+        }catch (\Throwable $exception)
+        {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+    public function communityAcceptedOrderAdmin(Request $request)
+    {
+        try {
+            if ($request->isMethod('put'))
+            {
+                $request->validate([
+                    'ref'   => ['required'],
+                ]);
+                extract($request->post());
+                $orderID = decrypt($ref);//order id
+                $me = Auth::user();
+                $userComm = communities::where('owner_id',$me->id)->where('status',1)->first();
+                $order = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')->where('o.delivery_person_id',$userComm->id)->where('order_products.id',$orderID)->where('order_products.order_status',4)->select('order_products.*')->first();//4 Waiting for Delivery Community
+                if ($order)
+                {
+                    $nou = $order->number_of_updated+1;
+                    Order_product::where('id',$order->id)->update([
+                        'order_status'      => 5,//Received delivery community
+                        'updated_by'        => $me->id,
+                        'number_of_updated' => $nou,
+                        'updated_at'        => now(),
                     ]);
                     return back()->with('success','Data update successfully!');
                 }
@@ -230,7 +338,7 @@ class OrderController extends Controller
                 ->leftJoin('shop_infos as si','si.id','community_order_from_shops.shop_id')
                 ->leftJoin('order_statuses as os','op.order_status','os.status_value')
                 ->where('community_order_from_shops.status',3)
-                ->where('op.order_status',13)
+                ->where('op.order_status',6)
                 ->where('community_order_from_shops.community_id',$userComm->id)
                 ->select('op.order_quantity','op.order_status','o.c_name','o.c_phone','o.delivery_address','o.delivery_person_id','si.shop_name','si.shop_phone','si.open_at','si.closed_at','si.home as shop_home','si.village as shop_vill','si.word as shop_word','si.union as shop_union','si.upazila as shop_upazilla','si.district as shop_dist','si.division as shop_div','si.country as shop_country','community_order_from_shops.*','os.status_name','os.status_value','os.title','os.badge')->get();
             return view('back-end.community.orders.sending.shop.order-list',compact('headerData','shopOrders'));
@@ -282,12 +390,26 @@ class OrderController extends Controller
                     ]);
 
                     Order_product::where('id',$order->order_id)->update([
-                        'order_status'      => 13,//13=community request to customer
+                        'order_status'      => 6,//6=community request to customer
                         'updated_by'        => $me->id,
                     ]);
                     return back()->with('success','Data update successfully!');
                 }
-                return back()->with('error','Order not found!');
+                elseif ($order = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')->where('o.delivery_person_id',$userComm->id)->where('order_products.id',$c_o_f_s_id)->where('order_products.order_status',5)->select('order_products.*')->first())//4 Waiting for Delivery Community
+                {
+                    $nou = $order->number_of_updated+1;
+                    Order_product::where('id',$order->id)->update([
+                        'order_status'      => 6,//Community Request to Customer for receive product
+                        'updated_by'        => $me->id,
+                        'number_of_updated' => $nou,
+                        'updated_at'        => now(),
+                    ]);
+                    return back()->with('success','Data update successfully!');
+                }
+                else
+                {
+                    return back()->with('error','Order not found!');
+                }
             }
             return back()->with('error','Something went wrong!');
         }catch (\Throwable $exception)
@@ -314,7 +436,7 @@ class OrderController extends Controller
                     ]);
 
                     Order_product::where('id',$order->order_id)->update([
-                        'order_status'      => 3,//3= vendor regional admin
+                        'order_status'      => 14,//14= vendor site community request to admin
                         'updated_by'        => $me->id,
                     ]);
                     return back()->with('success','Data update successfully!');

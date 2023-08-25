@@ -3,9 +3,9 @@
     <main>
         <div class="container-fluid px-4">
             <h1 class="mt-4 text-capitalize">{{str_replace('.', ' ', \Route::currentRouteName())}}</h1>
-            @if($order_product->order_status != 0)
-                <a href="{!! route("vendor.invoice.pdf.product",['orderID'=>encrypt($order_product->id)]) !!}" class="float-end btn btn-outline-success btn-sm"><i class="fas fa-file"></i> Download PDF</a>
-            @endif
+{{--            @if($order_product->order_status != 0)--}}
+{{--                <a href="{!! route("vendor.invoice.pdf.product",['orderID'=>encrypt($order_product->id)]) !!}" class="float-end btn btn-outline-success btn-sm"><i class="fas fa-file"></i> Download PDF</a>--}}
+{{--            @endif--}}
             <ol class="breadcrumb mb-4 bg-none">
                 <li class="breadcrumb-item">
                     <a href="{{\Illuminate\Support\Facades\URL::previous()}}" class="text-capitalize text-chl">Previous</a>
@@ -63,7 +63,7 @@
                                             <th style="width: 10%">Discount</th>
                                             <th style="width: 12%">Subtotal</th>
                                             <th style="width: 10%">Tax</th>
-                                            <th style="width: 12%">Total</th>
+                                            <th style="width: 12%" class="text-center">Total</th>
                                         </tr>
                                         @if($order_product)
                                             @php
@@ -95,7 +95,7 @@
                                                 <td>BDT {!! $order_product->discount !!}/=</td>
                                                 <td>BDT {!! $order_product->total_price !!}/=</td>
                                                 <td>BDT {!! $order_product->tax_amount !!}/=</td>
-                                                <td>BDT {!!($order_product->total_price + $order_product->tax_amount) !!}/=</td>
+                                                <td class="text-end">BDT {!!($order_product->total_price + $order_product->tax_amount) !!}/=</td>
                                             </tr>
                                             @php
                                                 $total += $order_product->total_price;
@@ -114,7 +114,7 @@
                                                         <tbody>
                                                         <tr>
                                                             <th class="w-200-right">Sub Total:</th>
-                                                            <td class="w-112-right">BDT {!! $total !!}/=</td>
+                                                            <td class="w-112-right text-end">BDT {!! $total !!}/=</td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -160,15 +160,15 @@
                                                         <tbody>
                                                         <tr>
                                                             <th class="w-200-right">Delivery Charge: </th>
-                                                            <td class="w-112-right">BDT {!! $order_product->shipping_charge !!}/=</td>
+                                                            <td class="w-112-right text-end">BDT {!! $order_product->shipping_charge !!}/=</td>
                                                         </tr>
                                                         <tr>
                                                             <th class="w-200-right">Tax (0%):</th>
-                                                            <td class="w-112-right">BDT {!! $totalTax !!}/=</td>
+                                                            <td class="w-112-right text-end">BDT {!! $totalTax !!}/=</td>
                                                         </tr>
                                                         <tr>
                                                             <th class="w-200-right">Grand Total: </th>
-                                                            <td class="float-end">BDT {!! ($total + $totalTax + $order_product->shipping_charge) !!}/=</td>
+                                                            <td class="float-end text-end">BDT {!! ($total + $totalTax + $order_product->shipping_charge) !!}/=</td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -278,7 +278,7 @@
                                                 <td class="text-center">
                                                     <button class="btn btn-outline-success d-inline-block">Message<i class="fas fa-paper-plane"></i></button>
                                                     @if($order_product->order_status == 9)
-                                                        <form class="d-inline-block" action="" method="post">
+                                                        <form class="d-inline-block" action="{!! route('admin.received.order.from.shop') !!}" method="post">
                                                             @csrf
                                                             {!! method_field('put') !!}
                                                             <input type="hidden" name="orderId" value="{!! encrypt($order_product->id) !!}">
@@ -291,12 +291,13 @@
 {{--                                                Community--}}
                                                 <td class="text-center">
                                                     <button class="btn btn-outline-success d-inline-block">Message <i class="fas fa-paper-plane"></i></button>
-                                        @if($order_product->order_status == 3)
+                                        @if($order_product->order_status == 3 || $order_product->order_status == 13 || $order_product->order_status == 12)
                                             @if($order_product->delivery_district == \Illuminate\Support\Facades\Auth::user()->district)
-                                                <form class="d-inline-block" action="" method="post">
+                                                <form class="d-inline-block" action="{!! route('admin.shop.order.request.delivery.community') !!}" method="post">
                                                     @csrf
                                                     {!! method_field('put') !!}
-                                                    <input type="button" onclick="return confirm('Are you sure?')" name="" class="btn btn-primary" value="Send to Community">
+                                                    <input type="hidden" name="orderId" value="{!! encrypt($order_product->id) !!}">
+                                                    <input type="submit" name="" class="btn btn-info" value="Send to community" onclick="return confirm('Are you sure?')" title="Admin send request to delivery community">
                                                 </form>
                                             @else
                                                 <form class="d-inline-block" action="{!! route('admin.shop.order.admin') !!}" method="post">
@@ -308,7 +309,7 @@
                                             @endif
                                         @elseif($order_product->order_status == 10)
                                             @if($order_product->delivery_district == \Illuminate\Support\Facades\Auth::user()->district)
-                                                <form class="d-inline-block" action="{!! route('admin.shop.order.received.admin') !!}" method="post">
+                                                <form class="d-inline-block" action="{!! route('admin.to.admin.order.received') !!}" method="post">
                                                     @csrf
                                                     {!! method_field('put') !!}
                                                     <input type="hidden" name="orderId" value="{!! encrypt($order_product->id) !!}">

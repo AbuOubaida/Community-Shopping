@@ -20,10 +20,11 @@
                                         <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Product</th>
+                                            <th>Invoice id</th>
                                             <th>Order id</th>
-                                            <th>Product Count</th>
-                                            <th>Customer name</th>
                                             <th>Price</th>
+                                            <th>Qnt.</th>
                                             <th>Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -31,10 +32,11 @@
                                         <tfoot>
                                         <tr>
                                             <th>No</th>
+                                            <th>Product</th>
+                                            <th>Invoice id</th>
                                             <th>Order id</th>
-                                            <th>Product Count</th>
-                                            <th>Customer name</th>
                                             <th>Price</th>
+                                            <th>Qnt.</th>
                                             <th>Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -47,14 +49,23 @@
                                             @foreach($orders as $o)
                                                 <tr>
                                                     <td>{{$i++}}</td>
+                                                    <td><a target="_blank" href="{{route('client.single.product.view',['productSingleID'=>encrypt($o->p_id)])}}"><img style="height: 50px; border-radius: 5px" src="{!! url("assets/back-end/vendor/product/".$o->p_image) !!}" alt=""> &nbsp;{{$o->p_name}}</a></td>
+                                                    <td>#{{$o->invoice_id}}</td>
                                                     <td>{{$o->order_id}}</td>
-                                                    <td>{{$o->nop}}</td>
-                                                    <td class="text-capitalize"> {{$o->customer_name}}</td>
-                                                    <td>BDT {{$o->price}}</td>
-                                                    <td>@if($o->order_status == 1) <spen class="text-success">Active</spen> @else <span class="text-danger">Inactive</span> @endif</td>
-{{--                                                    <td>{{$o->delivery_address}}</td>--}}
+                                                    <td>BDT-{{$o->total_price}}/=</td>
+                                                    <td>{{$o->order_quantity}}</td>
+                                                    <td>
+                                                        @if($o->status_name)
+                                                            <span class="badge {!! $o->badge !!}" title="{!! $o->title !!}">{!! $o->status_name !!}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Unknown</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-center">
-                                                        <a title="View" href="{{route("order.single",['orderID'=>$o->order_id])}}" class="text-primary"><i class="fas fa-eye"></i></a>
+                                                        <div class="text-center">
+                                                            <a title="View" href="{{route("customer.order.single.view",['orderID'=>encrypt($o->id)])}}" class="text-primary"><i class="fas fa-eye"></i></a>
+                                                        </div>
+
 {{--                                                        <a title="Edit" href="" class="text-success"><i class="fas fa-edit"></i></a>--}}
 {{--                                                        <form action="" method="post" class="d-inline-block">--}}
 {{--                                                            {!! method_field('delete') !!}--}}

@@ -47,7 +47,7 @@
                     </nav>
                 </div>
 {{--        user section end--}}
-            @if(Route::currentRouteName() == "admin.shop.order.list" || Route::currentRouteName() == "admin.shop.order.view")
+            @if(Route::currentRouteName() == "admin.shop.order.list" || Route::currentRouteName() == "admin.shop.order.view" || Route::currentRouteName() == "admin.to.admin.order.list" || Route::currentRouteName() == "admin.to.admin.order.view")
                 <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#orderLayouts" aria-expanded="true" aria-controls="orderLayouts">
                     <div class="sb-nav-link-icon text-active"><i class="fas fa-columns"></i></div>
                     Order
@@ -63,7 +63,37 @@
                 <div class="collapse" id="orderLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
             @endif
                     <nav class="sb-sidenav-menu-nested nav">
-{{----------------------Community Order Start Here--}}
+{{----------------------Admin Order Start Here--}}
+                    @if(Route::currentRouteName() == "admin.to.admin.order.list" || Route::currentRouteName() == "admin.to.admin.order.view" )
+                        <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#adminOrder" aria-expanded="true" aria-controls="shopOrder">
+                            Admin Order
+                            <div class="sb-sidenav-collapse-arrow text-active"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse show" id="adminOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @else
+                        <a class="nav-link collapsed text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#adminOrder" aria-expanded="false" aria-controls="communityOrder">
+                            Admin Order
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="adminOrder" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                    @endif
+                            <nav class="sb-sidenav-menu-nested nav">
+                                {{--------------------------admin Order List Start--}}
+                                @if(Route::currentRouteName() == "admin.to.admin.order.list")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('admin.to.admin.order.list')}}" title="Shop order list">All list</a>
+                                @else
+                                    <a class="nav-link text-capitalize" href="{{route('admin.to.admin.order.list')}}" title="Shop order list">All list</a>
+                                @endif
+                                {{--                    admin Order List End--}}
+                                {{--------------------------Admin Order View Start--}}
+                                @if(Route::currentRouteName() == "admin.to.admin.order.view")
+                                    <a class="nav-link text-active text-capitalize" href="{{route('admin.to.admin.order.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Shop order view">View Order</a>
+                                @endif
+                                {{--                        admin Order View End--}}
+                            </nav>
+                    </nav>
+                    <nav class="sb-sidenav-menu-nested nav">
+{{----------------------Shop Order Start Here--}}
                     @if(Route::currentRouteName() == "admin.shop.order.list" || Route::currentRouteName() == "admin.shop.order.view" )
                         <a class="nav-link text-active text-capitalize" href="#" data-bs-toggle="collapse" data-bs-target="#shopOrder" aria-expanded="true" aria-controls="shopOrder">
                             Shop Order
@@ -79,17 +109,17 @@
                     @endif
                             <nav class="sb-sidenav-menu-nested nav">
 {{--------------------------Shop Order List Start--}}
-                        @if(Route::currentRouteName() == "admin.shop.order.list")
-                            <a class="nav-link text-active text-capitalize" href="{{route('admin.shop.order.list')}}" title="Shop order list">All list</a>
-                        @else
-                            <a class="nav-link text-capitalize" href="{{route('admin.shop.order.list')}}" title="Shop order list">All list</a>
-                        @endif
-{{--                    Shop Order List End--}}
-{{--------------------------Shop Order View Start--}}
-                        @if(Route::currentRouteName() == "admin.shop.order.view")
-                            <a class="nav-link text-active text-capitalize" href="{{route('admin.shop.order.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Shop order view">View Order</a>
-                        @endif
-{{--                    Shop Order View End--}}
+                            @if(Route::currentRouteName() == "admin.shop.order.list")
+                                <a class="nav-link text-active text-capitalize" href="{{route('admin.shop.order.list')}}" title="Shop order list">All list</a>
+                            @else
+                                <a class="nav-link text-capitalize" href="{{route('admin.shop.order.list')}}" title="Shop order list">All list</a>
+                            @endif
+    {{--                    Shop Order List End--}}
+    {{--------------------------Shop Order View Start--}}
+                            @if(Route::currentRouteName() == "admin.shop.order.view")
+                                <a class="nav-link text-active text-capitalize" href="{{route('admin.shop.order.view',['orderID'=>\Illuminate\Support\Facades\Request::route('orderID')])}}" title="Shop order view">View Order</a>
+                            @endif
+{{--                        Shop Order View End--}}
                             </nav>
                         </div>
 

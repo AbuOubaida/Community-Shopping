@@ -149,11 +149,18 @@ Route::middleware('auth')->group(function () {
             });
         });
         Route::controller(\App\Http\Controllers\admin\OrderController::class)->group(function (){
+            //Admin Order
+            Route::match(['get'],'admin-order-list','adminOrderList')->name('admin.to.admin.order.list');
+            Route::match(['get'],'admin-order-view/{orderID}','adminOrderView')->name('admin.to.admin.order.view');
+            Route::put('admin-to-admin-received-order','adminToAdminOrderReceived')->name('admin.to.admin.order.received');
+
             //Shop Order
             Route::match(['get'],'shop-order-list','shopOrderList')->name('admin.shop.order.list');
             Route::match(['get'],'shop-order-view/{orderID}','shopOrderView')->name('admin.shop.order.view');
+            Route::put('admin-order-received-from-shop','adminOrderReceivedShop')->name('admin.received.order.from.shop');
             Route::put('shop-order-send-to-admin','shopOrderSendAdmin')->name('admin.shop.order.admin');
             Route::put('shop-order-received-to-admin','shopOrderReceivedAdmin')->name('admin.shop.order.received.admin');
+            Route::put('shop-order-send-request-community','shopOrderSendRequestCommunity')->name('admin.shop.order.request.delivery.community');
 
             //My Order
             Route::get('my-order-list','myOrder')->name('admin.my.order');
@@ -229,7 +236,8 @@ Route::middleware('auth')->group(function () {
 
         Route::controller(OrderController::class)->group(function (){
             Route::get('my-order-list','myOrder')->name('my.order.list');
-            Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('order.single');
+            Route::match(['post','get'],'order-single-view/{orderID}','orderSingle')->name('customer.order.single.view');
+            Route::put('user-accept-order-submit','userAcceptOrder')->name('user.accept.order.submit');
         });
     });
     #.2.6.Group For community/messenger role access
@@ -241,10 +249,10 @@ Route::middleware('auth')->group(function () {
             Route::match(['get','post'],'edit-community','editCommunity')->name('edit.community');
 //            Route::match(['get','post'],'my-community','myCommunity')->name('my.community');
         });
-        // Community self order (My order)
+        // Orders
         Route::controller(\App\Http\Controllers\community\OrderController::class)->group(function (){
             //Shop order start
-            Route::get('shop-request-list','ShopOrder')->name('community.shop.request.list');
+            Route::get('shop-request-list','ShopRequestList')->name('community.shop.request.list');
             Route::match(['get','post'],'shop-request-view/{orderID}','ShopOrderView')->name('community.shop.request.view');
             Route::put('shop-order-accepted','shopOrderAccepted')->name('shop.order.accepted');
             Route::get('accepted-shop-order-list','shopAcceptedOrderList')->name('community.accepted.shop.order.list');
@@ -252,6 +260,15 @@ Route::middleware('auth')->group(function () {
             Route::get('waiting-customer-acceptance-list','waitingCustomerAcceptanceList')->name('community.waiting.for.customer.acceptance');
             Route::put('delivery-direct-customer','deliveryDirectCustomer')->name('delivery.direct.customer');
             Route::put('send-to-admin','sendAdmin')->name('send.to.admin');
+
+            //Admin order start
+            Route::get('admin-request-list','adminRequestList')->name('admin.to.community.request.list');
+            Route::get('admin-accepted-list','adminAcceptedList')->name('admin.to.community.accepted.list');
+            Route::get('waiting-for-customer-receiving-list','waitingCustomerReceivingList')->name('community.to.customer.request.list');
+            Route::match(['get','post'],'admin-order-view/{orderID}','AdminOrderView')->name('admin.to.community.request.view');
+            Route::put('accepted-order-from-admin','communityAcceptedOrderAdmin')->name('community.accepted.order.from.admin');
+
+
             Route::match(['get','post'],'my-order','myOrder')->name('community.my.order');
             Route::match(['post','get'],'order-single/{orderID}','orderSingle')->name('community.order.single');
         });
