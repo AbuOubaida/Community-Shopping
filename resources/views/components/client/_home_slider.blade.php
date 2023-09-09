@@ -3,7 +3,7 @@
         <div id="slider1" class="rev_slider" data-version="5.0">
             <ul>
                 <li data-transition="turnoff-vertical" data-slotamount="default" data-easein="Power4.easeInOut" data-easeout="Power4.easeInOut" data-masterspeed="2000">
-                    <img src="{{("client-site/images/sliders/slide-bg/12.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
+                    <img src="{{("client-site/images/sliders/slider 02.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
 
                     <div
                         class="tp-caption"
@@ -36,7 +36,7 @@
                         data-splitout="none"
                         data-responsive_offset="on"
                     >
-                        <div class="slide--headline">We Serve Quality Food</div>
+                        <div class="slide--headline">Community-Powered Delivery Revolution</div>
                     </div>
 
                     <div
@@ -53,8 +53,7 @@
                         data-responsive_offset="on"
                     >
                         <div class="slide--bio text-center">
-                            Granny is a restaurant, bar and coffee roastery located on Egypt. We have<br />
-                            awesome recipes and the most talented chefs in town!
+                            Community Shopping's unique delivery system leverages local places of worship, empowering communities to <br>collaborate for efficient and eco-friendly deliveries.
                         </div>
                     </div>
 
@@ -76,7 +75,7 @@
                         data-responsive="off"
                     >
                         <div class="slide-action">
-                            <a class="btn btn--primary btn--lg" href="#">View Menu</a>
+                            <a class="btn btn--primary btn--lg" href="{{route('client.product.list')}}">View Products</a>
                         </div>
                     </div>
                 </li>
@@ -98,7 +97,7 @@
                         data-splitout="none"
                         data-responsive_offset="on"
                     >
-                        <div class="slide--subheadline">Hello, We Are Granny</div>
+                        <div class="slide--subheadline">Community-Powered Delivery</div>
                     </div>
 
                     <div
@@ -115,7 +114,7 @@
                         data-splitout="none"
                         data-responsive_offset="on"
                     >
-                        <div class="slide--headline">Passion For The Perfect Taste</div>
+                        <div class="slide--headline">Empowering Local Delivery Networks</div>
                     </div>
 
                     <div
@@ -132,8 +131,7 @@
                         data-responsive_offset="on"
                     >
                         <div class="slide--bio text-center">
-                            Granny is a restaurant, bar and coffee roastery located on Egypt. We have<br />
-                            awesome recipes and the most talented chefs in town!
+                            Experience a community-powered delivery revolution with Community Shopping, where local places of <br>worship join forces for efficient and sustainable deliveries.
                         </div>
                     </div>
 
@@ -155,7 +153,7 @@
                         data-responsive="off"
                     >
                         <div class="slide-action">
-                            <a class="btn btn--primary" href="#">Purchase Now</a>
+                            <a class="btn btn--primary" href="{{route('client.product.list')}}">Purchase Now</a>
                         </div>
                     </div>
                 </li>
@@ -177,7 +175,7 @@
                         data-splitout="none"
                         data-responsive_offset="on"
                     >
-                        <div class="slide--subheadline">Made With Love</div>
+                        <div class="slide--subheadline">Mission & Vision: Delivering Together</div>
                     </div>
 
                     <div
@@ -194,7 +192,7 @@
                         data-splitout="none"
                         data-responsive_offset="on"
                     >
-                        <div class="slide--headline">Hot and Ready to Serve</div>
+                        <div class="slide--headline">Empowering Communities Through Seamless Delivery</div>
                     </div>
 
                     <div
@@ -211,8 +209,7 @@
                         data-responsive_offset="on"
                     >
                         <div class="slide--bio text-center">
-                            Granny is a restaurant, bar and coffee roastery located on Egypt. We have<br />
-                            awesome recipes and the most talented chefs in town!
+                            Empowering communities through collaboration. Our mission is efficient, eco-friendly, and <br>community-driven delivery. Join us in building a sustainable future.
                         </div>
                     </div>
                 </li>

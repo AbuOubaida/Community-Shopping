@@ -20,6 +20,7 @@
                                         <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Date</th>
                                             <th>Product</th>
                                             <th>Invoice id</th>
                                             <th>Order id</th>
@@ -32,6 +33,7 @@
                                         <tfoot>
                                         <tr>
                                             <th>No</th>
+                                            <th>Date</th>
                                             <th>Product</th>
                                             <th>Invoice id</th>
                                             <th>Order id</th>
@@ -49,6 +51,7 @@
                                             @foreach($orders as $o)
                                                 <tr>
                                                     <td>{{$i++}}</td>
+                                                    <td>{!! date('d-M-y', strtotime($o->created_at)) !!}</td>
                                                     <td><a target="_blank" href="{{route('client.single.product.view',['productSingleID'=>encrypt($o->p_id)])}}"><img style="height: 50px; border-radius: 5px" src="{!! url("assets/back-end/vendor/product/".$o->p_image) !!}" alt=""> &nbsp;{{$o->p_name}}</a></td>
                                                     <td>#{{$o->invoice_id}}</td>
                                                     <td>{{$o->order_id}}</td>

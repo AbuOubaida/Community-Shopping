@@ -119,10 +119,12 @@ class orderController extends Controller
             $primaryOrders = Order_product::leftJoin('users as u','u.id','Order_products.customer_id')
                 ->leftJoin("products as p",'p.id','order_products.product_id')
                 ->leftJoin('orders as o','o.order_id','order_products.order_id')
-                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*')->where('order_products.vendor_id',$me->id)->where(function ($query){
+                ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
+                ->select('u.name as customer_name','o.invoice_id','p.p_name','p.p_image','p.p_quantity','Order_products.*','os.status_name','os.status_value','os.title','os.badge')->where('order_products.vendor_id',$me->id)->where(function ($query){
                     $query->where('Order_products.order_status',9);
                     $query->orWhere('Order_products.order_status',10);
                 })->get();
+//            dd($primaryOrders);
             return view('back-end.vendor.orders.sending.order-list',compact('headerData','primaryOrders'));
         }catch (\Throwable $exception)
         {

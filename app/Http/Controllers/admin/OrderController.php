@@ -302,7 +302,7 @@ class OrderController extends Controller
                 {
                     $nou = $o->number_of_updated++;
                     Order_product::where('id',$oID)->update([
-                        'order_status'  =>  12,// 12=Vendor site community Hub
+                        'order_status'  =>  3,// 3=H/O Logistic
                         'updated_by'    =>  Auth::user()->id,
                         'number_of_updated' => $nou,
                         'updated_at'    =>  now(),

@@ -19,7 +19,7 @@ class OrderController extends Controller
             $orders = Order_product::leftJoin('orders as o','o.order_id','order_products.order_id')
                 ->leftJoin('products as p','p.id','order_products.product_id')
                 ->leftJoin('order_statuses as os','order_products.order_status','os.status_value')
-                ->select('p.id as p_id','p.p_name','p.p_image','o.invoice_id','order_products.*','os.status_name','os.status_value','os.title','os.badge')->where('o.customer_id',$me->id)->get();
+                ->select('p.id as p_id','p.p_name','p.p_image','o.invoice_id','order_products.*','os.status_name','os.status_value','os.title','os.badge')->where('o.customer_id',$me->id)->orderBy('id','desc')->get();
             return view('back-end.user.orders.order-list',compact('headerData','orders'));
         }catch (\Throwable $exception)
         {

@@ -51,7 +51,7 @@
                                             @foreach($products as $p)
                                                 <tr>
                                                     <td>{{$i++}}</td>
-                                                    <td class="text-capitalize"><img src="{{url('assets/back-end/vendor/product/').'/'.$p->p_image}}" alt="product Image" style="max-width: 50%" class="tabel-image"> {{$p->p_name}}</td>
+                                                    <td class="text-capitalize"><img src="{{url('assets/back-end/vendor/product/').'/'.$p->p_image}}" alt="product Image" style="height: 50px; border-radius: 5px" class="tabel-image"> {{$p->p_name}}</td>
                                                     <td>{{$p->category_name}}</td>
                                                     <td>{{$p->p_price}}</td>
                                                     <td>@if($p->offer_status == "1") <b class="text-info">Available</b> @else <b class="text-warning">Unavailable</b> @endif</td>
