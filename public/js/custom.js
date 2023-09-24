@@ -4,7 +4,7 @@ if(window.location.port)
 {
     sourceDir = "";
 }else{
-    sourceDir = "/OFDS/public";
+    sourceDir = "/CSC/public";
 }
  // for localhost "/OFDS/public"
 (function ($){

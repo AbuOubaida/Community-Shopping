@@ -3,7 +3,7 @@
         <div id="slider1" class="rev_slider" data-version="5.0">
             <ul>
                 <li data-transition="turnoff-vertical" data-slotamount="default" data-easein="Power4.easeInOut" data-easeout="Power4.easeInOut" data-masterspeed="2000">
-                    <img src="{{("client-site/images/sliders/slider 02.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
+                    <img src="{{("client-site/images/sliders/slider.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
 
                     <div
                         class="tp-caption"
@@ -81,7 +81,7 @@
                 </li>
 
                 <li data-transition="random-premium" data-slotamount="default" data-easein="Power4.easeInOut" data-easeout="Power4.easeInOut" data-masterspeed="2000">
-                    <img src="{{("client-site/images/sliders/slide-bg/2.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
+                    <img src="{{url("client-site/images/sliders/Untitled1.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
 
                     <div
                         class="tp-caption"
@@ -159,7 +159,7 @@
                 </li>
 
                 <li data-transition="cube-horizontal" data-slotamount="default" data-easein="Power4.easeInOut" data-easeout="Power4.easeInOut" data-masterspeed="2000">
-                    <img src="{{("client-site/images/sliders/slide-bg/6.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
+                    <img src="{{url("client-site/images/sliders/slider 02.jpg")}}" alt="Slide Background Image" width="1920" height="1280" />
 
                     <div
                         class="tp-caption"
